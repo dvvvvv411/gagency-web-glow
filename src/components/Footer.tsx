@@ -13,7 +13,7 @@ const Footer = () => {
           <div>
             <div className="flex items-center mb-4">
               <img 
-                src="https://i.imgur.com/sGz3vrU.png" 
+                src="https://i.imgur.com/bJnPIVv.png" 
                 alt="AMCD Logo" 
                 className="h-12 w-auto object-contain"
               />
@@ -73,7 +73,7 @@ const Footer = () => {
             <ul className="space-y-4">
               <li className="flex items-start space-x-3">
                 <MapPin className="text-primary-500 flex-shrink-0 mt-1" size={18} />
-                <span className="text-gray-600">Hauptstraße 123<br />12345 Berlin, Deutschland</span>
+                <span className="text-gray-600">Rubensstr. 13<br />81245 München, Deutschland</span>
               </li>
               <li className="flex items-center space-x-3">
                 <Phone className="text-primary-500" size={18} />
@@ -90,7 +90,7 @@ const Footer = () => {
         <div className="py-6 border-t border-gray-200">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-600 text-sm">
-              © {currentYear} AMCD GmbH. Alle Rechte vorbehalten.
+              © {currentYear} AMCD Consult GmbH. Alle Rechte vorbehalten.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <Link to="/impressum" className="text-gray-600 hover:text-primary-600 text-sm">Impressum</Link>

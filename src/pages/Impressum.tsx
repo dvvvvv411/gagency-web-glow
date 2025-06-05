@@ -10,9 +10,9 @@ const Impressum = () => {
             <div>
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">Angaben gemäß § 5 TMG</h2>
               <div className="space-y-2">
-                <p><strong>AMCD GmbH</strong></p>
-                <p>Hauptstraße 123</p>
-                <p>12345 Berlin</p>
+                <p><strong>AMCD Consult GmbH</strong></p>
+                <p>Rubensstr. 13</p>
+                <p>81245 München</p>
                 <p>Deutschland</p>
               </div>
             </div>
@@ -29,8 +29,8 @@ const Impressum = () => {
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">Registereintrag</h2>
               <div className="space-y-2">
                 <p>Eintragung im Handelsregister.</p>
-                <p>Registergericht: Amtsgericht Berlin</p>
-                <p>Registernummer: HRB 123456</p>
+                <p>Registergericht: Amtsgericht München</p>
+                <p>Registernummer: HRB 235317</p>
               </div>
             </div>
 
@@ -43,9 +43,9 @@ const Impressum = () => {
             <div>
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h2>
               <div className="space-y-2">
-                <p>Max Mustermann</p>
-                <p>Hauptstraße 123</p>
-                <p>12345 Berlin</p>
+                <p>Armin Doster</p>
+                <p>Rubensstr. 13</p>
+                <p>81245 München</p>
                 <p>Deutschland</p>
               </div>
             </div>

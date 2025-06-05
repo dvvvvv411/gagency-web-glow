@@ -75,7 +75,7 @@ const Datenschutz = () => {
               <p className="leading-relaxed">
                 Bei Fragen zum Datenschutz wenden Sie sich bitte an: <br />
                 <strong>E-Mail:</strong> datenschutz@amcd.de <br />
-                <strong>Telefon:</strong> +49 30 87654321
+                <strong>Telefon:</strong> +49 30 12345678
               </p>
             </div>
           </div>

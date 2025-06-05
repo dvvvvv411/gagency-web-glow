@@ -10,8 +10,8 @@ const AGB = () => {
             <div>
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">§ 1 Geltungsbereich</h2>
               <p className="leading-relaxed mb-4">
-                Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle Verträge zwischen AMCD und deren Kunden. 
-                Abweichende Bedingungen des Kunden werden nicht anerkannt, es sei denn, AMCD stimmt ihrer Geltung 
+                Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle Verträge zwischen AMCD Consult GmbH und deren Kunden. 
+                Abweichende Bedingungen des Kunden werden nicht anerkannt, es sei denn, AMCD Consult GmbH stimmt ihrer Geltung 
                 ausdrücklich schriftlich zu.
               </p>
             </div>
@@ -19,7 +19,7 @@ const AGB = () => {
             <div>
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">§ 2 Vertragsgegenstand</h2>
               <p className="leading-relaxed mb-4">
-                AMCD erbringt Dienstleistungen im Bereich Webentwicklung, UI/UX Design, E-Commerce, Mobile Apps und 
+                AMCD Consult GmbH erbringt Dienstleistungen im Bereich Webentwicklung, UI/UX Design, E-Commerce, Mobile Apps und 
                 SEO Optimierung. Der konkrete Leistungsumfang ergibt sich aus der jeweiligen Leistungsbeschreibung 
                 bzw. dem individuellen Angebot.
               </p>
@@ -28,8 +28,8 @@ const AGB = () => {
             <div>
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">§ 3 Vertragsschluss</h2>
               <p className="leading-relaxed mb-4">
-                Angebote von AMCD sind freibleibend und unverbindlich. Ein Vertrag kommt erst durch die schriftliche 
-                Auftragsbestätigung von AMCD oder durch Beginn der Leistungserbringung zustande.
+                Angebote von AMCD Consult GmbH sind freibleibend und unverbindlich. Ein Vertrag kommt erst durch die schriftliche 
+                Auftragsbestätigung von AMCD Consult GmbH oder durch Beginn der Leistungserbringung zustande.
               </p>
             </div>
 
@@ -54,7 +54,7 @@ const AGB = () => {
             <div>
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">§ 6 Urheberrechte</h2>
               <p className="leading-relaxed mb-4">
-                Alle von AMCD erstellten Werke unterliegen dem Urheberrecht. Die Nutzungsrechte gehen erst nach 
+                Alle von AMCD Consult GmbH erstellten Werke unterliegen dem Urheberrecht. Die Nutzungsrechte gehen erst nach 
                 vollständiger Bezahlung auf den Kunden über. Der Kunde garantiert, dass von ihm bereitgestellte 
                 Materialien keine Rechte Dritter verletzen.
               </p>
@@ -63,7 +63,7 @@ const AGB = () => {
             <div>
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">§ 7 Gewährleistung</h2>
               <p className="leading-relaxed mb-4">
-                AMCD gewährleistet die vertragsgemäße Erbringung der Leistungen. Bei Mängeln hat der Kunde zunächst 
+                AMCD Consult GmbH gewährleistet die vertragsgemäße Erbringung der Leistungen. Bei Mängeln hat der Kunde zunächst 
                 Anspruch auf Nachbesserung. Schlägt die Nachbesserung fehl, kann der Kunde Minderung oder Rücktritt 
                 vom Vertrag verlangen.
               </p>
@@ -72,7 +72,7 @@ const AGB = () => {
             <div>
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">§ 8 Haftung</h2>
               <p className="leading-relaxed mb-4">
-                AMCD haftet nur für Schäden, die auf vorsätzliches oder grob fahrlässiges Verhalten zurückzuführen sind. 
+                AMCD Consult GmbH haftet nur für Schäden, die auf vorsätzliches oder grob fahrlässiges Verhalten zurückzuführen sind. 
                 Die Haftung für mittelbare Schäden, entgangenen Gewinn oder Folgeschäden ist ausgeschlossen.
               </p>
             </div>
@@ -88,7 +88,7 @@ const AGB = () => {
             <div>
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">§ 10 Schlussbestimmungen</h2>
               <p className="leading-relaxed">
-                Es gilt deutsches Recht. Gerichtsstand ist Berlin. Sollten einzelne Bestimmungen dieser AGB unwirksam 
+                Es gilt deutsches Recht. Gerichtsstand ist München. Sollten einzelne Bestimmungen dieser AGB unwirksam 
                 sein, bleibt die Wirksamkeit der übrigen Bestimmungen unberührt.
               </p>
             </div>
