@@ -1,9 +1,8 @@
-
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { MapPin, Clock, Users, GraduationCap, Briefcase, Star, Shield, Lock } from 'lucide-react';
+import { MapPin, Clock, Users, GraduationCap, Briefcase, Star, Shield, Lock, TestTube } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -46,6 +45,30 @@ const Careers = () => {
       datenschutz: false,
     },
   });
+
+  const generateTestData = () => {
+    const testData = {
+      vorname: 'Max',
+      nachname: 'Mustermann',
+      email: 'max.mustermann@email.de',
+      phone: '+49 30 12345678',
+      adresse: 'Musterstraße 123',
+      plz: '10115',
+      stadt: 'Berlin',
+      staatsangehoerigkeit: 'Deutsch',
+      datenschutz: true,
+    };
+
+    // Set form values with test data
+    Object.entries(testData).forEach(([key, value]) => {
+      form.setValue(key as keyof ApplicationForm, value);
+    });
+
+    toast({
+      title: "Testdaten generiert",
+      description: "Das Formular wurde mit Beispieldaten ausgefüllt.",
+    });
+  };
 
   const uploadFile = async (file: File, type: 'cv' | 'anschreiben', applicantName: string) => {
     const fileExt = file.name.split('.').pop();
@@ -271,9 +294,20 @@ const Careers = () => {
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                       Jetzt bewerben
                     </h2>
-                    <p className="text-xl text-gray-600">
+                    <p className="text-xl text-gray-600 mb-6">
                       Sende uns deine Bewerbung und werde Teil unseres Teams
                     </p>
+                    
+                    {/* Generate Test Data Button */}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={generateTestData}
+                      className="mb-6 bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100 hover:border-blue-300"
+                    >
+                      <TestTube className="w-4 h-4 mr-2" />
+                      Testdaten generieren
+                    </Button>
                   </div>
 
                   <div className="flex-grow">
