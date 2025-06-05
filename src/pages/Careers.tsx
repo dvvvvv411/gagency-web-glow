@@ -10,6 +10,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import BenefitsSlider from '@/components/BenefitsSlider';
+import ConfettiPopup from '@/components/ConfettiPopup';
 
 const applicationSchema = z.object({
   vorname: z.string().min(2, 'Vorname muss mindestens 2 Zeichen lang sein'),
@@ -30,6 +31,7 @@ type ApplicationForm = z.infer<typeof applicationSchema>;
 const Careers = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   const form = useForm<ApplicationForm>({
     resolver: zodResolver(applicationSchema),
@@ -121,11 +123,8 @@ const Careers = () => {
         throw dbError;
       }
 
-      toast({
-        title: "Bewerbung erfolgreich eingereicht!",
-        description: "Wir melden uns innerhalb von 5 Werktagen bei Ihnen.",
-      });
-      
+      // Show success popup with confetti instead of toast
+      setShowSuccessPopup(true);
       form.reset();
     } catch (error) {
       console.error('Error submitting application:', error);
@@ -535,6 +534,12 @@ const Careers = () => {
       </section>
 
       <BenefitsSlider />
+      
+      {/* Success Popup with Confetti */}
+      <ConfettiPopup 
+        isOpen={showSuccessPopup} 
+        onClose={() => setShowSuccessPopup(false)} 
+      />
     </div>
   );
 };
