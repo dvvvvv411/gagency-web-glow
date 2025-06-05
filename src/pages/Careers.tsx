@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -289,6 +290,15 @@ const Careers = () => {
               {/* Rechte Spalte - Bewerbungsformular */}
               <div className="p-8 lg:p-12 bg-white">
                 <div className="h-full flex flex-col">
+                  {/* Logo centered above form */}
+                  <div className="flex justify-center mb-8">
+                    <img 
+                      src="https://i.imgur.com/jLfB4V2.png" 
+                      alt="GAgency Logo" 
+                      className="h-16 w-auto object-contain"
+                    />
+                  </div>
+
                   <div className="mb-8">
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                       Jetzt bewerben
