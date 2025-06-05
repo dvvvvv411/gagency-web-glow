@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -21,10 +20,6 @@ const applicationSchema = z.object({
   plz: z.string().min(4, 'PLZ muss mindestens 4 Zeichen lang sein'),
   stadt: z.string().min(2, 'Bitte geben Sie Ihre Stadt an'),
   staatsangehoerigkeit: z.string().min(2, 'Bitte geben Sie Ihre Staatsangehörigkeit an'),
-  studiengang: z.string().min(2, 'Bitte geben Sie Ihren Studiengang an'),
-  semester: z.string().min(1, 'Bitte geben Sie Ihr Semester an'),
-  verfuegbarkeit: z.string().min(5, 'Bitte beschreiben Sie Ihre Verfügbarkeit'),
-  motivation: z.string().min(100, 'Motivationsschreiben muss mindestens 100 Zeichen lang sein'),
   cv: z.any().refine((files) => files?.length > 0, 'Bitte laden Sie Ihren Lebenslauf hoch'),
   anschreiben: z.any().refine((files) => files?.length > 0, 'Bitte laden Sie Ihr Anschreiben hoch'),
   datenschutz: z.boolean().refine((val) => val === true, 'Sie müssen den Datenschutzbestimmungen zustimmen'),
@@ -47,10 +42,6 @@ const Careers = () => {
       plz: '',
       stadt: '',
       staatsangehoerigkeit: '',
-      studiengang: '',
-      semester: '',
-      verfuegbarkeit: '',
-      motivation: '',
       datenschutz: false,
     },
   });
@@ -272,7 +263,7 @@ const Careers = () => {
                                 <FormItem>
                                   <FormLabel>Vorname *</FormLabel>
                                   <FormControl>
-                                    <Input placeholder="Max" {...field} />
+                                    <Input placeholder="Ihr Vorname" {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -285,7 +276,7 @@ const Careers = () => {
                                 <FormItem>
                                   <FormLabel>Nachname *</FormLabel>
                                   <FormControl>
-                                    <Input placeholder="Mustermann" {...field} />
+                                    <Input placeholder="Ihr Nachname" {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -301,7 +292,7 @@ const Careers = () => {
                                 <FormItem>
                                   <FormLabel>E-Mail-Adresse *</FormLabel>
                                   <FormControl>
-                                    <Input type="email" placeholder="max@beispiel.de" {...field} />
+                                    <Input type="email" placeholder="Ihre E-Mail-Adresse" {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -314,7 +305,7 @@ const Careers = () => {
                                 <FormItem>
                                   <FormLabel>Telefonnummer *</FormLabel>
                                   <FormControl>
-                                    <Input placeholder="+49 123 456 789" {...field} />
+                                    <Input placeholder="Ihre Telefonnummer" {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -330,7 +321,7 @@ const Careers = () => {
                               <FormItem>
                                 <FormLabel>Adresse *</FormLabel>
                                 <FormControl>
-                                  <Input placeholder="Musterstraße 123" {...field} />
+                                  <Input placeholder="Ihre Adresse" {...field} />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -345,7 +336,7 @@ const Careers = () => {
                                 <FormItem>
                                   <FormLabel>PLZ *</FormLabel>
                                   <FormControl>
-                                    <Input placeholder="12345" {...field} />
+                                    <Input placeholder="Ihre PLZ" {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -358,7 +349,7 @@ const Careers = () => {
                                 <FormItem>
                                   <FormLabel>Stadt *</FormLabel>
                                   <FormControl>
-                                    <Input placeholder="Berlin" {...field} />
+                                    <Input placeholder="Ihre Stadt" {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -373,69 +364,7 @@ const Careers = () => {
                               <FormItem>
                                 <FormLabel>Staatsangehörigkeit *</FormLabel>
                                 <FormControl>
-                                  <Input placeholder="Deutsch" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-
-                          {/* Studium */}
-                          <div className="grid md:grid-cols-2 gap-6">
-                            <FormField
-                              control={form.control}
-                              name="studiengang"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Studiengang *</FormLabel>
-                                  <FormControl>
-                                    <Input placeholder="z.B. BWL, Marketing, Kommunikation" {...field} />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            <FormField
-                              control={form.control}
-                              name="semester"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Aktuelles Semester *</FormLabel>
-                                  <FormControl>
-                                    <Input placeholder="z.B. 3. Semester" {...field} />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                          </div>
-
-                          <FormField
-                            control={form.control}
-                            name="verfuegbarkeit"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Verfügbarkeit *</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="z.B. Mo-Fr vormittags, 15-20h/Woche" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-
-                          <FormField
-                            control={form.control}
-                            name="motivation"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Motivationsschreiben *</FormLabel>
-                                <FormControl>
-                                  <Textarea 
-                                    placeholder="Erzählen Sie uns, warum Sie sich für diese Position interessieren und was Sie mitbringen..."
-                                    className="min-h-[100px]"
-                                    {...field}
-                                  />
+                                  <Input placeholder="Ihre Staatsangehörigkeit" {...field} />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
