@@ -1,7 +1,7 @@
 
 interface GeometricBackgroundProps {
   variant?: 'hero' | 'section';
-  pattern?: 'circles' | 'dots' | 'lines';
+  pattern?: 'circles' | 'dots' | 'lines' | 'hexagons';
 }
 
 const GeometricBackground = ({ 
@@ -34,6 +34,19 @@ const GeometricBackground = ({
               <line x1="10" y1="0" x2="10" y2="20" stroke="currentColor" strokeWidth="0.5" className="text-primary-200" />
             </pattern>
           )}
+
+          {/* Hexagons Pattern */}
+          {pattern === 'hexagons' && (
+            <pattern id="hexagonsPattern" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+              <polygon 
+                points="12,2 20,7 20,17 12,22 4,17 4,7" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="0.5" 
+                className="text-primary-200" 
+              />
+            </pattern>
+          )}
         </defs>
         
         {/* Apply Pattern */}
@@ -42,7 +55,8 @@ const GeometricBackground = ({
           height="100%" 
           fill={pattern === 'dots' ? 'url(#dotsPattern)' : 
                 pattern === 'circles' ? 'url(#circlesPattern)' : 
-                'url(#linesPattern)'}
+                pattern === 'lines' ? 'url(#linesPattern)' :
+                'url(#hexagonsPattern)'}
         />
       </svg>
       
