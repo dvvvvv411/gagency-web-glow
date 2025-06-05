@@ -48,30 +48,6 @@ const Careers = () => {
     },
   });
 
-  const generateTestData = () => {
-    const testData = {
-      vorname: 'Max',
-      nachname: 'Mustermann',
-      email: 'max.mustermann@email.de',
-      phone: '+49 30 12345678',
-      adresse: 'Musterstraße 123',
-      plz: '10115',
-      stadt: 'Berlin',
-      staatsangehoerigkeit: 'Deutsch',
-      datenschutz: true,
-    };
-
-    // Set form values with test data
-    Object.entries(testData).forEach(([key, value]) => {
-      form.setValue(key as keyof ApplicationForm, value);
-    });
-
-    toast({
-      title: "Testdaten generiert",
-      description: "Das Formular wurde mit Beispieldaten ausgefüllt.",
-    });
-  };
-
   const uploadFile = async (file: File, type: 'cv' | 'anschreiben', applicantName: string) => {
     const fileExt = file.name.split('.').pop();
     const fileName = `${applicantName}_${type}_${Date.now()}.${fileExt}`;
@@ -306,10 +282,6 @@ const Careers = () => {
                       Sende uns deine Bewerbung und werde Teil unseres Teams
                     </p>
                     
-                    {/* Generate Test Data Button */}
-                    <Button variant="secondary" onClick={generateTestData}>
-                      Testdaten generieren
-                    </Button>
                   </div>
 
                   <div className="flex-grow">
