@@ -4,8 +4,6 @@ import HeroSection from '@/components/sections/HeroSection';
 import ServicesShowcase from '@/components/sections/ServicesShowcase';
 import StatsBar from '@/components/sections/StatsBar';
 import TestimonialsSection from '@/components/sections/TestimonialsSection';
-import PremiumCTA from '@/components/sections/PremiumCTA';
-import SocialProof from '@/components/sections/SocialProof';
 
 const Index = () => {
   return (
@@ -32,9 +30,6 @@ const Index = () => {
           
           <TestimonialsSection />
         </div>
-        
-        <PremiumCTA />
-        <SocialProof />
       </div>
     </FluidBackground>
   );
