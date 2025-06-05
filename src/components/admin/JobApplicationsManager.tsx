@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,7 +7,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { FileText, Download, Save, Phone, Mail, MapPin, User, Flag } from 'lucide-react';
+import { FileText, Eye, Save, Phone, Mail, MapPin, User, Flag } from 'lucide-react';
+import PDFViewerDialog from './PDFViewerDialog';
 
 interface JobApplication {
   id: string;
@@ -33,6 +33,9 @@ const JobApplicationsManager = () => {
   const [loading, setLoading] = useState(true);
   const [editingNotes, setEditingNotes] = useState<{ [key: string]: string }>({});
   const [editingStatus, setEditingStatus] = useState<{ [key: string]: string }>({});
+  const [pdfViewerOpen, setPdfViewerOpen] = useState(false);
+  const [currentPdfUrl, setCurrentPdfUrl] = useState<string | null>(null);
+  const [pdfViewerTitle, setPdfViewerTitle] = useState('');
   const { toast } = useToast();
 
   useEffect(() => {
@@ -96,27 +99,22 @@ const JobApplicationsManager = () => {
     }
   };
 
-  const downloadFile = async (filePath: string, fileName: string) => {
+  const viewFile = async (filePath: string, fileName: string) => {
     try {
       const { data, error } = await supabase.storage
         .from('application-documents')
-        .download(filePath);
+        .createSignedUrl(filePath, 3600); // URL valid for 1 hour
 
       if (error) throw error;
 
-      const url = URL.createObjectURL(data);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      setCurrentPdfUrl(data.signedUrl);
+      setPdfViewerTitle(fileName);
+      setPdfViewerOpen(true);
     } catch (error) {
-      console.error('Error downloading file:', error);
+      console.error('Error viewing file:', error);
       toast({
         title: "Fehler",
-        description: "Fehler beim Herunterladen der Datei.",
+        description: "Fehler beim Anzeigen der Datei.",
         variant: "destructive",
       });
     }
@@ -160,174 +158,183 @@ const JobApplicationsManager = () => {
   };
 
   return (
-    <Card className="bg-white/70 backdrop-blur-sm">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <FileText className="h-5 w-5" />
-          Bewerbungen verwalten
-        </CardTitle>
-        <CardDescription>
-          Übersicht und Verwaltung aller eingegangenen Bewerbungen
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        {loading ? (
-          <div className="flex justify-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="min-w-[150px]">Persönliche Daten</TableHead>
-                    <TableHead className="min-w-[200px]">Kontakt</TableHead>
-                    <TableHead className="min-w-[200px]">Adresse</TableHead>
-                    <TableHead className="min-w-[120px]">Staatsangehörigkeit</TableHead>
-                    <TableHead className="min-w-[100px]">Eingereicht</TableHead>
-                    <TableHead className="min-w-[150px]">Status</TableHead>
-                    <TableHead className="min-w-[200px]">Notizen</TableHead>
-                    <TableHead className="min-w-[200px]">Dokumente</TableHead>
-                    <TableHead className="min-w-[100px]">Aktionen</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {applications.map((application) => (
-                    <TableRow key={application.id} className="align-top">
-                      <TableCell>
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-1">
-                            <User className="h-3 w-3 text-gray-500" />
-                            <span className="font-medium text-sm">
-                              {application.vorname} {application.nachname}
-                            </span>
-                          </div>
-                        </div>
-                      </TableCell>
-                      
-                      <TableCell>
-                        <div className="space-y-1 text-sm">
-                          <div className="flex items-center gap-1">
-                            <Mail className="h-3 w-3 text-gray-500" />
-                            <span>{application.email}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Phone className="h-3 w-3 text-gray-500" />
-                            <span>{application.phone}</span>
-                          </div>
-                        </div>
-                      </TableCell>
-                      
-                      <TableCell>
-                        <div className="space-y-1 text-sm">
-                          <div className="flex items-center gap-1">
-                            <MapPin className="h-3 w-3 text-gray-500" />
-                            <div>
-                              <div>{application.adresse}</div>
-                              <div>{application.plz} {application.stadt}</div>
+    <>
+      <Card className="bg-white/70 backdrop-blur-sm">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <FileText className="h-5 w-5" />
+            Bewerbungen verwalten
+          </CardTitle>
+          <CardDescription>
+            Übersicht und Verwaltung aller eingegangenen Bewerbungen
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <div className="flex justify-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="min-w-[150px]">Persönliche Daten</TableHead>
+                      <TableHead className="min-w-[200px]">Kontakt</TableHead>
+                      <TableHead className="min-w-[200px]">Adresse</TableHead>
+                      <TableHead className="min-w-[120px]">Staatsangehörigkeit</TableHead>
+                      <TableHead className="min-w-[100px]">Eingereicht</TableHead>
+                      <TableHead className="min-w-[150px]">Status</TableHead>
+                      <TableHead className="min-w-[200px]">Notizen</TableHead>
+                      <TableHead className="min-w-[200px]">Dokumente</TableHead>
+                      <TableHead className="min-w-[100px]">Aktionen</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {applications.map((application) => (
+                      <TableRow key={application.id} className="align-top">
+                        <TableCell>
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-1">
+                              <User className="h-3 w-3 text-gray-500" />
+                              <span className="font-medium text-sm">
+                                {application.vorname} {application.nachname}
+                              </span>
                             </div>
                           </div>
-                        </div>
-                      </TableCell>
-                      
-                      <TableCell>
-                        <div className="flex items-center gap-1 text-sm">
-                          <Flag className="h-3 w-3 text-gray-500" />
-                          <span>{application.staatsangehoerigkeit}</span>
-                        </div>
-                      </TableCell>
-                      
-                      <TableCell className="text-sm">
-                        {new Date(application.created_at).toLocaleDateString('de-DE')}
-                      </TableCell>
-                      
-                      <TableCell>
-                        <Select 
-                          value={editingStatus[application.id] || application.status} 
-                          onValueChange={(value) => 
-                            setEditingStatus(prev => ({...prev, [application.id]: value}))
-                          }
-                        >
-                          <SelectTrigger className="h-8">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="neu">Neu</SelectItem>
-                            <SelectItem value="in_bearbeitung">In Bearbeitung</SelectItem>
-                            <SelectItem value="angenommen">Angenommen</SelectItem>
-                            <SelectItem value="abgelehnt">Abgelehnt</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </TableCell>
-                      
-                      <TableCell>
-                        <Textarea
-                          value={editingNotes[application.id] || ''}
-                          onChange={(e) => 
-                            setEditingNotes(prev => ({...prev, [application.id]: e.target.value}))
-                          }
-                          placeholder="Notizen..."
-                          className="min-h-[60px] text-sm"
-                          rows={3}
-                        />
-                      </TableCell>
-                      
-                      <TableCell>
-                        <div className="space-y-2">
-                          {application.cv_file_path && (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => downloadFile(application.cv_file_path!, 'Lebenslauf.pdf')}
-                              className="w-full justify-start text-xs"
-                            >
-                              <Download className="h-3 w-3 mr-1" />
-                              Lebenslauf
-                            </Button>
-                          )}
-                          {application.anschreiben_file_path && (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => downloadFile(application.anschreiben_file_path!, 'Anschreiben.pdf')}
-                              className="w-full justify-start text-xs"
-                            >
-                              <Download className="h-3 w-3 mr-1" />
-                              Anschreiben
-                            </Button>
-                          )}
-                          {!application.cv_file_path && !application.anschreiben_file_path && (
-                            <span className="text-xs text-gray-500">Keine Dokumente</span>
-                          )}
-                        </div>
-                      </TableCell>
-                      
-                      <TableCell>
-                        <Button
-                          onClick={() => handleSaveChanges(application.id)}
-                          size="sm"
-                          className="w-full"
-                        >
-                          <Save className="h-3 w-3 mr-1" />
-                          Speichern
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-            
-            {applications.length === 0 && (
-              <div className="text-center py-8 text-gray-500">
-                Noch keine Bewerbungen eingegangen.
+                        </TableCell>
+                        
+                        <TableCell>
+                          <div className="space-y-1 text-sm">
+                            <div className="flex items-center gap-1">
+                              <Mail className="h-3 w-3 text-gray-500" />
+                              <span>{application.email}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Phone className="h-3 w-3 text-gray-500" />
+                              <span>{application.phone}</span>
+                            </div>
+                          </div>
+                        </TableCell>
+                        
+                        <TableCell>
+                          <div className="space-y-1 text-sm">
+                            <div className="flex items-center gap-1">
+                              <MapPin className="h-3 w-3 text-gray-500" />
+                              <div>
+                                <div>{application.adresse}</div>
+                                <div>{application.plz} {application.stadt}</div>
+                              </div>
+                            </div>
+                          </div>
+                        </TableCell>
+                        
+                        <TableCell>
+                          <div className="flex items-center gap-1 text-sm">
+                            <Flag className="h-3 w-3 text-gray-500" />
+                            <span>{application.staatsangehoerigkeit}</span>
+                          </div>
+                        </TableCell>
+                        
+                        <TableCell className="text-sm">
+                          {new Date(application.created_at).toLocaleDateString('de-DE')}
+                        </TableCell>
+                        
+                        <TableCell>
+                          <Select 
+                            value={editingStatus[application.id] || application.status} 
+                            onValueChange={(value) => 
+                              setEditingStatus(prev => ({...prev, [application.id]: value}))
+                            }
+                          >
+                            <SelectTrigger className="h-8">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="neu">Neu</SelectItem>
+                              <SelectItem value="in_bearbeitung">In Bearbeitung</SelectItem>
+                              <SelectItem value="angenommen">Angenommen</SelectItem>
+                              <SelectItem value="abgelehnt">Abgelehnt</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </TableCell>
+                        
+                        <TableCell>
+                          <Textarea
+                            value={editingNotes[application.id] || ''}
+                            onChange={(e) => 
+                              setEditingNotes(prev => ({...prev, [application.id]: e.target.value}))
+                            }
+                            placeholder="Notizen..."
+                            className="min-h-[60px] text-sm"
+                            rows={3}
+                          />
+                        </TableCell>
+                        
+                        <TableCell>
+                          <div className="space-y-2">
+                            {application.cv_file_path && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => viewFile(application.cv_file_path!, 'Lebenslauf')}
+                                className="w-full justify-start text-xs"
+                              >
+                                <Eye className="h-3 w-3 mr-1" />
+                                Lebenslauf anzeigen
+                              </Button>
+                            )}
+                            {application.anschreiben_file_path && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => viewFile(application.anschreiben_file_path!, 'Anschreiben')}
+                                className="w-full justify-start text-xs"
+                              >
+                                <Eye className="h-3 w-3 mr-1" />
+                                Anschreiben anzeigen
+                              </Button>
+                            )}
+                            {!application.cv_file_path && !application.anschreiben_file_path && (
+                              <span className="text-xs text-gray-500">Keine Dokumente</span>
+                            )}
+                          </div>
+                        </TableCell>
+                        
+                        <TableCell>
+                          <Button
+                            onClick={() => handleSaveChanges(application.id)}
+                            size="sm"
+                            className="w-full"
+                          >
+                            <Save className="h-3 w-3 mr-1" />
+                            Speichern
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </div>
-            )}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+              
+              {applications.length === 0 && (
+                <div className="text-center py-8 text-gray-500">
+                  Noch keine Bewerbungen eingegangen.
+                </div>
+              )}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <PDFViewerDialog
+        isOpen={pdfViewerOpen}
+        onClose={() => setPdfViewerOpen(false)}
+        pdfUrl={currentPdfUrl}
+        title={pdfViewerTitle}
+      />
+    </>
   );
 };
 
