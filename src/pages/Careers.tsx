@@ -1,8 +1,9 @@
+
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { MapPin, Clock, Users, GraduationCap, Briefcase, Heart, TrendingUp, Lightbulb, Coffee, Star } from 'lucide-react';
+import { MapPin, Clock, Users, GraduationCap, Briefcase, Heart, TrendingUp, Lightbulb, Coffee, Star, Shield, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -253,7 +254,7 @@ const Careers = () => {
                   <div className="flex-grow">
                     <Form {...form}>
                       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 h-full flex flex-col">
-                        <div className="flex-grow space-y-6">
+                        <div className="space-y-6">
                           {/* Persönliche Daten */}
                           <div className="grid md:grid-cols-2 gap-6">
                             <FormField
@@ -441,6 +442,28 @@ const Careers = () => {
                         >
                           {isSubmitting ? 'Bewerbung wird eingereicht...' : 'Bewerbung einreichen'}
                         </Button>
+
+                        {/* Sichere Übertragung Animation */}
+                        <div className="flex items-center justify-center mt-6 space-x-2 text-sm text-gray-500">
+                          <div className="flex items-center space-x-2">
+                            <div className="relative">
+                              <Shield className="w-5 h-5 text-green-500" />
+                              <div className="absolute inset-0 animate-ping">
+                                <Shield className="w-5 h-5 text-green-300 opacity-75" />
+                              </div>
+                            </div>
+                            <span>SSL-verschlüsselt</span>
+                          </div>
+                          <div className="flex space-x-1">
+                            <div className="w-1 h-1 bg-green-500 rounded-full animate-pulse"></div>
+                            <div className="w-1 h-1 bg-green-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                            <div className="w-1 h-1 bg-green-500 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Lock className="w-4 h-4 text-green-500" />
+                            <span>Sichere Übertragung</span>
+                          </div>
+                        </div>
                       </form>
                     </Form>
                   </div>
