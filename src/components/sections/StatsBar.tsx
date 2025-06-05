@@ -33,7 +33,7 @@ const StatsBar = () => {
 
   return (
     <AnimatedSection animation="fade-up" delay={400} className="py-12">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-2xl border border-gray-200 shadow-lg p-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (

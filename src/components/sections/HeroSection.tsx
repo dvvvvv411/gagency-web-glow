@@ -13,7 +13,7 @@ const HeroSection = () => {
 
   return (
     <AnimatedSection className="py-20">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Floating Badge */}
         <div className="flex justify-center mb-8">
           <div className="inline-flex items-center gap-2 bg-primary-50 text-primary-700 px-4 py-2 rounded-full border border-primary-200 text-sm font-medium">
