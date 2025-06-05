@@ -1,6 +1,9 @@
-
 import { ArrowRight, Target, BarChart3, Zap, Users, Star, CheckCircle, TrendingUp, Award, Clock, Lightbulb } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Dashboard3D from '../components/graphics/Dashboard3D';
+import NetworkVisualization from '../components/graphics/NetworkVisualization';
+import ParticleSystem from '../components/graphics/ParticleSystem';
+import GeometricBackground from '../components/graphics/GeometricBackground';
 
 const Index = () => {
   const services = [
@@ -74,12 +77,9 @@ const Index = () => {
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <section className="min-h-screen flex items-center bg-gradient-to-br from-primary-50 via-white to-primary-100 relative overflow-hidden">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-primary-200 rounded-full opacity-20 animate-pulse"></div>
-          <div className="absolute bottom-1/3 left-1/4 w-32 h-32 bg-primary-300 rounded-full opacity-30 animate-bounce"></div>
-          <div className="absolute top-3/4 right-1/3 w-48 h-48 bg-gradient-to-r from-primary-400 to-primary-600 rounded-full opacity-10 animate-pulse"></div>
-        </div>
+        {/* Enhanced Animated Background */}
+        <GeometricBackground variant="hero" pattern="circles" />
+        <ParticleSystem density={20} color="primary" size="sm" speed="slow" />
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -112,34 +112,10 @@ const Index = () => {
               </div>
             </div>
             
-            {/* Right Illustration */}
+            {/* Enhanced 3D Dashboard Illustration */}
             <div className="relative animate-fade-in-up">
-              <div className="aspect-square bg-gradient-to-tr from-primary-600 via-primary-500 to-primary-400 rounded-2xl shadow-2xl relative overflow-hidden">
-                {/* Dashboard Mockup */}
-                <div className="absolute inset-4 bg-white rounded-lg p-6 shadow-lg">
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div className="h-8 bg-gray-100 rounded animate-pulse"></div>
-                    <div className="h-8 bg-primary-100 rounded animate-pulse"></div>
-                  </div>
-                  <div className="h-32 bg-gradient-to-r from-primary-100 to-primary-200 rounded mb-4 flex items-end justify-around p-2">
-                    <div className="w-4 bg-primary-500 rounded-t" style={{height: '60%'}}></div>
-                    <div className="w-4 bg-primary-400 rounded-t" style={{height: '80%'}}></div>
-                    <div className="w-4 bg-primary-600 rounded-t" style={{height: '40%'}}></div>
-                    <div className="w-4 bg-primary-500 rounded-t" style={{height: '90%'}}></div>
-                  </div>
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="h-4 bg-gray-100 rounded"></div>
-                    <div className="h-4 bg-gray-100 rounded"></div>
-                    <div className="h-4 bg-primary-100 rounded"></div>
-                  </div>
-                </div>
-              </div>
-              {/* Floating Elements */}
-              <div className="absolute -top-6 -right-6 w-24 h-24 bg-white rounded-full shadow-lg flex items-center justify-center animate-bounce">
-                <TrendingUp className="text-primary-500" size={32} />
-              </div>
-              <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-primary-100 rounded-full shadow-lg flex items-center justify-center animate-pulse">
-                <BarChart3 className="text-primary-600" size={24} />
+              <div className="aspect-square">
+                <Dashboard3D />
               </div>
             </div>
           </div>
@@ -189,39 +165,19 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Warum GAgency Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Enhanced Warum GAgency Section */}
+      <section className="py-20 bg-gray-50 relative overflow-hidden">
+        {/* Enhanced Background */}
+        <GeometricBackground variant="section" pattern="hexagons" />
+        <ParticleSystem density={12} color="primary" size="md" speed="medium" />
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
-            {/* Left Illustration */}
+            {/* Enhanced Network Visualization */}
             <div className="relative animate-fade-in order-2 lg:order-1">
-              <div className="aspect-[4/3] bg-gradient-to-tr from-primary-600 to-primary-400 rounded-2xl shadow-xl relative overflow-hidden">
-                {/* Team Work Illustration */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="grid grid-cols-3 gap-4 p-8">
-                    <div className="w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center">
-                      <Users className="text-primary-600" size={24} />
-                    </div>
-                    <div className="w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center">
-                      <TrendingUp className="text-primary-600" size={24} />
-                    </div>
-                    <div className="w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center">
-                      <Target className="text-primary-600" size={24} />
-                    </div>
-                  </div>
-                </div>
-                {/* Success Chart Mockup */}
-                <div className="absolute bottom-4 left-4 right-4 bg-white rounded-lg p-4 shadow-lg">
-                  <div className="flex items-end justify-between h-16">
-                    <div className="w-6 bg-primary-200 rounded-t" style={{height: '30%'}}></div>
-                    <div className="w-6 bg-primary-400 rounded-t" style={{height: '60%'}}></div>
-                    <div className="w-6 bg-primary-600 rounded-t" style={{height: '100%'}}></div>
-                    <div className="w-6 bg-primary-500 rounded-t" style={{height: '80%'}}></div>
-                  </div>
-                </div>
+              <div className="aspect-[4/3] relative">
+                <NetworkVisualization />
               </div>
-              <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-white rounded-full shadow-lg"></div>
-              <div className="absolute -top-6 -left-6 w-32 h-32 bg-primary-100 rounded-full opacity-60"></div>
             </div>
             
             {/* Right Content */}
