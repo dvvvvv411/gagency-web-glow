@@ -1,13 +1,12 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { FileText, Eye, Save, Phone, Mail, MapPin, User, Flag } from 'lucide-react';
+import { FileText, Eye, Phone, Mail, MapPin, User, Flag } from 'lucide-react';
 import PDFViewerDialog from './PDFViewerDialog';
 
 interface JobApplication {
@@ -31,8 +30,6 @@ interface JobApplication {
 const JobApplicationsManager = () => {
   const [applications, setApplications] = useState<JobApplication[]>([]);
   const [loading, setLoading] = useState(true);
-  const [editingNotes, setEditingNotes] = useState<{ [key: string]: string }>({});
-  const [editingStatus, setEditingStatus] = useState<{ [key: string]: string }>({});
   const [pdfViewerOpen, setPdfViewerOpen] = useState(false);
   const [currentPdfUrl, setCurrentPdfUrl] = useState<string | null>(null);
   const [pdfViewerTitle, setPdfViewerTitle] = useState('');
@@ -52,16 +49,6 @@ const JobApplicationsManager = () => {
 
       if (error) throw error;
       setApplications(data || []);
-      
-      // Initialize editing states
-      const notesState: { [key: string]: string } = {};
-      const statusState: { [key: string]: string } = {};
-      data?.forEach(app => {
-        notesState[app.id] = app.notes || '';
-        statusState[app.id] = app.status;
-      });
-      setEditingNotes(notesState);
-      setEditingStatus(statusState);
     } catch (error) {
       console.error('Error fetching applications:', error);
       toast({
@@ -71,31 +58,6 @@ const JobApplicationsManager = () => {
       });
     } finally {
       setLoading(false);
-    }
-  };
-
-  const updateApplication = async (id: string, updates: Partial<JobApplication>) => {
-    try {
-      const { error } = await supabase
-        .from('job_applications')
-        .update(updates)
-        .eq('id', id);
-
-      if (error) throw error;
-
-      toast({
-        title: "Bewerbung aktualisiert",
-        description: "Die Bewerbung wurde erfolgreich aktualisiert.",
-      });
-
-      fetchApplications();
-    } catch (error) {
-      console.error('Error updating application:', error);
-      toast({
-        title: "Fehler",
-        description: "Fehler beim Aktualisieren der Bewerbung.",
-        variant: "destructive",
-      });
     }
   };
 
@@ -118,43 +80,6 @@ const JobApplicationsManager = () => {
         variant: "destructive",
       });
     }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'neu':
-        return 'bg-blue-100 text-blue-800';
-      case 'in_bearbeitung':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'angenommen':
-        return 'bg-green-100 text-green-800';
-      case 'abgelehnt':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'neu':
-        return 'Neu';
-      case 'in_bearbeitung':
-        return 'In Bearbeitung';
-      case 'angenommen':
-        return 'Angenommen';
-      case 'abgelehnt':
-        return 'Abgelehnt';
-      default:
-        return status;
-    }
-  };
-
-  const handleSaveChanges = (applicationId: string) => {
-    updateApplication(applicationId, {
-      status: editingStatus[applicationId],
-      notes: editingNotes[applicationId]
-    });
   };
 
   return (
@@ -185,10 +110,7 @@ const JobApplicationsManager = () => {
                       <TableHead className="min-w-[200px]">Adresse</TableHead>
                       <TableHead className="min-w-[120px]">Staatsangehörigkeit</TableHead>
                       <TableHead className="min-w-[100px]">Eingereicht</TableHead>
-                      <TableHead className="min-w-[150px]">Status</TableHead>
-                      <TableHead className="min-w-[200px]">Notizen</TableHead>
                       <TableHead className="min-w-[200px]">Dokumente</TableHead>
-                      <TableHead className="min-w-[100px]">Aktionen</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -242,37 +164,6 @@ const JobApplicationsManager = () => {
                         </TableCell>
                         
                         <TableCell>
-                          <Select 
-                            value={editingStatus[application.id] || application.status} 
-                            onValueChange={(value) => 
-                              setEditingStatus(prev => ({...prev, [application.id]: value}))
-                            }
-                          >
-                            <SelectTrigger className="h-8">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="neu">Neu</SelectItem>
-                              <SelectItem value="in_bearbeitung">In Bearbeitung</SelectItem>
-                              <SelectItem value="angenommen">Angenommen</SelectItem>
-                              <SelectItem value="abgelehnt">Abgelehnt</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </TableCell>
-                        
-                        <TableCell>
-                          <Textarea
-                            value={editingNotes[application.id] || ''}
-                            onChange={(e) => 
-                              setEditingNotes(prev => ({...prev, [application.id]: e.target.value}))
-                            }
-                            placeholder="Notizen..."
-                            className="min-h-[60px] text-sm"
-                            rows={3}
-                          />
-                        </TableCell>
-                        
-                        <TableCell>
                           <div className="space-y-2">
                             {application.cv_file_path && (
                               <Button
@@ -300,17 +191,6 @@ const JobApplicationsManager = () => {
                               <span className="text-xs text-gray-500">Keine Dokumente</span>
                             )}
                           </div>
-                        </TableCell>
-                        
-                        <TableCell>
-                          <Button
-                            onClick={() => handleSaveChanges(application.id)}
-                            size="sm"
-                            className="w-full"
-                          >
-                            <Save className="h-3 w-3 mr-1" />
-                            Speichern
-                          </Button>
                         </TableCell>
                       </TableRow>
                     ))}
