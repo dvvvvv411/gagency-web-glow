@@ -1,169 +1,208 @@
 
-import { Users, Award, Briefcase, BarChart } from 'lucide-react';
+import { Calendar, Target, Users, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const About = () => {
-  const team = [
+  const timeline = [
     {
-      name: 'Max Mustermann',
-      position: 'Gründer & CEO',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=256&q=80'
+      year: '2013',
+      title: 'Gründung',
+      description: 'Start als kleines Designstudio mit Fokus auf digitale Lösungen'
     },
     {
-      name: 'Lisa Schmidt',
-      position: 'Creative Director',
-      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=256&q=80'
+      year: '2018',
+      title: 'Expansion',
+      description: 'Erweiterung um Development-Team und erste Enterprise-Kunden'
     },
     {
-      name: 'Tim Wagner',
-      position: 'Lead Developer',
-      image: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=256&q=80'
+      year: '2021',
+      title: 'Innovation',
+      description: 'Spezialisierung auf KI-gestützte digitale Transformation'
     },
     {
-      name: 'Sophia Becker',
-      position: 'UI/UX Designer',
-      image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=256&q=80'
+      year: '2024',
+      title: 'Heute',
+      description: 'Führende Digitalagentur mit 30+ Experten und 100+ Projekten'
     }
   ];
 
-  const stats = [
-    { icon: Users, value: '50+', label: 'Zufriedene Kunden' },
-    { icon: Award, value: '10+', label: 'Jahre Erfahrung' },
-    { icon: Briefcase, value: '100+', label: 'Abgeschlossene Projekte' },
-    { icon: BarChart, value: '30+', label: 'Branchenexperten' }
-  ];
-
   return (
-    <div className="min-h-screen bg-white pt-16">
+    <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="pt-16 pb-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 animate-fade-in">
-              Über <span className="text-primary-500">GAgency</span>
+      <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-primary-500 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-500 rounded-full blur-3xl"></div>
+        </div>
+        
+        <div className="max-w-7xl mx-auto relative">
+          <div className="text-center animate-fade-in">
+            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6">
+              Unser <span className="bg-gradient-to-r from-primary-600 to-blue-600 bg-clip-text text-transparent">Team</span>,
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto animate-fade-in-up">
-              Wir sind ein Team von kreativen Köpfen und technischen Experten, 
-              die digitale Erlebnisse erschaffen, die begeistern.
+            <h2 className="text-5xl md:text-7xl font-bold text-gray-900 mb-8">
+              Ihre <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Vision</span>
+            </h2>
+            <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Wir verwandeln digitale Träume in messbare Erfolge und begleiten Sie auf dem Weg 
+              zur digitalen Transformation.
             </p>
-          </div>
-          
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="relative">
-              <div className="aspect-[4/3] rounded-lg overflow-hidden">
-                <img 
-                  src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" 
-                  alt="GAgency Team" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="absolute -bottom-6 -right-6 w-1/2 h-1/2 bg-primary-100 rounded-lg -z-10"></div>
-              <div className="absolute -top-6 -left-6 w-1/3 h-1/3 bg-primary-500 rounded-full -z-10 opacity-20"></div>
-            </div>
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                Unsere Geschichte
-              </h2>
-              <p className="text-gray-600 mb-6">
-                GAgency wurde 2013 mit einer klaren Vision gegründet: Digitale Lösungen zu schaffen, 
-                die nicht nur ästhetisch ansprechend sind, sondern auch messbare Geschäftsergebnisse liefern.
-              </p>
-              <p className="text-gray-600 mb-6">
-                Was als kleines Studio begann, ist heute zu einer führenden Digitalagentur mit einem 
-                vielseitigen Team aus Designern, Entwicklern und Strategen gewachsen. Unser Engagement 
-                für Qualität und Innovation hat uns zu einem vertrauenswürdigen Partner für Unternehmen 
-                jeder Größe gemacht.
-              </p>
-              <p className="text-gray-600">
-                Heute arbeiten wir mit Kunden aus verschiedenen Branchen zusammen und helfen ihnen, 
-                in der digitalen Welt erfolgreich zu sein. Unsere Projekte reichen von einfachen 
-                Websites bis hin zu komplexen Webanwendungen und E-Commerce-Plattformen.
-              </p>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-16 bg-primary-500">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="flex justify-center mb-4">
-                  <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                    <stat.icon className="text-white" size={24} />
+      {/* Mission Statement */}
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="animate-fade-in">
+              <div className="flex items-center mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-blue-500 rounded-2xl flex items-center justify-center mr-4">
+                  <Target className="text-white" size={24} />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900">Unsere Mission</h3>
+              </div>
+              <p className="text-lg text-gray-700 leading-relaxed mb-6">
+                Bei GAgency glauben wir daran, dass digitale Transformation mehr ist als nur Technologie. 
+                Es geht darum, Geschäftsprozesse zu revolutionieren und nachhaltiges Wachstum zu schaffen.
+              </p>
+              <p className="text-lg text-gray-700 leading-relaxed mb-6">
+                Wir entwickeln maßgeschneiderte digitale Lösungen, die nicht nur heute funktionieren, 
+                sondern auch für die Herausforderungen von morgen gerüstet sind.
+              </p>
+              <p className="text-lg text-gray-700 leading-relaxed">
+                Unser Ziel ist es, aus jedem Projekt eine Erfolgsgeschichte zu machen und unsere 
+                Kunden zu den Gewinnern der digitalen Zukunft zu machen.
+              </p>
+            </div>
+            
+            <div className="relative animate-fade-in">
+              <div className="aspect-square bg-gradient-to-br from-primary-100 via-blue-50 to-purple-100 rounded-3xl p-8 flex items-center justify-center">
+                <div className="grid grid-cols-2 gap-6 w-full">
+                  <div className="bg-white rounded-2xl p-6 shadow-lg transform hover:scale-105 transition-transform duration-300">
+                    <Users className="text-primary-500 mb-3" size={32} />
+                    <div className="text-2xl font-bold text-gray-900">50+</div>
+                    <div className="text-gray-600">Kunden</div>
+                  </div>
+                  <div className="bg-white rounded-2xl p-6 shadow-lg transform hover:scale-105 transition-transform duration-300">
+                    <Zap className="text-blue-500 mb-3" size={32} />
+                    <div className="text-2xl font-bold text-gray-900">100+</div>
+                    <div className="text-gray-600">Projekte</div>
+                  </div>
+                  <div className="bg-white rounded-2xl p-6 shadow-lg transform hover:scale-105 transition-transform duration-300">
+                    <Calendar className="text-purple-500 mb-3" size={32} />
+                    <div className="text-2xl font-bold text-gray-900">10+</div>
+                    <div className="text-gray-600">Jahre</div>
+                  </div>
+                  <div className="bg-white rounded-2xl p-6 shadow-lg transform hover:scale-105 transition-transform duration-300">
+                    <Target className="text-green-500 mb-3" size={32} />
+                    <div className="text-2xl font-bold text-gray-900">95%</div>
+                    <div className="text-gray-600">Erfolgsrate</div>
                   </div>
                 </div>
-                <h3 className="text-3xl font-bold text-white">{stat.value}</h3>
-                <p className="text-primary-100">{stat.label}</p>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Team Section */}
+      {/* Timeline */}
       <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Unser Team
-            </h2>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16 animate-fade-in">
+            <h3 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Unsere <span className="bg-gradient-to-r from-primary-600 to-blue-600 bg-clip-text text-transparent">Geschichte</span>
+            </h3>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Lernen Sie die Köpfe hinter GAgency kennen. Ein Team von Experten, die Ihre Vision in die Realität umsetzen.
+              Von der Vision zur Realität - ein Jahrzehnt der digitalen Innovation
             </p>
           </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {team.map((member, index) => (
-              <div key={index} className="bg-gray-50 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 group">
-                <div className="aspect-[3/4] overflow-hidden">
-                  <img 
-                    src={member.image} 
-                    alt={member.name} 
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
+
+          <div className="relative">
+            {/* Timeline Line */}
+            <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-primary-500 via-blue-500 to-purple-500 rounded-full"></div>
+            
+            <div className="space-y-16">
+              {timeline.map((item, index) => (
+                <div
+                  key={item.year}
+                  className={`flex items-center ${
+                    index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'
+                  } animate-fade-in`}
+                  style={{ animationDelay: `${index * 0.2}s` }}
+                >
+                  <div className={`lg:w-1/2 ${index % 2 === 0 ? 'lg:pr-12' : 'lg:pl-12'}`}>
+                    <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
+                      <div className="flex items-center mb-4">
+                        <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-blue-500 rounded-xl flex items-center justify-center mr-4">
+                          <span className="text-white font-bold">{item.year.slice(-2)}</span>
+                        </div>
+                        <h4 className="text-2xl font-bold text-gray-900">{item.title}</h4>
+                      </div>
+                      <p className="text-gray-600 leading-relaxed">{item.description}</p>
+                    </div>
+                  </div>
+                  
+                  {/* Timeline Node */}
+                  <div className="relative lg:w-12 flex justify-center">
+                    <div className="w-6 h-6 bg-white border-4 border-primary-500 rounded-full shadow-lg"></div>
+                    <div className="absolute inset-0 w-6 h-6 bg-primary-500 rounded-full animate-ping opacity-20"></div>
+                  </div>
+                  
+                  <div className="lg:w-1/2">
+                    {/* Spacer for alternating layout */}
+                  </div>
                 </div>
-                <div className="p-6">
-                  <h3 className="text-lg font-semibold text-gray-900">{member.name}</h3>
-                  <p className="text-primary-600">{member.position}</p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Values Section */}
-      <section className="py-20 bg-gray-50">
+      {/* Values Cards */}
+      <section className="py-20 bg-gradient-to-br from-gray-50 via-white to-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Unsere Werte
-            </h2>
+          <div className="text-center mb-16 animate-fade-in">
+            <h3 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Unsere <span className="bg-gradient-to-r from-primary-600 to-blue-600 bg-clip-text text-transparent">Werte</span>
+            </h3>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Diese Grundprinzipien leiten unsere Arbeit und unsere Interaktionen mit Kunden und Partners.
+              Diese Prinzipien leiten unser tägliches Handeln und unsere Beziehungen zu Kunden und Partnern
             </p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="p-8 bg-white rounded-lg shadow-sm">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Innovation</h3>
-              <p className="text-gray-600">
-                Wir bleiben stets am Puls der Zeit und nutzen die neuesten Technologien und Trends, um innovative Lösungen zu schaffen.
+            <div className="group bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 animate-fade-in hover:scale-105">
+              <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-blue-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <Zap className="text-white" size={32} />
+              </div>
+              <h4 className="text-2xl font-bold text-gray-900 mb-4">Innovation</h4>
+              <p className="text-gray-600 leading-relaxed">
+                Wir bleiben stets am Puls der Zeit und nutzen die neuesten Technologien, 
+                um bahnbrechende Lösungen zu entwickeln.
               </p>
             </div>
-            <div className="p-8 bg-white rounded-lg shadow-sm">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Qualität</h3>
-              <p className="text-gray-600">
-                Wir streben nach Exzellenz in allem, was wir tun, und liefern hochwertige Ergebnisse, die die Erwartungen übertreffen.
+            
+            <div className="group bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 animate-fade-in hover:scale-105" style={{ animationDelay: '0.2s' }}>
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <Target className="text-white" size={32} />
+              </div>
+              <h4 className="text-2xl font-bold text-gray-900 mb-4">Qualität</h4>
+              <p className="text-gray-600 leading-relaxed">
+                Exzellenz in jedem Detail - wir liefern hochwertige Ergebnisse, 
+                die Erwartungen übertreffen und Standards setzen.
               </p>
             </div>
-            <div className="p-8 bg-white rounded-lg shadow-sm">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Zusammenarbeit</h3>
-              <p className="text-gray-600">
-                Wir glauben an die Kraft der Zusammenarbeit und arbeiten eng mit unseren Kunden zusammen, um gemeinsam Erfolge zu erzielen.
+            
+            <div className="group bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 animate-fade-in hover:scale-105" style={{ animationDelay: '0.4s' }}>
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <Users className="text-white" size={32} />
+              </div>
+              <h4 className="text-2xl font-bold text-gray-900 mb-4">Partnerschaft</h4>
+              <p className="text-gray-600 leading-relaxed">
+                Wir verstehen uns als Partner unserer Kunden und arbeiten eng zusammen, 
+                um gemeinsam außergewöhnliche Erfolge zu erzielen.
               </p>
             </div>
           </div>
@@ -171,20 +210,28 @@ const About = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-              Bereit, mit uns zu arbeiten?
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
-              Lassen Sie uns gemeinsam Ihr nächstes digitales Projekt verwirklichen.
-            </p>
+      <section className="py-20 bg-gradient-to-br from-primary-500 via-blue-600 to-purple-600 relative overflow-hidden">
+        <div className="absolute inset-0 bg-black opacity-10"></div>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
+          <h3 className="text-4xl md:text-5xl font-bold text-white mb-6 animate-fade-in">
+            Bereit für Ihre digitale Transformation?
+          </h3>
+          <p className="text-xl text-white opacity-90 mb-10 max-w-2xl mx-auto animate-fade-in">
+            Lassen Sie uns gemeinsam Ihre Vision in die Realität umsetzen und Ihr Unternehmen 
+            für die digitale Zukunft rüsten.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
             <Link
               to="/contact"
-              className="bg-primary-500 text-white px-8 py-4 rounded-lg font-medium hover:bg-primary-600 transition-colors duration-200 inline-flex items-center"
+              className="bg-white text-primary-600 px-8 py-4 rounded-2xl font-semibold hover:bg-gray-100 transition-colors duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105"
             >
-              Kontakt aufnehmen
+              Projekt besprechen
+            </Link>
+            <Link
+              to="/services"
+              className="border-2 border-white text-white px-8 py-4 rounded-2xl font-semibold hover:bg-white hover:text-primary-600 transition-all duration-300 inline-flex items-center justify-center transform hover:scale-105"
+            >
+              Services entdecken
             </Link>
           </div>
         </div>
