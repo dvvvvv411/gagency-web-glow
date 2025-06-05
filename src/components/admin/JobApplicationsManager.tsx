@@ -5,11 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Textarea } from '@/components/ui/textarea';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { FileText, Download, Eye, Calendar, User, Mail, Phone, MapPin } from 'lucide-react';
+import { FileText, Download, Save, Phone, Mail, MapPin, User, Flag } from 'lucide-react';
 
 interface JobApplication {
   id: string;
@@ -32,9 +31,8 @@ interface JobApplication {
 const JobApplicationsManager = () => {
   const [applications, setApplications] = useState<JobApplication[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedApplication, setSelectedApplication] = useState<JobApplication | null>(null);
-  const [notes, setNotes] = useState('');
-  const [status, setStatus] = useState('');
+  const [editingNotes, setEditingNotes] = useState<{ [key: string]: string }>({});
+  const [editingStatus, setEditingStatus] = useState<{ [key: string]: string }>({});
   const { toast } = useToast();
 
   useEffect(() => {
@@ -51,6 +49,16 @@ const JobApplicationsManager = () => {
 
       if (error) throw error;
       setApplications(data || []);
+      
+      // Initialize editing states
+      const notesState: { [key: string]: string } = {};
+      const statusState: { [key: string]: string } = {};
+      data?.forEach(app => {
+        notesState[app.id] = app.notes || '';
+        statusState[app.id] = app.status;
+      });
+      setEditingNotes(notesState);
+      setEditingStatus(statusState);
     } catch (error) {
       console.error('Error fetching applications:', error);
       toast({
@@ -144,6 +152,13 @@ const JobApplicationsManager = () => {
     }
   };
 
+  const handleSaveChanges = (applicationId: string) => {
+    updateApplication(applicationId, {
+      status: editingStatus[applicationId],
+      notes: editingNotes[applicationId]
+    });
+  };
+
   return (
     <Card className="bg-white/70 backdrop-blur-sm">
       <CardHeader>
@@ -162,176 +177,147 @@ const JobApplicationsManager = () => {
           </div>
         ) : (
           <div className="space-y-4">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>E-Mail</TableHead>
-                  <TableHead>Eingereicht</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Aktionen</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {applications.map((application) => (
-                  <TableRow key={application.id}>
-                    <TableCell className="font-medium">
-                      {application.vorname} {application.nachname}
-                    </TableCell>
-                    <TableCell>{application.email}</TableCell>
-                    <TableCell>
-                      {new Date(application.created_at).toLocaleDateString('de-DE')}
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={getStatusColor(application.status)}>
-                        {getStatusText(application.status)}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              setSelectedApplication(application);
-                              setNotes(application.notes || '');
-                              setStatus(application.status);
-                            }}
-                          >
-                            <Eye className="h-4 w-4 mr-1" />
-                            Details
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-                          <DialogHeader>
-                            <DialogTitle>
-                              Bewerbung von {selectedApplication?.vorname} {selectedApplication?.nachname}
-                            </DialogTitle>
-                            <DialogDescription>
-                              Eingereicht am {selectedApplication && new Date(selectedApplication.created_at).toLocaleDateString('de-DE')}
-                            </DialogDescription>
-                          </DialogHeader>
-                          
-                          {selectedApplication && (
-                            <div className="space-y-6">
-                              {/* Personal Information */}
-                              <div className="grid md:grid-cols-2 gap-4">
-                                <div className="space-y-3">
-                                  <div className="flex items-center gap-2">
-                                    <User className="h-4 w-4 text-gray-500" />
-                                    <span className="font-medium">Persönliche Daten</span>
-                                  </div>
-                                  <div className="pl-6 space-y-2 text-sm">
-                                    <p><strong>Name:</strong> {selectedApplication.vorname} {selectedApplication.nachname}</p>
-                                    <p><strong>Staatsangehörigkeit:</strong> {selectedApplication.staatsangehoerigkeit}</p>
-                                  </div>
-                                </div>
-                                
-                                <div className="space-y-3">
-                                  <div className="flex items-center gap-2">
-                                    <Mail className="h-4 w-4 text-gray-500" />
-                                    <span className="font-medium">Kontakt</span>
-                                  </div>
-                                  <div className="pl-6 space-y-2 text-sm">
-                                    <p><strong>E-Mail:</strong> {selectedApplication.email}</p>
-                                    <p><strong>Telefon:</strong> {selectedApplication.phone}</p>
-                                  </div>
-                                </div>
-                              </div>
-
-                              {/* Address */}
-                              <div>
-                                <div className="flex items-center gap-2 mb-3">
-                                  <MapPin className="h-4 w-4 text-gray-500" />
-                                  <span className="font-medium">Adresse</span>
-                                </div>
-                                <div className="pl-6 text-sm">
-                                  <p>{selectedApplication.adresse}</p>
-                                  <p>{selectedApplication.plz} {selectedApplication.stadt}</p>
-                                </div>
-                              </div>
-
-                              {/* Documents */}
-                              <div>
-                                <div className="flex items-center gap-2 mb-3">
-                                  <FileText className="h-4 w-4 text-gray-500" />
-                                  <span className="font-medium">Dokumente</span>
-                                </div>
-                                <div className="pl-6 space-y-2">
-                                  {selectedApplication.cv_file_path && (
-                                    <Button
-                                      variant="outline"
-                                      size="sm"
-                                      onClick={() => downloadFile(selectedApplication.cv_file_path!, 'Lebenslauf.pdf')}
-                                    >
-                                      <Download className="h-4 w-4 mr-2" />
-                                      Lebenslauf herunterladen
-                                    </Button>
-                                  )}
-                                  {selectedApplication.anschreiben_file_path && (
-                                    <Button
-                                      variant="outline"
-                                      size="sm"
-                                      onClick={() => downloadFile(selectedApplication.anschreiben_file_path!, 'Anschreiben.pdf')}
-                                    >
-                                      <Download className="h-4 w-4 mr-2" />
-                                      Anschreiben herunterladen
-                                    </Button>
-                                  )}
-                                </div>
-                              </div>
-
-                              {/* Status and Notes */}
-                              <div className="space-y-4">
-                                <div>
-                                  <label className="block text-sm font-medium mb-2">Status</label>
-                                  <Select value={status} onValueChange={setStatus}>
-                                    <SelectTrigger>
-                                      <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      <SelectItem value="neu">Neu</SelectItem>
-                                      <SelectItem value="in_bearbeitung">In Bearbeitung</SelectItem>
-                                      <SelectItem value="angenommen">Angenommen</SelectItem>
-                                      <SelectItem value="abgelehnt">Abgelehnt</SelectItem>
-                                    </SelectContent>
-                                  </Select>
-                                </div>
-
-                                <div>
-                                  <label className="block text-sm font-medium mb-2">Notizen</label>
-                                  <Textarea
-                                    value={notes}
-                                    onChange={(e) => setNotes(e.target.value)}
-                                    placeholder="Interne Notizen zur Bewerbung..."
-                                    rows={4}
-                                  />
-                                </div>
-
-                                <Button
-                                  onClick={() => {
-                                    if (selectedApplication) {
-                                      updateApplication(selectedApplication.id, {
-                                        status,
-                                        notes
-                                      });
-                                    }
-                                  }}
-                                  className="w-full"
-                                >
-                                  Änderungen speichern
-                                </Button>
-                              </div>
-                            </div>
-                          )}
-                        </DialogContent>
-                      </Dialog>
-                    </TableCell>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="min-w-[150px]">Persönliche Daten</TableHead>
+                    <TableHead className="min-w-[200px]">Kontakt</TableHead>
+                    <TableHead className="min-w-[200px]">Adresse</TableHead>
+                    <TableHead className="min-w-[120px]">Staatsangehörigkeit</TableHead>
+                    <TableHead className="min-w-[100px]">Eingereicht</TableHead>
+                    <TableHead className="min-w-[150px]">Status</TableHead>
+                    <TableHead className="min-w-[200px]">Notizen</TableHead>
+                    <TableHead className="min-w-[200px]">Dokumente</TableHead>
+                    <TableHead className="min-w-[100px]">Aktionen</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {applications.map((application) => (
+                    <TableRow key={application.id} className="align-top">
+                      <TableCell>
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-1">
+                            <User className="h-3 w-3 text-gray-500" />
+                            <span className="font-medium text-sm">
+                              {application.vorname} {application.nachname}
+                            </span>
+                          </div>
+                        </div>
+                      </TableCell>
+                      
+                      <TableCell>
+                        <div className="space-y-1 text-sm">
+                          <div className="flex items-center gap-1">
+                            <Mail className="h-3 w-3 text-gray-500" />
+                            <span>{application.email}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Phone className="h-3 w-3 text-gray-500" />
+                            <span>{application.phone}</span>
+                          </div>
+                        </div>
+                      </TableCell>
+                      
+                      <TableCell>
+                        <div className="space-y-1 text-sm">
+                          <div className="flex items-center gap-1">
+                            <MapPin className="h-3 w-3 text-gray-500" />
+                            <div>
+                              <div>{application.adresse}</div>
+                              <div>{application.plz} {application.stadt}</div>
+                            </div>
+                          </div>
+                        </div>
+                      </TableCell>
+                      
+                      <TableCell>
+                        <div className="flex items-center gap-1 text-sm">
+                          <Flag className="h-3 w-3 text-gray-500" />
+                          <span>{application.staatsangehoerigkeit}</span>
+                        </div>
+                      </TableCell>
+                      
+                      <TableCell className="text-sm">
+                        {new Date(application.created_at).toLocaleDateString('de-DE')}
+                      </TableCell>
+                      
+                      <TableCell>
+                        <Select 
+                          value={editingStatus[application.id] || application.status} 
+                          onValueChange={(value) => 
+                            setEditingStatus(prev => ({...prev, [application.id]: value}))
+                          }
+                        >
+                          <SelectTrigger className="h-8">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="neu">Neu</SelectItem>
+                            <SelectItem value="in_bearbeitung">In Bearbeitung</SelectItem>
+                            <SelectItem value="angenommen">Angenommen</SelectItem>
+                            <SelectItem value="abgelehnt">Abgelehnt</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </TableCell>
+                      
+                      <TableCell>
+                        <Textarea
+                          value={editingNotes[application.id] || ''}
+                          onChange={(e) => 
+                            setEditingNotes(prev => ({...prev, [application.id]: e.target.value}))
+                          }
+                          placeholder="Notizen..."
+                          className="min-h-[60px] text-sm"
+                          rows={3}
+                        />
+                      </TableCell>
+                      
+                      <TableCell>
+                        <div className="space-y-2">
+                          {application.cv_file_path && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => downloadFile(application.cv_file_path!, 'Lebenslauf.pdf')}
+                              className="w-full justify-start text-xs"
+                            >
+                              <Download className="h-3 w-3 mr-1" />
+                              Lebenslauf
+                            </Button>
+                          )}
+                          {application.anschreiben_file_path && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => downloadFile(application.anschreiben_file_path!, 'Anschreiben.pdf')}
+                              className="w-full justify-start text-xs"
+                            >
+                              <Download className="h-3 w-3 mr-1" />
+                              Anschreiben
+                            </Button>
+                          )}
+                          {!application.cv_file_path && !application.anschreiben_file_path && (
+                            <span className="text-xs text-gray-500">Keine Dokumente</span>
+                          )}
+                        </div>
+                      </TableCell>
+                      
+                      <TableCell>
+                        <Button
+                          onClick={() => handleSaveChanges(application.id)}
+                          size="sm"
+                          className="w-full"
+                        >
+                          <Save className="h-3 w-3 mr-1" />
+                          Speichern
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
             
             {applications.length === 0 && (
               <div className="text-center py-8 text-gray-500">
