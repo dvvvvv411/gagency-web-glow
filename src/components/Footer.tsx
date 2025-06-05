@@ -13,8 +13,8 @@ const Footer = () => {
           <div>
             <div className="flex items-center mb-4">
               <img 
-                src="https://i.imgur.com/jLfB4V2.png" 
-                alt="GAgency Logo" 
+                src="https://i.imgur.com/sGz3vrU.png" 
+                alt="AMCD Logo" 
                 className="h-12 w-auto object-contain"
               />
             </div>
@@ -90,15 +90,15 @@ const Footer = () => {
             <ul className="space-y-4">
               <li className="flex items-start space-x-3">
                 <MapPin className="text-primary-500 flex-shrink-0 mt-1" size={18} />
-                <span className="text-gray-600">Musterstraße 123<br />10115 Berlin, Deutschland</span>
+                <span className="text-gray-600">Musterstraße 456<br />10117 Berlin, Deutschland</span>
               </li>
               <li className="flex items-center space-x-3">
                 <Phone className="text-primary-500" size={18} />
-                <a href="tel:+4930123456789" className="text-gray-600 hover:text-primary-600 transition-colors duration-200">+49 30 123 456 789</a>
+                <a href="tel:+493087654321" className="text-gray-600 hover:text-primary-600 transition-colors duration-200">+49 30 87654321</a>
               </li>
               <li className="flex items-center space-x-3">
                 <Mail className="text-primary-500" size={18} />
-                <a href="mailto:info@gagency.de" className="text-gray-600 hover:text-primary-600 transition-colors duration-200">info@gagency.de</a>
+                <a href="mailto:info@amcd.de" className="text-gray-600 hover:text-primary-600 transition-colors duration-200">info@amcd.de</a>
               </li>
             </ul>
           </div>
@@ -107,12 +107,12 @@ const Footer = () => {
         <div className="py-6 border-t border-gray-200">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-600 text-sm">
-              © {currentYear} GAgency. Alle Rechte vorbehalten.
+              © {currentYear} AMCD. Alle Rechte vorbehalten.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link to="#" className="text-gray-600 hover:text-primary-600 text-sm">Impressum</Link>
-              <Link to="#" className="text-gray-600 hover:text-primary-600 text-sm">Datenschutz</Link>
-              <Link to="#" className="text-gray-600 hover:text-primary-600 text-sm">AGB</Link>
+              <Link to="/impressum" className="text-gray-600 hover:text-primary-600 text-sm">Impressum</Link>
+              <Link to="/datenschutz" className="text-gray-600 hover:text-primary-600 text-sm">Datenschutz</Link>
+              <Link to="/agb" className="text-gray-600 hover:text-primary-600 text-sm">AGB</Link>
             </div>
           </div>
         </div>

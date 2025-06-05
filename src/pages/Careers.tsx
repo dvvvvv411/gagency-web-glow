@@ -292,8 +292,8 @@ const Careers = () => {
                   {/* Logo centered above form */}
                   <div className="flex justify-center mb-8">
                     <img 
-                      src="https://i.imgur.com/jLfB4V2.png" 
-                      alt="GAgency Logo" 
+                      src="https://i.imgur.com/sGz3vrU.png" 
+                      alt="AMCD Logo" 
                       className="h-16 w-auto object-contain"
                     />
                   </div>
