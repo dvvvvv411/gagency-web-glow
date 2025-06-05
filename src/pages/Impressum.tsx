@@ -10,9 +10,9 @@ const Impressum = () => {
             <div>
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">Angaben gemäß § 5 TMG</h2>
               <div className="space-y-2">
-                <p><strong>AMCD</strong></p>
-                <p>Musterstraße 456</p>
-                <p>10117 Berlin</p>
+                <p><strong>AMCD GmbH</strong></p>
+                <p>Hauptstraße 123</p>
+                <p>12345 Berlin</p>
                 <p>Deutschland</p>
               </div>
             </div>
@@ -20,28 +20,32 @@ const Impressum = () => {
             <div>
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">Kontakt</h2>
               <div className="space-y-2">
-                <p><strong>Telefon:</strong> +49 30 87654321</p>
+                <p><strong>Telefon:</strong> +49 30 12345678</p>
                 <p><strong>E-Mail:</strong> info@amcd.de</p>
+              </div>
+            </div>
+
+            <div>
+              <h2 className="text-2xl font-semibold text-gray-900 mb-4">Registereintrag</h2>
+              <div className="space-y-2">
+                <p>Eintragung im Handelsregister.</p>
+                <p>Registergericht: Amtsgericht Berlin</p>
+                <p>Registernummer: HRB 123456</p>
               </div>
             </div>
 
             <div>
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">Umsatzsteuer-ID</h2>
               <p>Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:</p>
-              <p>DE123456789</p>
-            </div>
-
-            <div>
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">Wirtschafts-ID</h2>
-              <p>Wirtschafts-Identifikationsnummer: 12345678901</p>
+              <p>DE987654321</p>
             </div>
 
             <div>
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h2>
               <div className="space-y-2">
-                <p>AMCD</p>
-                <p>Musterstraße 456</p>
-                <p>10117 Berlin</p>
+                <p>Max Mustermann</p>
+                <p>Hauptstraße 123</p>
+                <p>12345 Berlin</p>
                 <p>Deutschland</p>
               </div>
             </div>
