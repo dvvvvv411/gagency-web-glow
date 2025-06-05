@@ -216,34 +216,6 @@ const Contact = () => {
           </div>
         </div>
       </section>
-
-      {/* Interactive Map */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Besuchen Sie uns
-            </h2>
-            <p className="text-xl text-gray-600">
-              Mitten im Herzen von Düsseldorf
-            </p>
-          </div>
-          
-          <div className="rounded-lg overflow-hidden shadow-lg">
-            <div className="aspect-[16/9] bg-gray-200 flex items-center justify-center">
-              <div className="text-center">
-                <MapPin className="mx-auto mb-4 text-gray-400" size={48} />
-                <p className="text-gray-600 text-lg font-medium">
-                  Google Maps wird hier eingebettet
-                </p>
-                <p className="text-gray-500 text-sm mt-2">
-                  Königsallee 27, 40212 Düsseldorf
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };
