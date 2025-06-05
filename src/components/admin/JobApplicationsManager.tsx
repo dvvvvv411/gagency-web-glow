@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -33,6 +32,10 @@ const JobApplicationsManager = () => {
   const [pdfViewerOpen, setPdfViewerOpen] = useState(false);
   const [currentPdfUrl, setCurrentPdfUrl] = useState<string | null>(null);
   const [pdfViewerTitle, setPdfViewerTitle] = useState('');
+  const [currentApplicant, setCurrentApplicant] = useState<{
+    name: string;
+    submissionDate: string;
+  } | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -61,7 +64,7 @@ const JobApplicationsManager = () => {
     }
   };
 
-  const viewFile = async (filePath: string, fileName: string) => {
+  const viewFile = async (filePath: string, fileName: string, application: JobApplication) => {
     try {
       const { data, error } = await supabase.storage
         .from('application-documents')
@@ -71,6 +74,10 @@ const JobApplicationsManager = () => {
 
       setCurrentPdfUrl(data.signedUrl);
       setPdfViewerTitle(fileName);
+      setCurrentApplicant({
+        name: `${application.vorname} ${application.nachname}`,
+        submissionDate: application.created_at
+      });
       setPdfViewerOpen(true);
     } catch (error) {
       console.error('Error viewing file:', error);
@@ -169,7 +176,7 @@ const JobApplicationsManager = () => {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => viewFile(application.cv_file_path!, 'Lebenslauf')}
+                                onClick={() => viewFile(application.cv_file_path!, 'Lebenslauf', application)}
                                 className="w-full justify-start text-xs"
                               >
                                 <Eye className="h-3 w-3 mr-1" />
@@ -180,7 +187,7 @@ const JobApplicationsManager = () => {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => viewFile(application.anschreiben_file_path!, 'Anschreiben')}
+                                onClick={() => viewFile(application.anschreiben_file_path!, 'Anschreiben', application)}
                                 className="w-full justify-start text-xs"
                               >
                                 <Eye className="h-3 w-3 mr-1" />
@@ -210,9 +217,14 @@ const JobApplicationsManager = () => {
 
       <PDFViewerDialog
         isOpen={pdfViewerOpen}
-        onClose={() => setPdfViewerOpen(false)}
+        onClose={() => {
+          setPdfViewerOpen(false);
+          setCurrentApplicant(null);
+        }}
         pdfUrl={currentPdfUrl}
         title={pdfViewerTitle}
+        applicantName={currentApplicant?.name}
+        submissionDate={currentApplicant?.submissionDate}
       />
     </>
   );
