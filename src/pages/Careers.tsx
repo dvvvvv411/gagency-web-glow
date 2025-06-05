@@ -1,300 +1,477 @@
 
-import { Users, Award, Heart, BookOpen, Clock, MapPin, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { MapPin, Clock, Users, Award, Heart, BookOpen, Send, CheckCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { useToast } from '@/hooks/use-toast';
+
+const applicationSchema = z.object({
+  firstName: z.string().min(2, 'Vorname muss mindestens 2 Zeichen lang sein'),
+  lastName: z.string().min(2, 'Nachname muss mindestens 2 Zeichen lang sein'),
+  email: z.string().email('Bitte geben Sie eine gültige E-Mail-Adresse ein'),
+  phone: z.string().min(10, 'Telefonnummer muss mindestens 10 Zeichen lang sein'),
+  university: z.string().min(2, 'Universität/Hochschule ist erforderlich'),
+  studyField: z.string().min(2, 'Studienrichtung ist erforderlich'),
+  semester: z.string().min(1, 'Semester ist erforderlich'),
+  experience: z.string().min(50, 'Bitte beschreiben Sie Ihre Erfahrungen (mindestens 50 Zeichen)'),
+  motivation: z.string().min(100, 'Bitte erläutern Sie Ihre Motivation (mindestens 100 Zeichen)'),
+  availability: z.string().min(10, 'Verfügbarkeit ist erforderlich'),
+  portfolio: z.string().url('Bitte geben Sie eine gültige URL ein').optional().or(z.literal('')),
+  dataProtection: z.boolean().refine(val => val, 'Sie müssen der Datenschutzerklärung zustimmen'),
+});
+
+type ApplicationFormData = z.infer<typeof applicationSchema>;
 
 const Careers = () => {
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const { toast } = useToast();
+
+  const form = useForm<ApplicationFormData>({
+    resolver: zodResolver(applicationSchema),
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      university: '',
+      studyField: '',
+      semester: '',
+      experience: '',
+      motivation: '',
+      availability: '',
+      portfolio: '',
+      dataProtection: false,
+    },
+  });
+
+  const onSubmit = (data: ApplicationFormData) => {
+    console.log('Form submitted:', data);
+    setIsSubmitted(true);
+    toast({
+      title: "Bewerbung erfolgreich eingereicht!",
+      description: "Wir werden uns in Kürze bei Ihnen melden.",
+    });
+  };
+
   const benefits = [
     {
-      icon: Clock,
-      title: 'Flexible Arbeitszeiten',
-      description: 'Wir bieten flexible Arbeitszeiten und die Möglichkeit, remote zu arbeiten.'
-    },
-    {
       icon: Users,
-      title: 'Starkes Team',
-      description: 'Werde Teil unseres talentierten und unterstützenden Teams.'
+      title: 'Mentorship & Guidance',
+      description: 'Persönliche Betreuung durch erfahrene Marketing-Profis und regelmäßige Feedback-Gespräche.'
     },
     {
       icon: Award,
-      title: 'Weiterbildung',
-      description: 'Regelmäßige Schulungen und Weiterbildungsmöglichkeiten.'
-    },
-    {
-      icon: Heart,
-      title: 'Work-Life-Balance',
-      description: '30 Tage Urlaub und Fokus auf eine gesunde Work-Life-Balance.'
+      title: 'Praktische Erfahrung',
+      description: 'Arbeiten Sie an echten Kundenprojekten und sammeln Sie wertvolle Praxis-Erfahrungen.'
     },
     {
       icon: BookOpen,
-      title: 'Mentoring',
-      description: 'Persönliche Betreuung und Karriereentwicklung durch erfahrene Mentoren.'
+      title: 'Weiterbildung',
+      description: 'Zugang zu Online-Kursen, Workshops und Branchenveranstaltungen für Ihre persönliche Entwicklung.'
     },
     {
-      icon: MapPin,
-      title: 'Zentrale Lage',
-      description: 'Unser Büro befindet sich zentral in Berlin mit guter Anbindung.'
+      icon: Heart,
+      title: 'Flexible Arbeitszeiten',
+      description: 'Studienfreundliche Arbeitszeiten mit der Möglichkeit für Remote-Arbeit und flexibler Zeitplanung.'
+    },
+    {
+      icon: Clock,
+      title: 'Work-Life-Balance',
+      description: 'Verständnis für Ihre Studienanforderungen mit anpassbaren Arbeitszeiten während Prüfungsphasen.'
+    },
+    {
+      icon: CheckCircle,
+      title: 'Faire Vergütung',
+      description: 'Attraktive Vergütung auf Stundenbasis plus Leistungsboni für herausragende Ergebnisse.'
     },
   ];
 
-  const openPositions = [
-    {
-      title: 'Frontend Entwickler (m/w/d)',
-      type: 'Vollzeit',
-      location: 'Berlin / Remote',
-      description: 'Wir suchen einen erfahrenen Frontend Entwickler zur Verstärkung unseres Teams. Deine Aufgabe wird die Entwicklung moderner, responsiver Webinterfaces sein.'
-    },
-    {
-      title: 'UI/UX Designer (m/w/d)',
-      type: 'Vollzeit / Teilzeit',
-      location: 'Berlin',
-      description: 'Als UI/UX Designer gestaltest du benutzerfreundliche und ästhetische Designs für unsere Kundenprojekte.'
-    },
-    {
-      title: 'Backend Entwickler (m/w/d)',
-      type: 'Vollzeit',
-      location: 'Remote',
-      description: 'Wir suchen einen Backend Entwickler zur Entwicklung skalierbarer und performanter Serveranwendungen.'
-    },
-    {
-      title: 'Projektmanager (m/w/d)',
-      type: 'Vollzeit',
-      location: 'Berlin',
-      description: 'Als Projektmanager koordinierst du unsere Kundenprojekte von der Konzeption bis zur Umsetzung.'
-    }
-  ];
+  if (isSubmitted) {
+    return (
+      <div className="min-h-screen bg-white pt-16 flex items-center justify-center">
+        <div className="max-w-2xl mx-auto px-4 text-center">
+          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <CheckCircle className="text-green-600" size={32} />
+          </div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+            Vielen Dank für Ihre Bewerbung!
+          </h1>
+          <p className="text-xl text-gray-600 mb-8">
+            Wir haben Ihre Bewerbung erhalten und werden uns in den nächsten Tagen bei Ihnen melden.
+          </p>
+          <Button 
+            onClick={() => {
+              setIsSubmitted(false);
+              form.reset();
+            }}
+            variant="outline"
+          >
+            Neue Bewerbung einreichen
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white pt-16">
       {/* Hero Section */}
-      <section className="pt-16 pb-20 px-4 sm:px-6 lg:px-8">
+      <section className="pt-16 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-primary-50 to-primary-100">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 animate-fade-in">
-              Karriere bei <span className="text-primary-500">GAgency</span>
-            </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto animate-fade-in-up">
-              Werde Teil unseres Teams und hilf uns dabei, außergewöhnliche digitale Erlebnisse zu schaffen.
-            </p>
-          </div>
-          
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="relative">
-              <div className="aspect-[4/3] rounded-lg overflow-hidden">
-                <img 
-                  src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" 
-                  alt="GAgency Team" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="absolute -bottom-6 -right-6 w-1/2 h-1/2 bg-primary-100 rounded-lg -z-10"></div>
-              <div className="absolute -top-6 -left-6 w-1/3 h-1/3 bg-primary-500 rounded-full -z-10 opacity-20"></div>
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-full text-sm font-medium mb-6">
+              <Users size={16} className="mr-2" />
+              Wir stellen ein
             </div>
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Digital Marketing <span className="text-primary-600">Werkstudent</span>
+            </h1>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+              Starten Sie Ihre Karriere im digitalen Marketing und sammeln Sie wertvolle Praxiserfahrungen 
+              in einem dynamischen Agentur-Umfeld.
+            </p>
+            <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-600">
+              <div className="flex items-center">
+                <MapPin size={16} className="mr-2 text-primary-600" />
+                Berlin / Remote
+              </div>
+              <div className="flex items-center">
+                <Clock size={16} className="mr-2 text-primary-600" />
+                15-20 Stunden/Woche
+              </div>
+              <div className="flex items-center">
+                <Award size={16} className="mr-2 text-primary-600" />
+                12-15€ / Stunde
+              </div>
+            </div>
+          </div>
+
+          {/* Job Details */}
+          <div className="grid lg:grid-cols-2 gap-12 items-start">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                Arbeiten bei GAgency
-              </h2>
-              <p className="text-gray-600 mb-6">
-                Bei GAgency bieten wir mehr als nur einen Job. Wir bieten eine 
-                Umgebung, in der du wachsen, lernen und deine Fähigkeiten in 
-                spannenden Projekten einbringen kannst.
-              </p>
-              <p className="text-gray-600 mb-6">
-                Unser Team besteht aus leidenschaftlichen Designern, Entwicklern 
-                und digitalen Strategen, die täglich daran arbeiten, außergewöhnliche 
-                digitale Erlebnisse zu schaffen. Wir legen Wert auf Kreativität, 
-                Innovation und kontinuierliches Lernen.
-              </p>
-              <p className="text-gray-600">
-                Wenn du nach einer Karriere suchst, die herausfordernd, erfüllend und 
-                niemals langweilig ist, dann bist du bei uns genau richtig.
-              </p>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Was Sie erwartet</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-2">Ihre Aufgaben:</h4>
+                    <ul className="space-y-2 text-gray-600">
+                      <li className="flex items-start">
+                        <span className="w-2 h-2 bg-primary-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        Unterstützung bei der Erstellung und Optimierung von Social Media Kampagnen
+                      </li>
+                      <li className="flex items-start">
+                        <span className="w-2 h-2 bg-primary-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        Content-Erstellung für verschiedene digitale Kanäle
+                      </li>
+                      <li className="flex items-start">
+                        <span className="w-2 h-2 bg-primary-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        Marktanalysen und Wettbewerbsbeobachtung
+                      </li>
+                      <li className="flex items-start">
+                        <span className="w-2 h-2 bg-primary-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        SEO/SEA Kampagnen-Management
+                      </li>
+                      <li className="flex items-start">
+                        <span className="w-2 h-2 bg-primary-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        Reporting und Performance-Analyse
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-2">Das bringen Sie mit:</h4>
+                    <ul className="space-y-2 text-gray-600">
+                      <li className="flex items-start">
+                        <span className="w-2 h-2 bg-primary-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        Studium in Marketing, Kommunikation, BWL oder ähnlichem
+                      </li>
+                      <li className="flex items-start">
+                        <span className="w-2 h-2 bg-primary-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        Erste Erfahrungen im digitalen Marketing (Praktika, Projekte)
+                      </li>
+                      <li className="flex items-start">
+                        <span className="w-2 h-2 bg-primary-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        Sehr gute Deutsch- und Englischkenntnisse
+                      </li>
+                      <li className="flex items-start">
+                        <span className="w-2 h-2 bg-primary-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        Kreativität und analytisches Denkvermögen
+                      </li>
+                      <li className="flex items-start">
+                        <span className="w-2 h-2 bg-primary-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        Teamfähigkeit und Eigeninitiative
+                      </li>
+                    </ul>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Jetzt bewerben</CardTitle>
+                  <CardDescription>
+                    Füllen Sie das Formular aus und starten Sie Ihre Karriere bei GAgency
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                      <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                          control={form.control}
+                          name="firstName"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Vorname *</FormLabel>
+                              <FormControl>
+                                <Input placeholder="Max" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="lastName"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Nachname *</FormLabel>
+                              <FormControl>
+                                <Input placeholder="Mustermann" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>E-Mail *</FormLabel>
+                            <FormControl>
+                              <Input placeholder="max.mustermann@example.com" type="email" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="phone"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Telefonnummer *</FormLabel>
+                            <FormControl>
+                              <Input placeholder="+49 123 456789" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                          control={form.control}
+                          name="university"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Universität/Hochschule *</FormLabel>
+                              <FormControl>
+                                <Input placeholder="Humboldt-Universität" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="semester"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Aktuelles Semester *</FormLabel>
+                              <FormControl>
+                                <Input placeholder="5. Semester" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+
+                      <FormField
+                        control={form.control}
+                        name="studyField"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Studienrichtung *</FormLabel>
+                            <FormControl>
+                              <Input placeholder="BWL, Marketing, Kommunikation..." {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="experience"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Bisherige Erfahrungen im Marketing *</FormLabel>
+                            <FormControl>
+                              <Textarea 
+                                placeholder="Beschreiben Sie Ihre bisherigen Erfahrungen im Marketing (Praktika, Projekte, Kurse...)." 
+                                className="min-h-[100px]" 
+                                {...field} 
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="motivation"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Motivation *</FormLabel>
+                            <FormControl>
+                              <Textarea 
+                                placeholder="Warum möchten Sie bei GAgency als Werkstudent arbeiten? Was interessiert Sie am digitalen Marketing?" 
+                                className="min-h-[100px]" 
+                                {...field} 
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="availability"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Verfügbarkeit *</FormLabel>
+                            <FormControl>
+                              <Textarea 
+                                placeholder="Wann können Sie anfangen? Wie viele Stunden pro Woche können Sie arbeiten?" 
+                                className="min-h-[80px]" 
+                                {...field} 
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="portfolio"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Portfolio/LinkedIn (optional)</FormLabel>
+                            <FormControl>
+                              <Input placeholder="https://..." {...field} />
+                            </FormControl>
+                            <FormDescription>
+                              Link zu Ihrem Portfolio, LinkedIn-Profil oder anderen relevanten Arbeiten
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="dataProtection"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                            <FormControl>
+                              <Checkbox
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                            </FormControl>
+                            <div className="space-y-1 leading-none">
+                              <FormLabel>
+                                Ich stimme der Datenschutzerklärung zu *
+                              </FormLabel>
+                              <FormDescription>
+                                Ihre Daten werden nur für den Bewerbungsprozess verwendet und nicht an Dritte weitergegeben.
+                              </FormDescription>
+                              <FormMessage />
+                            </div>
+                          </FormItem>
+                        )}
+                      />
+
+                      <Button type="submit" className="w-full" size="lg">
+                        <Send size={18} className="mr-2" />
+                        Bewerbung abschicken
+                      </Button>
+                    </form>
+                  </Form>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Benefits */}
+      {/* Why Work With Us Section */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Benefits bei GAgency
+              Warum bei uns arbeiten?
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Wir bieten unseren Mitarbeitern zahlreiche Vorteile, die das Arbeiten bei uns besonders machen.
+              Entdecken Sie die Vorteile einer Werkstudententätigkeit bei GAgency und 
+              starten Sie Ihre Karriere im digitalen Marketing.
             </p>
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {benefits.map((benefit, index) => (
-              <div key={index} className="bg-white p-8 rounded-lg shadow-sm">
-                <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-6">
-                  <benefit.icon className="text-primary-600" size={24} />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  {benefit.title}
-                </h3>
-                <p className="text-gray-600">
-                  {benefit.description}
-                </p>
-              </div>
+              <Card key={index} className="h-full">
+                <CardContent className="p-6">
+                  <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
+                    <benefit.icon className="text-primary-600" size={24} />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {benefit.title}
+                  </h3>
+                  <p className="text-gray-600">
+                    {benefit.description}
+                  </p>
+                </CardContent>
+              </Card>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Open Positions */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Offene Stellen
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Schau dir unsere aktuellen Stellenangebote an und werde Teil unseres Teams.
-            </p>
-          </div>
-          
-          <div className="space-y-6">
-            {openPositions.map((position, index) => (
-              <div
-                key={index}
-                className="bg-white border border-gray-100 rounded-lg p-8 hover:shadow-md transition-shadow duration-300"
-              >
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                      {position.title}
-                    </h3>
-                    <div className="flex items-center space-x-4 text-sm text-gray-600 mb-4">
-                      <span>{position.type}</span>
-                      <span>•</span>
-                      <span>{position.location}</span>
-                    </div>
-                    <p className="text-gray-600 mb-6 md:mb-0">
-                      {position.description}
-                    </p>
-                  </div>
-                  <div className="mt-4 md:mt-0">
-                    <Link
-                      to="/contact"
-                      className="inline-flex items-center text-primary-600 font-medium hover:text-primary-700 group"
-                    >
-                      Mehr erfahren
-                      <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform duration-200" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Application Process */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Bewerbungsprozess
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              So läuft der Bewerbungsprozess bei GAgency ab.
-            </p>
-          </div>
-          
-          <div className="max-w-4xl mx-auto">
-            <div className="relative">
-              {/* Timeline connector */}
-              <div className="absolute left-8 top-8 bottom-8 w-1 bg-primary-100"></div>
-              
-              <div className="space-y-12">
-                <div className="relative flex items-start">
-                  <div className="absolute left-0 mt-1 w-16 h-16 bg-white border-4 border-primary-500 rounded-full flex items-center justify-center text-2xl font-bold text-primary-500 z-10">
-                    1
-                  </div>
-                  <div className="ml-24">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Bewerbung einreichen</h3>
-                    <p className="text-gray-600">
-                      Sende uns deine Bewerbung mit Lebenslauf und Motivationsschreiben. 
-                      Erzähle uns, warum du bei GAgency arbeiten möchtest und was dich auszeichnet.
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="relative flex items-start">
-                  <div className="absolute left-0 mt-1 w-16 h-16 bg-white border-4 border-primary-500 rounded-full flex items-center justify-center text-2xl font-bold text-primary-500 z-10">
-                    2
-                  </div>
-                  <div className="ml-24">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Erstes Kennenlernen</h3>
-                    <p className="text-gray-600">
-                      Wenn deine Bewerbung uns überzeugt, laden wir dich zu einem ersten Gespräch ein, 
-                      bei dem wir uns gegenseitig kennenlernen und offene Fragen klären.
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="relative flex items-start">
-                  <div className="absolute left-0 mt-1 w-16 h-16 bg-white border-4 border-primary-500 rounded-full flex items-center justify-center text-2xl font-bold text-primary-500 z-10">
-                    3
-                  </div>
-                  <div className="ml-24">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Fachgespräch</h3>
-                    <p className="text-gray-600">
-                      Im nächsten Schritt führen wir ein Fachgespräch, bei dem wir deine Kenntnisse 
-                      und Fähigkeiten in deinem Fachgebiet genauer unter die Lupe nehmen.
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="relative flex items-start">
-                  <div className="absolute left-0 mt-1 w-16 h-16 bg-white border-4 border-primary-500 rounded-full flex items-center justify-center text-2xl font-bold text-primary-500 z-10">
-                    4
-                  </div>
-                  <div className="ml-24">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Kennenlernen des Teams</h3>
-                    <p className="text-gray-600">
-                      Du lernst dein potenzielles Team kennen und erhältst Einblick in unsere 
-                      Arbeitsweise und Projekte.
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="relative flex items-start">
-                  <div className="absolute left-0 mt-1 w-16 h-16 bg-white border-4 border-primary-500 rounded-full flex items-center justify-center text-2xl font-bold text-primary-500 z-10">
-                    5
-                  </div>
-                  <div className="ml-24">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Angebot</h3>
-                    <p className="text-gray-600">
-                      Wenn wir überzeugt sind, dass du gut zu uns passt, machen wir dir ein Angebot 
-                      und freuen uns darauf, dich in unserem Team willkommen zu heißen.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-              Keine passende Stelle dabei?
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
-              Wir freuen uns auch über Initiativbewerbungen!
-            </p>
-            <Link
-              to="/contact"
-              className="bg-primary-500 text-white px-8 py-4 rounded-lg font-medium hover:bg-primary-600 transition-colors duration-200 inline-flex items-center"
-            >
-              Jetzt bewerben
-            </Link>
           </div>
         </div>
       </section>
