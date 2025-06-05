@@ -15,11 +15,13 @@ const ConfettiPopup = ({ isOpen, onClose }: ConfettiPopupProps) => {
   useEffect(() => {
     if (isOpen) {
       setShowConfetti(true);
-      // Hide confetti after animation
+      // Stop confetti after 3 seconds
       const timer = setTimeout(() => {
         setShowConfetti(false);
       }, 3000);
       return () => clearTimeout(timer);
+    } else {
+      setShowConfetti(false);
     }
   }, [isOpen]);
 
@@ -27,8 +29,8 @@ const ConfettiPopup = ({ isOpen, onClose }: ConfettiPopupProps) => {
   const confettiParticles = Array.from({ length: 50 }, (_, index) => ({
     id: index,
     x: Math.random() * 100,
-    delay: Math.random() * 2,
-    duration: 2 + Math.random() * 2,
+    delay: Math.random() * 1,
+    duration: 2 + Math.random() * 1,
     color: ['bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-red-500', 'bg-purple-500'][Math.floor(Math.random() * 5)]
   }));
 
@@ -40,15 +42,11 @@ const ConfettiPopup = ({ isOpen, onClose }: ConfettiPopupProps) => {
           {confettiParticles.map((particle) => (
             <div
               key={particle.id}
-              className={`absolute w-2 h-2 ${particle.color} rounded-sm opacity-80 animate-pulse`}
+              className={`absolute w-2 h-2 ${particle.color} rounded-sm opacity-80`}
               style={{
                 left: `${particle.x}%`,
                 top: '-10px',
-                animationName: 'confettiFall',
-                animationDuration: `${particle.duration}s`,
-                animationDelay: `${particle.delay}s`,
-                animationTimingFunction: 'ease-in-out',
-                animationFillMode: 'forwards',
+                animation: `confettiFall ${particle.duration}s ${particle.delay}s ease-in-out forwards`,
                 transform: 'rotate(45deg)'
               }}
             />
