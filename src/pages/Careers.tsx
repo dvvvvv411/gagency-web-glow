@@ -101,319 +101,322 @@ const Careers = () => {
         </div>
       </section>
 
-      {/* Stellenanzeige */}
+      {/* Stellenanzeige und Bewerbungsformular - Zwei Spalten Layout */}
       <section className="py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Card className="shadow-lg">
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div>
-                  <CardTitle className="text-2xl md:text-3xl text-primary-600 mb-2">
-                    Digital Marketing Werkstudent (m/w/d)
-                  </CardTitle>
-                  <CardDescription className="text-lg">
-                    Unterstütze unser Marketing-Team bei spannenden Projekten
-                  </CardDescription>
-                </div>
-                <div className="bg-primary-100 text-primary-700 px-3 py-1 rounded-full text-sm font-medium">
-                  Werkstudent
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-8">
-              {/* Job Details */}
-              <div className="grid md:grid-cols-3 gap-6">
-                <div className="flex items-center space-x-3">
-                  <Clock className="text-primary-500" size={20} />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12">
+            {/* Linke Spalte - Stellenanzeige */}
+            <div>
+              <Card className="shadow-lg h-fit">
+                <CardHeader>
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <CardTitle className="text-2xl md:text-3xl text-primary-600 mb-2">
+                        Digital Marketing Werkstudent (m/w/d)
+                      </CardTitle>
+                      <CardDescription className="text-lg">
+                        Unterstütze unser Marketing-Team bei spannenden Projekten
+                      </CardDescription>
+                    </div>
+                    <div className="bg-primary-100 text-primary-700 px-3 py-1 rounded-full text-sm font-medium">
+                      Werkstudent
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-8">
+                  {/* Job Details */}
+                  <div className="grid md:grid-cols-3 gap-6">
+                    <div className="flex items-center space-x-3">
+                      <Clock className="text-primary-500" size={20} />
+                      <div>
+                        <p className="font-medium">Arbeitszeit</p>
+                        <p className="text-gray-600">15-20h/Woche</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <MapPin className="text-primary-500" size={20} />
+                      <div>
+                        <p className="font-medium">Standort</p>
+                        <p className="text-gray-600">Berlin / Remote</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <Briefcase className="text-primary-500" size={20} />
+                      <div>
+                        <p className="font-medium">Start</p>
+                        <p className="text-gray-600">Ab sofort</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Aufgaben */}
                   <div>
-                    <p className="font-medium">Arbeitszeit</p>
-                    <p className="text-gray-600">15-20h/Woche</p>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Deine Aufgaben</h3>
+                    <ul className="space-y-2 text-gray-600">
+                      <li className="flex items-start">
+                        <Star className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
+                        Erstellung und Pflege von Social Media Content für verschiedene Plattformen
+                      </li>
+                      <li className="flex items-start">
+                        <Star className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
+                        Content Creation: Texte, Grafiken und Videos für Marketing-Kampagnen
+                      </li>
+                      <li className="flex items-start">
+                        <Star className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
+                        Analyse und Reporting von Marketing-KPIs und Social Media Metriken
+                      </li>
+                      <li className="flex items-start">
+                        <Star className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
+                        Unterstützung bei der Planung und Umsetzung von Marketing-Strategien
+                      </li>
+                      <li className="flex items-start">
+                        <Star className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
+                        Marktrecherche und Competitor-Analyse
+                      </li>
+                    </ul>
                   </div>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <MapPin className="text-primary-500" size={20} />
+
+                  {/* Anforderungen */}
                   <div>
-                    <p className="font-medium">Standort</p>
-                    <p className="text-gray-600">Berlin / Remote</p>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Das bringst du mit</h3>
+                    <ul className="space-y-2 text-gray-600">
+                      <li className="flex items-start">
+                        <GraduationCap className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
+                        Immatrikulierter Student (vorzugsweise Marketing, BWL, Kommunikation oder ähnlich)
+                      </li>
+                      <li className="flex items-start">
+                        <GraduationCap className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
+                        Grundkenntnisse im Digital Marketing und Social Media
+                      </li>
+                      <li className="flex items-start">
+                        <GraduationCap className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
+                        Kreativität und Gespür für Trends
+                      </li>
+                      <li className="flex items-start">
+                        <GraduationCap className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
+                        Sehr gute Deutsch- und Englischkenntnisse
+                      </li>
+                      <li className="flex items-start">
+                        <GraduationCap className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
+                        Zuverlässigkeit und eigenständige Arbeitsweise
+                      </li>
+                    </ul>
                   </div>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Briefcase className="text-primary-500" size={20} />
+
+                  {/* Benefits */}
                   <div>
-                    <p className="font-medium">Start</p>
-                    <p className="text-gray-600">Ab sofort</p>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Das bieten wir</h3>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
+                        <span className="text-gray-600">Flexible Arbeitszeiten</span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
+                        <span className="text-gray-600">Homeoffice-Möglichkeit</span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
+                        <span className="text-gray-600">Weiterbildungsmöglichkeiten</span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
+                        <span className="text-gray-600">Modernes, junges Team</span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
+                        <span className="text-gray-600">Faire Vergütung</span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
+                        <span className="text-gray-600">Übernahmechancen</span>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Rechte Spalte - Bewerbungsformular */}
+            <div>
+              <div className="mb-8">
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                  Jetzt bewerben
+                </h2>
+                <p className="text-xl text-gray-600">
+                  Sende uns deine Bewerbung und werde Teil unseres Teams
+                </p>
               </div>
 
-              {/* Aufgaben */}
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Deine Aufgaben</h3>
-                <ul className="space-y-2 text-gray-600">
-                  <li className="flex items-start">
-                    <Star className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
-                    Erstellung und Pflege von Social Media Content für verschiedene Plattformen
-                  </li>
-                  <li className="flex items-start">
-                    <Star className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
-                    Content Creation: Texte, Grafiken und Videos für Marketing-Kampagnen
-                  </li>
-                  <li className="flex items-start">
-                    <Star className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
-                    Analyse und Reporting von Marketing-KPIs und Social Media Metriken
-                  </li>
-                  <li className="flex items-start">
-                    <Star className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
-                    Unterstützung bei der Planung und Umsetzung von Marketing-Strategien
-                  </li>
-                  <li className="flex items-start">
-                    <Star className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
-                    Marktrecherche und Competitor-Analyse
-                  </li>
-                </ul>
-              </div>
+              <Card className="shadow-lg">
+                <CardContent className="p-8">
+                  <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                      {/* Persönliche Daten */}
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <FormField
+                          control={form.control}
+                          name="name"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Vollständiger Name *</FormLabel>
+                              <FormControl>
+                                <Input placeholder="Max Mustermann" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="email"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>E-Mail-Adresse *</FormLabel>
+                              <FormControl>
+                                <Input type="email" placeholder="max@beispiel.de" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
 
-              {/* Anforderungen */}
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Das bringst du mit</h3>
-                <ul className="space-y-2 text-gray-600">
-                  <li className="flex items-start">
-                    <GraduationCap className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
-                    Immatrikulierter Student (vorzugsweise Marketing, BWL, Kommunikation oder ähnlich)
-                  </li>
-                  <li className="flex items-start">
-                    <GraduationCap className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
-                    Grundkenntnisse im Digital Marketing und Social Media
-                  </li>
-                  <li className="flex items-start">
-                    <GraduationCap className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
-                    Kreativität und Gespür für Trends
-                  </li>
-                  <li className="flex items-start">
-                    <GraduationCap className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
-                    Sehr gute Deutsch- und Englischkenntnisse
-                  </li>
-                  <li className="flex items-start">
-                    <GraduationCap className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
-                    Zuverlässigkeit und eigenständige Arbeitsweise
-                  </li>
-                </ul>
-              </div>
+                      <FormField
+                        control={form.control}
+                        name="phone"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Telefonnummer *</FormLabel>
+                            <FormControl>
+                              <Input placeholder="+49 123 456 789" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-              {/* Benefits */}
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Das bieten wir</h3>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
-                    <span className="text-gray-600">Flexible Arbeitszeiten</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
-                    <span className="text-gray-600">Homeoffice-Möglichkeit</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
-                    <span className="text-gray-600">Weiterbildungsmöglichkeiten</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
-                    <span className="text-gray-600">Modernes, junges Team</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
-                    <span className="text-gray-600">Faire Vergütung</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
-                    <span className="text-gray-600">Übernahmechancen</span>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
+                      {/* Studium */}
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <FormField
+                          control={form.control}
+                          name="studiengang"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Studiengang *</FormLabel>
+                              <FormControl>
+                                <Input placeholder="z.B. BWL, Marketing, Kommunikation" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="semester"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Aktuelles Semester *</FormLabel>
+                              <FormControl>
+                                <Input placeholder="z.B. 3. Semester" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
 
-      {/* Bewerbungsformular */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Jetzt bewerben
-            </h2>
-            <p className="text-xl text-gray-600">
-              Sende uns deine Bewerbung und werde Teil unseres Teams
-            </p>
+                      <FormField
+                        control={form.control}
+                        name="verfuegbarkeit"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Verfügbarkeit *</FormLabel>
+                            <FormControl>
+                              <Input placeholder="z.B. Mo-Fr vormittags, 15-20h/Woche" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="motivation"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Motivationsschreiben *</FormLabel>
+                            <FormControl>
+                              <Textarea 
+                                placeholder="Erzählen Sie uns, warum Sie sich für diese Position interessieren und was Sie mitbringen..."
+                                className="min-h-[120px]"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="cv"
+                        render={({ field: { onChange, ...field } }) => (
+                          <FormItem>
+                            <FormLabel>Lebenslauf (PDF) *</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="file"
+                                accept=".pdf"
+                                onChange={(e) => onChange(e.target.files)}
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="datenschutz"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                            <FormControl>
+                              <Checkbox
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                            </FormControl>
+                            <div className="space-y-1 leading-none">
+                              <FormLabel>
+                                Ich stimme der Verarbeitung meiner Daten gemäß der Datenschutzerklärung zu *
+                              </FormLabel>
+                              <FormMessage />
+                            </div>
+                          </FormItem>
+                        )}
+                      />
+
+                      <Button 
+                        type="submit" 
+                        className="w-full" 
+                        disabled={isSubmitting}
+                        size="lg"
+                      >
+                        {isSubmitting ? 'Bewerbung wird eingereicht...' : 'Bewerbung einreichen'}
+                      </Button>
+                    </form>
+                  </Form>
+                </CardContent>
+              </Card>
+            </div>
           </div>
-
-          <Card className="shadow-lg">
-            <CardContent className="p-8">
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                  {/* Persönliche Daten */}
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <FormField
-                      control={form.control}
-                      name="name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Vollständiger Name *</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Max Mustermann" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>E-Mail-Adresse *</FormLabel>
-                          <FormControl>
-                            <Input type="email" placeholder="max@beispiel.de" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <FormField
-                    control={form.control}
-                    name="phone"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Telefonnummer *</FormLabel>
-                        <FormControl>
-                          <Input placeholder="+49 123 456 789" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  {/* Studium */}
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <FormField
-                      control={form.control}
-                      name="studiengang"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Studiengang *</FormLabel>
-                          <FormControl>
-                            <Input placeholder="z.B. BWL, Marketing, Kommunikation" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="semester"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Aktuelles Semester *</FormLabel>
-                          <FormControl>
-                            <Input placeholder="z.B. 3. Semester" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <FormField
-                    control={form.control}
-                    name="verfuegbarkeit"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Verfügbarkeit *</FormLabel>
-                        <FormControl>
-                          <Input placeholder="z.B. Mo-Fr vormittags, 15-20h/Woche" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="motivation"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Motivationsschreiben *</FormLabel>
-                        <FormControl>
-                          <Textarea 
-                            placeholder="Erzählen Sie uns, warum Sie sich für diese Position interessieren und was Sie mitbringen..."
-                            className="min-h-[120px]"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="cv"
-                    render={({ field: { onChange, ...field } }) => (
-                      <FormItem>
-                        <FormLabel>Lebenslauf (PDF) *</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="file"
-                            accept=".pdf"
-                            onChange={(e) => onChange(e.target.files)}
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="datenschutz"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <div className="space-y-1 leading-none">
-                          <FormLabel>
-                            Ich stimme der Verarbeitung meiner Daten gemäß der Datenschutzerklärung zu *
-                          </FormLabel>
-                          <FormMessage />
-                        </div>
-                      </FormItem>
-                    )}
-                  />
-
-                  <Button 
-                    type="submit" 
-                    className="w-full" 
-                    disabled={isSubmitting}
-                    size="lg"
-                  >
-                    {isSubmitting ? 'Bewerbung wird eingereicht...' : 'Bewerbung einreichen'}
-                  </Button>
-                </form>
-              </Form>
-            </CardContent>
-          </Card>
         </div>
       </section>
 
       {/* Warum bei uns arbeiten */}
-      <section className="py-20">
+      <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
