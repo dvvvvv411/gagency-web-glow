@@ -7,10 +7,10 @@ interface ParticleSystemProps {
 }
 
 const ParticleSystem = ({ 
-  density = 15, 
+  density = 8, 
   color = 'primary', 
-  size = 'md',
-  speed = 'medium' 
+  size = 'sm',
+  speed = 'slow' 
 }: ParticleSystemProps) => {
   const sizeClasses = {
     sm: 'w-1 h-1',
@@ -18,18 +18,11 @@ const ParticleSystem = ({
     lg: 'w-3 h-3'
   };
 
-  const speedDurations = {
-    slow: '8s',
-    medium: '6s',
-    fast: '4s'
-  };
-
   const particles = Array.from({ length: density }, (_, index) => ({
     id: index,
     x: Math.random() * 100,
     y: Math.random() * 100,
-    delay: Math.random() * 4,
-    duration: parseFloat(speedDurations[speed]) + (Math.random() * 2 - 1)
+    delay: Math.random() * 6,
   }));
 
   return (
@@ -37,17 +30,14 @@ const ParticleSystem = ({
       {particles.map((particle) => (
         <div
           key={particle.id}
-          className={`absolute ${sizeClasses[size]} bg-${color}-400 rounded-full opacity-30 animate-float`}
+          className={`absolute ${sizeClasses[size]} bg-${color}-300 rounded-full opacity-20`}
           style={{
             left: `${particle.x}%`,
             top: `${particle.y}%`,
-            animationDelay: `${particle.delay}s`,
-            animationDuration: `${particle.duration}s`
+            animation: `float 8s ease-in-out infinite`,
+            animationDelay: `${particle.delay}s`
           }}
-        >
-          {/* Glow Effect */}
-          <div className={`absolute inset-0 ${sizeClasses[size]} bg-${color}-300 rounded-full blur-sm opacity-50`}></div>
-        </div>
+        />
       ))}
     </div>
   );

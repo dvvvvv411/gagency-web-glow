@@ -1,113 +1,100 @@
 
-import { Users, Target, Zap, Award, TrendingUp } from 'lucide-react';
+import { Users, Target, Zap, Award, TrendingUp, Building } from 'lucide-react';
 
 const NetworkVisualization = () => {
-  const nodes = [
-    { id: 1, x: 50, y: 30, icon: Users, color: 'from-blue-400 to-blue-600', size: 'w-12 h-12' },
-    { id: 2, x: 20, y: 60, icon: Target, color: 'from-green-400 to-green-600', size: 'w-10 h-10' },
-    { id: 3, x: 80, y: 50, icon: Zap, color: 'from-yellow-400 to-yellow-600', size: 'w-11 h-11' },
-    { id: 4, x: 35, y: 80, icon: Award, color: 'from-purple-400 to-purple-600', size: 'w-9 h-9' },
-    { id: 5, x: 70, y: 20, icon: TrendingUp, color: 'from-red-400 to-red-600', size: 'w-10 h-10' },
-    { id: 6, x: 15, y: 35, icon: Users, color: 'from-indigo-400 to-indigo-600', size: 'w-8 h-8' },
-    { id: 7, x: 85, y: 75, icon: Target, color: 'from-pink-400 to-pink-600', size: 'w-9 h-9' },
+  const centralNodes = [
+    { id: 1, x: 50, y: 50, icon: Building, color: 'from-primary-500 to-primary-600', size: 'w-16 h-16', label: 'Ihr Unternehmen' },
   ];
 
-  const connections = [
-    [1, 2], [1, 3], [1, 5], [2, 4], [2, 6], [3, 7], [3, 5], [4, 6], [5, 7]
+  const serviceNodes = [
+    { id: 2, x: 20, y: 25, icon: Target, color: 'from-blue-500 to-blue-600', size: 'w-12 h-12', label: 'Strategie' },
+    { id: 3, x: 80, y: 25, icon: Zap, color: 'from-green-500 to-green-600', size: 'w-12 h-12', label: 'Automatisierung' },
+    { id: 4, x: 20, y: 75, icon: TrendingUp, color: 'from-purple-500 to-purple-600', size: 'w-12 h-12', label: 'Analytics' },
+    { id: 5, x: 80, y: 75, icon: Award, color: 'from-orange-500 to-orange-600', size: 'w-12 h-12', label: 'Optimierung' },
   ];
 
   return (
-    <div className="relative w-full h-full overflow-hidden">
-      {/* Animated Background Grid */}
-      <div className="absolute inset-0 opacity-10">
-        <svg className="w-full h-full">
-          <defs>
-            <pattern id="networkGrid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <circle cx="20" cy="20" r="1" fill="currentColor" className="animate-pulse">
-                <animate attributeName="opacity" values="0.3;1;0.3" dur="3s" repeatCount="indefinite" />
-              </circle>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#networkGrid)" />
-        </svg>
-      </div>
-
+    <div className="relative w-full h-full bg-gradient-to-br from-gray-50 to-white rounded-2xl overflow-hidden">
       {/* Connection Lines */}
       <svg className="absolute inset-0 w-full h-full">
         <defs>
           <linearGradient id="connectionGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.6" />
-            <stop offset="100%" stopColor="#8B5CF6" stopOpacity="0.3" />
+            <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="#8B5CF6" stopOpacity="0.1" />
           </linearGradient>
         </defs>
-        {connections.map(([startId, endId], index) => {
-          const startNode = nodes.find(n => n.id === startId);
-          const endNode = nodes.find(n => n.id === endId);
-          if (!startNode || !endNode) return null;
-          
-          return (
-            <line
-              key={index}
-              x1={`${startNode.x}%`}
-              y1={`${startNode.y}%`}
-              x2={`${endNode.x}%`}
-              y2={`${endNode.y}%`}
-              stroke="url(#connectionGradient)"
-              strokeWidth="2"
-              className="animate-pulse"
-              style={{
-                animation: `drawLine 2s ease-in-out ${index * 0.3}s both`,
-                strokeDasharray: '100',
-                strokeDashoffset: '100'
-              }}
-            />
-          );
-        })}
+        
+        {serviceNodes.map((node, index) => (
+          <line
+            key={index}
+            x1="50%"
+            y1="50%"
+            x2={`${node.x}%`}
+            y2={`${node.y}%`}
+            stroke="url(#connectionGradient)"
+            strokeWidth="2"
+            strokeDasharray="5,5"
+            className="animate-pulse"
+            style={{ animationDelay: `${index * 0.5}s` }}
+          />
+        ))}
       </svg>
 
-      {/* Network Nodes */}
-      {nodes.map((node, index) => (
+      {/* Service Nodes */}
+      {serviceNodes.map((node, index) => (
         <div
           key={node.id}
-          className={`absolute ${node.size} bg-gradient-to-br ${node.color} rounded-full shadow-lg flex items-center justify-center transform-gpu hover:scale-110 transition-all duration-300 cursor-pointer animate-fadeInScale`}
+          className={`absolute ${node.size} bg-gradient-to-br ${node.color} rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 group`}
           style={{
             left: `${node.x}%`,
             top: `${node.y}%`,
             transform: 'translate(-50%, -50%)',
-            animationDelay: `${index * 0.2}s`
           }}
         >
-          <node.icon className="text-white" size={16} />
+          <node.icon className="text-white" size={20} />
+          
+          {/* Label */}
+          <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-white px-2 py-1 rounded shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap text-xs font-medium text-gray-700">
+            {node.label}
+          </div>
+        </div>
+      ))}
+
+      {/* Central Node */}
+      {centralNodes.map((node) => (
+        <div
+          key={node.id}
+          className={`absolute ${node.size} bg-gradient-to-br ${node.color} rounded-full shadow-xl flex items-center justify-center group`}
+          style={{
+            left: `${node.x}%`,
+            top: `${node.y}%`,
+            transform: 'translate(-50%, -50%)',
+          }}
+        >
+          <node.icon className="text-white" size={24} />
+          
+          {/* Central Label */}
+          <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 text-center">
+            <div className="bg-primary-100 px-3 py-1 rounded-full text-xs font-semibold text-primary-700">
+              {node.label}
+            </div>
+          </div>
           
           {/* Pulse Ring */}
-          <div 
-            className="absolute inset-0 rounded-full border-2 border-white opacity-60 animate-ping"
-            style={{ animationDelay: `${index * 0.5}s` }}
-          ></div>
+          <div className="absolute inset-0 rounded-full border-2 border-primary-300 opacity-60 animate-ping"></div>
         </div>
       ))}
 
-      {/* Central Success Indicator */}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-        <div className="w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full shadow-xl flex items-center justify-center animate-pulse">
-          <div className="text-white text-2xl font-bold">200%</div>
-        </div>
-        <div className="absolute inset-0 rounded-full border-4 border-primary-300 opacity-50 animate-spin" style={{animationDuration: '8s'}}></div>
+      {/* Success Metrics */}
+      <div className="absolute top-4 right-4 bg-white rounded-lg shadow-md p-3">
+        <div className="text-2xl font-bold text-primary-600">200%</div>
+        <div className="text-xs text-gray-600">Effizienzsteigerung</div>
       </div>
-
-      {/* Data Flow Particles */}
-      {Array.from({ length: 5 }).map((_, index) => (
-        <div
-          key={index}
-          className="absolute w-2 h-2 bg-primary-400 rounded-full animate-float"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            animationDelay: `${index * 1.2}s`,
-            animationDuration: '4s'
-          }}
-        ></div>
-      ))}
+      
+      <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-md p-3">
+        <div className="text-2xl font-bold text-green-600">75%</div>
+        <div className="text-xs text-gray-600">Zeitersparnis</div>
+      </div>
     </div>
   );
 };
