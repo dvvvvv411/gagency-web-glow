@@ -1,6 +1,6 @@
-
 import { Star, Quote, Users, TrendingUp, Award, Sparkles, Zap, Shield } from 'lucide-react';
 import { AnimatedSection } from '@/components/ui/animated-section';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import {
   Carousel,
   CarouselContent,
@@ -15,9 +15,10 @@ const TestimonialsSection = () => {
     {
       name: "Marcus Weber",
       position: "Geschäftsführer",
-      company: "DigitalFlow GmbH",
+      company: "München, Deutschland",
       quote: "Die Entwicklung unserer E-Commerce-Plattform war ein voller Erfolg. Innerhalb von 6 Monaten konnten wir unseren Online-Umsatz um 400% steigern.",
       avatar: "MW",
+      avatarImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
       rating: 5,
       project: "E-Commerce Platform",
       gradient: "from-emerald-500 to-teal-600",
@@ -26,9 +27,10 @@ const TestimonialsSection = () => {
     {
       name: "Dr. Julia Schneider",
       position: "IT-Leiterin",
-      company: "MedTech Solutions",
+      company: "Berlin, Deutschland",
       quote: "Professionelle Beratung und erstklassige Umsetzung. Das automatisierte System hat unsere Arbeitsabläufe revolutioniert und spart uns täglich 8 Stunden.",
       avatar: "JS",
+      avatarImage: "https://images.unsplash.com/photo-1494790108755-2616b68650d2?w=150&h=150&fit=crop&crop=face",
       rating: 5,
       project: "Workflow Automation",
       gradient: "from-purple-500 to-indigo-600",
@@ -37,9 +39,10 @@ const TestimonialsSection = () => {
     {
       name: "Alexander Müller",
       position: "Marketing Director",
-      company: "StartupXpress",
+      company: "Hamburg, Deutschland",
       quote: "Von der ersten Beratung bis zum Go-Live - alles perfekt koordiniert. Die neue Website generiert 250% mehr Leads als zuvor.",
       avatar: "AM",
+      avatarImage: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
       rating: 5,
       project: "Corporate Website",
       gradient: "from-orange-500 to-red-600",
@@ -48,9 +51,10 @@ const TestimonialsSection = () => {
     {
       name: "Sarah Hoffmann",
       position: "CTO",
-      company: "InnovateTech",
+      company: "Frankfurt, Deutschland",
       quote: "Beeindruckende technische Expertise und zuverlässige Projektabwicklung. Unser neues System läuft seit 18 Monaten ohne Probleme.",
       avatar: "SH",
+      avatarImage: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
       rating: 5,
       project: "Enterprise Software",
       gradient: "from-blue-500 to-cyan-600",
@@ -154,10 +158,13 @@ const TestimonialsSection = () => {
 
                       {/* Author */}
                       <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
-                        <div className={`w-10 h-10 bg-gradient-to-br ${testimonial.gradient} rounded-xl flex items-center justify-center shadow-md relative`}>
-                          <span className="text-white font-semibold text-xs">
-                            {testimonial.avatar}
-                          </span>
+                        <div className="relative">
+                          <Avatar className="w-10 h-10 shadow-md">
+                            <AvatarImage src={testimonial.avatarImage} alt={testimonial.name} />
+                            <AvatarFallback className={`bg-gradient-to-br ${testimonial.gradient} text-white font-semibold text-xs`}>
+                              {testimonial.avatar}
+                            </AvatarFallback>
+                          </Avatar>
                           <Shield className="w-3 h-3 text-green-500 bg-white rounded-full p-0.5 absolute -bottom-1 -right-1" />
                         </div>
                         <div className="flex-1 min-w-0">
