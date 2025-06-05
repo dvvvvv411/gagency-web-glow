@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, Sparkles } from 'lucide-react';
+import { CheckCircle, Sparkles, Check } from 'lucide-react';
 
 interface ConfettiPopupProps {
   isOpen: boolean;
@@ -67,7 +67,7 @@ const ConfettiPopup = ({ isOpen, onClose }: ConfettiPopupProps) => {
               </div>
             </div>
             <DialogTitle className="text-2xl font-bold text-gray-900 mb-2">
-              Bewerbung erfolgreich eingereicht! 🎉
+              Bewerbung erfolgreich eingereicht!
             </DialogTitle>
           </DialogHeader>
           
@@ -78,14 +78,23 @@ const ConfettiPopup = ({ isOpen, onClose }: ConfettiPopupProps) => {
             
             <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
               <p className="text-blue-800 font-medium">
-                📧 Wir melden uns innerhalb von 5 Werktagen bei Ihnen
+                📧 Wir melden uns zeitnah bei Ihnen
               </p>
             </div>
             
             <div className="space-y-2 text-sm text-gray-500">
-              <p>✅ Lebenslauf erfolgreich hochgeladen</p>
-              <p>✅ Anschreiben erfolgreich hochgeladen</p>
-              <p>✅ Bewerbung in unserem System gespeichert</p>
+              <div className="flex items-center">
+                <Check className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
+                <span>Lebenslauf erfolgreich hochgeladen</span>
+              </div>
+              <div className="flex items-center">
+                <Check className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
+                <span>Anschreiben erfolgreich hochgeladen</span>
+              </div>
+              <div className="flex items-center">
+                <Check className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
+                <span>Bewerbung in unserem System gespeichert</span>
+              </div>
             </div>
           </div>
           
