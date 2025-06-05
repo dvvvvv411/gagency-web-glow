@@ -21,7 +21,7 @@ const Impressum = () => {
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">Kontakt</h2>
               <div className="space-y-2">
                 <p><strong>Telefon:</strong> +49 30 12345678</p>
-                <p><strong>E-Mail:</strong> info@amcd.de</p>
+                <p><strong>E-Mail:</strong> info@amcd-agentur.de</p>
               </div>
             </div>
 

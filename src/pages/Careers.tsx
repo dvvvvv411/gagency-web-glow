@@ -307,7 +307,9 @@ const Careers = () => {
                     </p>
                     
                     {/* Generate Test Data Button */}
-                    
+                    <Button variant="secondary" onClick={generateTestData}>
+                      Testdaten generieren
+                    </Button>
                   </div>
 
                   <div className="flex-grow">

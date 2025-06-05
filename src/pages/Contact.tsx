@@ -48,8 +48,8 @@ const Contact = () => {
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-1">E-Mail</h3>
-                      <a href="mailto:info@gagency.de" className="text-primary-600 hover:text-primary-700 hover:underline transition-all duration-200">
-                        info@gagency.de
+                      <a href="mailto:info@amcd-agentur.de" className="text-primary-600 hover:text-primary-700 hover:underline transition-all duration-200">
+                        info@amcd-agentur.de
                       </a>
                     </div>
                   </CardContent>
@@ -77,8 +77,8 @@ const Contact = () => {
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-1">Adresse</h3>
                       <p className="text-gray-600">
-                        Königsallee 27<br />
-                        40212 Düsseldorf<br />
+                        Rubensstr. 13<br />
+                        81245 München<br />
                         Deutschland
                       </p>
                     </div>
