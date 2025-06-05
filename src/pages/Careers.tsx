@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import BenefitsSlider from '@/components/BenefitsSlider';
 
 const applicationSchema = z.object({
@@ -45,18 +47,73 @@ const Careers = () => {
     },
   });
 
+  const uploadFile = async (file: File, type: 'cv' | 'anschreiben', applicantName: string) => {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${applicantName}_${type}_${Date.now()}.${fileExt}`;
+    
+    const { data, error } = await supabase.storage
+      .from('application-documents')
+      .upload(fileName, file);
+
+    if (error) {
+      throw error;
+    }
+
+    return data.path;
+  };
+
   const onSubmit = async (data: ApplicationForm) => {
     setIsSubmitting(true);
-    // Simuliere API-Aufruf
-    await new Promise(resolve => setTimeout(resolve, 2000));
     
-    toast({
-      title: "Bewerbung erfolgreich eingereicht!",
-      description: "Wir melden uns innerhalb von 5 Werktagen bei Ihnen.",
-    });
-    
-    form.reset();
-    setIsSubmitting(false);
+    try {
+      const applicantName = `${data.vorname}_${data.nachname}`.replace(/\s+/g, '_');
+      
+      // Upload files
+      const cvFile = data.cv[0];
+      const anschreibenFile = data.anschreiben[0];
+      
+      const [cvPath, anschreibenPath] = await Promise.all([
+        uploadFile(cvFile, 'cv', applicantName),
+        uploadFile(anschreibenFile, 'anschreiben', applicantName)
+      ]);
+
+      // Save application to database
+      const { error: dbError } = await supabase
+        .from('job_applications')
+        .insert({
+          vorname: data.vorname,
+          nachname: data.nachname,
+          email: data.email,
+          phone: data.phone,
+          adresse: data.adresse,
+          plz: data.plz,
+          stadt: data.stadt,
+          staatsangehoerigkeit: data.staatsangehoerigkeit,
+          cv_file_path: cvPath,
+          anschreiben_file_path: anschreibenPath,
+          status: 'neu'
+        });
+
+      if (dbError) {
+        throw dbError;
+      }
+
+      toast({
+        title: "Bewerbung erfolgreich eingereicht!",
+        description: "Wir melden uns innerhalb von 5 Werktagen bei Ihnen.",
+      });
+      
+      form.reset();
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      toast({
+        title: "Fehler beim Einreichen der Bewerbung",
+        description: "Bitte versuchen Sie es später erneut.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -149,7 +206,6 @@ const Careers = () => {
                     </ul>
                   </div>
 
-                  {/* Anforderungen */}
                   <div className="mb-8">
                     <h3 className="text-xl font-semibold text-gray-900 mb-4">Das bringst du mit</h3>
                     <ul className="space-y-2 text-gray-600">
@@ -176,7 +232,6 @@ const Careers = () => {
                     </ul>
                   </div>
 
-                  {/* Benefits */}
                   <div className="flex-grow">
                     <h3 className="text-xl font-semibold text-gray-900 mb-4">Das bieten wir</h3>
                     <div className="grid md:grid-cols-2 gap-4">
@@ -284,7 +339,6 @@ const Careers = () => {
                             />
                           </div>
 
-                          {/* Adresse */}
                           <FormField
                             control={form.control}
                             name="adresse"
@@ -342,7 +396,6 @@ const Careers = () => {
                             )}
                           />
 
-                          {/* File Uploads */}
                           <div className="grid md:grid-cols-2 gap-6">
                             <FormField
                               control={form.control}
@@ -413,7 +466,6 @@ const Careers = () => {
                           {isSubmitting ? 'Bewerbung wird eingereicht...' : 'Bewerbung einreichen'}
                         </Button>
 
-                        {/* Sichere Übertragung Animation */}
                         <div className="flex items-center justify-center mt-6 space-x-2 text-sm text-gray-500">
                           <div className="flex items-center space-x-2">
                             <div className="relative">
@@ -444,7 +496,6 @@ const Careers = () => {
         </div>
       </section>
 
-      {/* New Compact Benefits Slider */}
       <BenefitsSlider />
     </div>
   );

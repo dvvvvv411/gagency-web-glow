@@ -3,11 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import FluidBackground from '@/components/backgrounds/FluidBackground';
 import { AnimatedSection } from '@/components/ui/animated-section';
+import JobApplicationsManager from '@/components/admin/JobApplicationsManager';
 import { 
   Users, 
   Shield, 
@@ -15,7 +17,9 @@ import {
   Activity,
   UserCheck,
   Crown,
-  LogOut
+  LogOut,
+  FileText,
+  Briefcase
 } from 'lucide-react';
 
 interface Profile {
@@ -28,6 +32,7 @@ interface Profile {
 
 const AdminDashboard = () => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
+  const [applicationsCount, setApplicationsCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const { user, signOut, isAdmin } = useAuth();
   const { toast } = useToast();
@@ -35,6 +40,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     if (isAdmin) {
       fetchProfiles();
+      fetchApplicationsCount();
     }
   }, [isAdmin]);
 
@@ -74,6 +80,19 @@ const AdminDashboard = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchApplicationsCount = async () => {
+    try {
+      const { count, error } = await supabase
+        .from('job_applications')
+        .select('*', { count: 'exact', head: true });
+
+      if (error) throw error;
+      setApplicationsCount(count || 0);
+    } catch (error) {
+      console.error('Error fetching applications count:', error);
     }
   };
 
@@ -154,7 +173,7 @@ const AdminDashboard = () => {
         </AnimatedSection>
 
         {/* Stats Cards */}
-        <AnimatedSection className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" delay={100}>
+        <AnimatedSection className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8" delay={100}>
           <Card className="bg-white/70 backdrop-blur-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Gesamte Benutzer</CardTitle>
@@ -188,74 +207,103 @@ const AdminDashboard = () => {
               </div>
             </CardContent>
           </Card>
-        </AnimatedSection>
 
-        {/* Users Management */}
-        <AnimatedSection delay={200}>
           <Card className="bg-white/70 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <UserCheck className="h-5 w-5" />
-                Benutzerverwaltung
-              </CardTitle>
-              <CardDescription>
-                Verwalten Sie Benutzerrollen und Berechtigungen
-              </CardDescription>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Bewerbungen</CardTitle>
+              <Briefcase className="h-4 w-4 text-blue-600" />
             </CardHeader>
             <CardContent>
-              {loading ? (
-                <div className="flex justify-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {profiles.map((profile) => (
-                    <div
-                      key={profile.id}
-                      className="flex items-center justify-between p-4 border border-gray-200 rounded-lg bg-white/50"
-                    >
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3">
-                          <div>
-                            <h3 className="font-semibold text-gray-900">
-                              {profile.full_name || 'Unbekannt'}
-                            </h3>
-                            <p className="text-sm text-gray-600">{profile.email}</p>
-                          </div>
-                          <Badge 
-                            variant={profile.role === 'admin' ? 'default' : 'secondary'}
-                            className={profile.role === 'admin' ? 'bg-yellow-100 text-yellow-800 border-yellow-300' : ''}
-                          >
-                            {profile.role === 'admin' ? 'Administrator' : 'Benutzer'}
-                          </Badge>
-                        </div>
-                        <p className="text-xs text-gray-500 mt-1">
-                          Registriert: {new Date(profile.created_at).toLocaleDateString('de-DE')}
-                        </p>
-                      </div>
-                      
-                      {profile.id !== user?.id && (
-                        <Button
-                          onClick={() => toggleUserRole(profile.id, profile.role)}
-                          variant={profile.role === 'admin' ? 'destructive' : 'default'}
-                          size="sm"
-                          className="ml-4"
-                        >
-                          {profile.role === 'admin' ? 'Admin entfernen' : 'Zu Admin machen'}
-                        </Button>
-                      )}
-                    </div>
-                  ))}
-                  
-                  {profiles.length === 0 && (
-                    <div className="text-center py-8 text-gray-500">
-                      Keine Benutzer gefunden.
-                    </div>
-                  )}
-                </div>
-              )}
+              <div className="text-2xl font-bold">{applicationsCount}</div>
             </CardContent>
           </Card>
+        </AnimatedSection>
+
+        {/* Tabs for different management sections */}
+        <AnimatedSection delay={200}>
+          <Tabs defaultValue="users" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="users" className="flex items-center gap-2">
+                <UserCheck className="h-4 w-4" />
+                Benutzerverwaltung
+              </TabsTrigger>
+              <TabsTrigger value="applications" className="flex items-center gap-2">
+                <FileText className="h-4 w-4" />
+                Bewerbungen
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="users">
+              <Card className="bg-white/70 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <UserCheck className="h-5 w-5" />
+                    Benutzerverwaltung
+                  </CardTitle>
+                  <CardDescription>
+                    Verwalten Sie Benutzerrollen und Berechtigungen
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {loading ? (
+                    <div className="flex justify-center py-8">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {profiles.map((profile) => (
+                        <div
+                          key={profile.id}
+                          className="flex items-center justify-between p-4 border border-gray-200 rounded-lg bg-white/50"
+                        >
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3">
+                              <div>
+                                <h3 className="font-semibold text-gray-900">
+                                  {profile.full_name || 'Unbekannt'}
+                                </h3>
+                                <p className="text-sm text-gray-600">{profile.email}</p>
+                              </div>
+                              <Badge 
+                                variant={profile.role === 'admin' ? 'default' : 'secondary'}
+                                className={profile.role === 'admin' ? 'bg-yellow-100 text-yellow-800 border-yellow-300' : ''}
+                              >
+                                {profile.role === 'admin' ? 'Administrator' : 'Benutzer'}
+                              </Badge>
+                            </div>
+                            <p className="text-xs text-gray-500 mt-1">
+                              Registriert: {new Date(profile.created_at).toLocaleDateString('de-DE')}
+                            </p>
+                          </div>
+                          
+                          {profile.id !== user?.id && (
+                            <Button
+                              onClick={() => toggleUserRole(profile.id, profile.role)}
+                              variant={profile.role === 'admin' ? 'destructive' : 'default'}
+                              size="sm"
+                              className="ml-4"
+                            >
+                              {profile.role === 'admin' ? 'Admin entfernen' : 'Zu Admin machen'}
+                            </Button>
+                          )}
+                        </div>
+                      ))}
+                      
+                      {profiles.length === 0 && (
+                        <div className="text-center py-8 text-gray-500">
+                          Keine Benutzer gefunden.
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="applications">
+              <JobApplicationsManager />
+            </TabsContent>
+          </Tabs>
         </AnimatedSection>
       </div>
     </FluidBackground>
