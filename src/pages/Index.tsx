@@ -1,3 +1,4 @@
+
 import { ArrowRight, Target, BarChart3, Zap, Users, Star, CheckCircle, TrendingUp, Award, Clock, Lightbulb } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Dashboard3D from '../components/graphics/Dashboard3D';
@@ -76,10 +77,14 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="min-h-screen flex items-center bg-gradient-to-br from-primary-50 via-white to-primary-100 relative overflow-hidden">
-        {/* Enhanced Animated Background */}
-        <GeometricBackground variant="hero" pattern="circles" />
-        <ParticleSystem density={20} color="primary" size="sm" speed="slow" />
+      <section className="min-h-screen flex items-center relative overflow-hidden">
+        {/* Clean Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-blue-50"></div>
+        
+        {/* Subtle Decorative Elements */}
+        <div className="absolute top-20 right-20 w-32 h-32 bg-primary-100 rounded-full opacity-20 blur-xl"></div>
+        <div className="absolute bottom-32 left-20 w-24 h-24 bg-blue-100 rounded-full opacity-15 blur-lg"></div>
+        <div className="absolute top-1/2 right-1/4 w-16 h-16 bg-primary-200 rounded-full opacity-10 blur-lg"></div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -167,9 +172,11 @@ const Index = () => {
 
       {/* Enhanced Warum GAgency Section */}
       <section className="py-20 bg-gray-50 relative overflow-hidden">
-        {/* Enhanced Background */}
-        <GeometricBackground variant="section" pattern="hexagons" />
-        <ParticleSystem density={12} color="primary" size="md" speed="medium" />
+        {/* Simple Decorative Background */}
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute top-0 left-0 w-64 h-64 bg-primary-100 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-100 rounded-full blur-3xl"></div>
+        </div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
