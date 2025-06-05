@@ -40,11 +40,15 @@ const ConfettiPopup = ({ isOpen, onClose }: ConfettiPopupProps) => {
           {confettiParticles.map((particle) => (
             <div
               key={particle.id}
-              className={`absolute w-2 h-2 ${particle.color} rounded-sm opacity-80`}
+              className={`absolute w-2 h-2 ${particle.color} rounded-sm opacity-80 animate-pulse`}
               style={{
                 left: `${particle.x}%`,
                 top: '-10px',
-                animation: `confettiFall ${particle.duration}s ease-in-out ${particle.delay}s forwards`,
+                animationName: 'confettiFall',
+                animationDuration: `${particle.duration}s`,
+                animationDelay: `${particle.delay}s`,
+                animationTimingFunction: 'ease-in-out',
+                animationFillMode: 'forwards',
                 transform: 'rotate(45deg)'
               }}
             />
@@ -93,18 +97,21 @@ const ConfettiPopup = ({ isOpen, onClose }: ConfettiPopupProps) => {
         </DialogContent>
       </Dialog>
 
-      <style jsx>{`
-        @keyframes confettiFall {
-          0% {
-            transform: translateY(-10px) rotate(0deg);
-            opacity: 1;
+      {/* Global styles for confetti animation */}
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          @keyframes confettiFall {
+            0% {
+              transform: translateY(-10px) rotate(0deg);
+              opacity: 1;
+            }
+            100% {
+              transform: translateY(100vh) rotate(720deg);
+              opacity: 0;
+            }
           }
-          100% {
-            transform: translateY(100vh) rotate(720deg);
-            opacity: 0;
-          }
-        }
-      `}</style>
+        `
+      }} />
     </>
   );
 };
