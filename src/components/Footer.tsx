@@ -11,15 +11,12 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 py-12">
           {/* Column 1: Logo and Info */}
           <div>
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center">
-                <img 
-                  src="https://i.imgur.com/kvkcHAI.png" 
-                  alt="GAgency Logo" 
-                  className="w-8 h-8 object-contain rounded-lg"
-                />
-              </div>
-              <span className="text-xl font-semibold text-gray-900">GAgency</span>
+            <div className="flex items-center mb-4">
+              <img 
+                src="https://i.imgur.com/kvkcHAI.png" 
+                alt="GAgency Logo" 
+                className="h-10 w-auto object-contain"
+              />
             </div>
             <p className="text-gray-600 mb-4">
               Moderne Weblösungen für Unternehmen jeder Größe. Wir entwickeln digitale Projekte, die Eindruck machen.

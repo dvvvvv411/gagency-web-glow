@@ -36,18 +36,12 @@ const Navigation = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3 group">
-            <div className="relative w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
-              <img 
-                src="https://i.imgur.com/kvkcHAI.png" 
-                alt="GAgency Logo" 
-                className="w-10 h-10 object-contain rounded-2xl"
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-2xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors duration-300">GAgency</span>
-              <span className="text-xs text-gray-500 font-medium -mt-1">Digital Excellence</span>
-            </div>
+          <Link to="/" className="flex items-center group">
+            <img 
+              src="https://i.imgur.com/kvkcHAI.png" 
+              alt="GAgency Logo" 
+              className="h-12 w-auto object-contain group-hover:scale-105 transition-all duration-300"
+            />
           </Link>
 
           {/* Desktop Navigation */}
