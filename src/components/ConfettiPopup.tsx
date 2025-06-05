@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, Sparkles, Check } from 'lucide-react';
+import { CheckCircle, Sparkles } from 'lucide-react';
 
 interface ConfettiPopupProps {
   isOpen: boolean;
@@ -78,23 +78,8 @@ const ConfettiPopup = ({ isOpen, onClose }: ConfettiPopupProps) => {
             
             <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
               <p className="text-blue-800 font-medium">
-                📧 Wir melden uns zeitnah bei Ihnen
+                Wir melden uns zeitnah bei Ihnen
               </p>
-            </div>
-            
-            <div className="space-y-2 text-sm text-gray-500">
-              <div className="flex items-center">
-                <Check className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
-                <span>Lebenslauf erfolgreich hochgeladen</span>
-              </div>
-              <div className="flex items-center">
-                <Check className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
-                <span>Anschreiben erfolgreich hochgeladen</span>
-              </div>
-              <div className="flex items-center">
-                <Check className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
-                <span>Bewerbung in unserem System gespeichert</span>
-              </div>
             </div>
           </div>
           
