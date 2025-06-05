@@ -37,9 +37,12 @@ const Navigation = () => {
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
-            <div className="relative w-10 h-10 bg-gradient-to-br from-primary-500 via-primary-600 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
-              <span className="text-white font-bold text-xl">G</span>
-              <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-2xl"></div>
+            <div className="relative w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+              <img 
+                src="https://i.imgur.com/kvkcHAI.png" 
+                alt="GAgency Logo" 
+                className="w-10 h-10 object-contain rounded-2xl"
+              />
             </div>
             <div className="flex flex-col">
               <span className="text-2xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors duration-300">GAgency</span>

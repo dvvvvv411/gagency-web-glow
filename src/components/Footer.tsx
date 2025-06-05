@@ -12,8 +12,12 @@ const Footer = () => {
           {/* Column 1: Logo and Info */}
           <div>
             <div className="flex items-center space-x-2 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">G</span>
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center">
+                <img 
+                  src="https://i.imgur.com/kvkcHAI.png" 
+                  alt="GAgency Logo" 
+                  className="w-8 h-8 object-contain rounded-lg"
+                />
               </div>
               <span className="text-xl font-semibold text-gray-900">GAgency</span>
             </div>
