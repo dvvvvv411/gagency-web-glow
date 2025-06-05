@@ -1,4 +1,3 @@
-
 import { ArrowRight, Badge, Rocket, Clock, TrendingUp, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { AnimatedSection } from '@/components/ui/animated-section';
@@ -6,7 +5,7 @@ import TechElements from '@/components/graphics/TechElements';
 
 const HeroSection = () => {
   const trustBadges = [
-    { icon: Rocket, text: "50+ Projekte" },
+    { icon: Rocket, text: "150+ Projekte" },
     { icon: Heart, text: "95% Kundenzufriedenheit" },
     { icon: TrendingUp, text: "5 Jahre Expertise" }
   ];
