@@ -60,9 +60,9 @@ const Careers = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white pt-16">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 pt-16">
       {/* Hero Section */}
-      <section className="pt-16 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-primary-50 to-white">
+      <section className="pt-16 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-purple-50 to-white">
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 animate-fade-in">
             Werde Teil unseres <span className="text-primary-500">Teams</span>
@@ -75,7 +75,7 @@ const Careers = () => {
       </section>
 
       {/* Stellenanzeige und Bewerbungsformular - Verbundene Karten */}
-      <section className="py-20">
+      <section className="py-20 bg-gradient-to-br from-white via-gray-50 to-primary-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Connected Card Container */}
           <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">

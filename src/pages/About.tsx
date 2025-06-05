@@ -1,4 +1,3 @@
-
 import { Calendar, Target, Users, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -27,9 +26,9 @@ const About = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-20 left-10 w-72 h-72 bg-primary-500 rounded-full blur-3xl"></div>
@@ -53,7 +52,7 @@ const About = () => {
       </section>
 
       {/* Mission Statement */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
+      <section className="py-20 bg-gradient-to-br from-primary-50 via-white to-blue-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="animate-fade-in">
@@ -108,7 +107,7 @@ const About = () => {
       </section>
 
       {/* Timeline */}
-      <section className="py-20">
+      <section className="py-20 bg-gradient-to-br from-white via-gray-50 to-primary-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 animate-fade-in">
             <h3 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
@@ -161,7 +160,7 @@ const About = () => {
       </section>
 
       {/* Values Cards */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 via-white to-gray-50">
+      <section className="py-20 bg-gradient-to-br from-blue-50 via-purple-50 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 animate-fade-in">
             <h3 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
