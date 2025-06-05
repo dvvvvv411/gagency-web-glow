@@ -400,15 +400,17 @@ const Careers = () => {
                             <FormField
                               control={form.control}
                               name="cv"
-                              render={({ field: { onChange, ...field } }) => (
+                              render={({ field: { value, onChange, ...fieldProps } }) => (
                                 <FormItem>
                                   <FormLabel>Lebenslauf (PDF) *</FormLabel>
                                   <FormControl>
                                     <Input
+                                      {...fieldProps}
                                       type="file"
                                       accept=".pdf"
-                                      onChange={(e) => onChange(e.target.files)}
-                                      {...field}
+                                      onChange={(event) => {
+                                        onChange(event.target.files);
+                                      }}
                                     />
                                   </FormControl>
                                   <FormMessage />
@@ -418,15 +420,17 @@ const Careers = () => {
                             <FormField
                               control={form.control}
                               name="anschreiben"
-                              render={({ field: { onChange, ...field } }) => (
+                              render={({ field: { value, onChange, ...fieldProps } }) => (
                                 <FormItem>
                                   <FormLabel>Anschreiben (PDF) *</FormLabel>
                                   <FormControl>
                                     <Input
+                                      {...fieldProps}
                                       type="file"
                                       accept=".pdf"
-                                      onChange={(e) => onChange(e.target.files)}
-                                      {...field}
+                                      onChange={(event) => {
+                                        onChange(event.target.files);
+                                      }}
                                     />
                                   </FormControl>
                                   <FormMessage />
