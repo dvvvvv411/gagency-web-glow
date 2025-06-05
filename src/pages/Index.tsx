@@ -3,7 +3,7 @@ import FluidBackground from '@/components/backgrounds/FluidBackground';
 import HeroSection from '@/components/sections/HeroSection';
 import ServicesShowcase from '@/components/sections/ServicesShowcase';
 import StatsBar from '@/components/sections/StatsBar';
-import TechStackGrid from '@/components/sections/TechStackGrid';
+import TestimonialsSection from '@/components/sections/TestimonialsSection';
 import PremiumCTA from '@/components/sections/PremiumCTA';
 import SocialProof from '@/components/sections/SocialProof';
 
@@ -21,7 +21,18 @@ const Index = () => {
         <HeroSection />
         <ServicesShowcase />
         <StatsBar />
-        <TechStackGrid />
+        
+        {/* Strong Blue Background Section for Testimonials */}
+        <div className="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 relative overflow-hidden">
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.1)_0%,transparent_50%)]"></div>
+            <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.05)_0%,transparent_50%)]"></div>
+          </div>
+          
+          <TestimonialsSection />
+        </div>
+        
         <PremiumCTA />
         <SocialProof />
       </div>
