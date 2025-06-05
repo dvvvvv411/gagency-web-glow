@@ -34,15 +34,17 @@ const Navigation = () => {
   return (
     <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-xl border-b border-white/20 z-50 shadow-lg shadow-black/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          {/* Logo */}
-          <Link to="/" className="flex items-center group">
-            <img 
-              src="https://i.imgur.com/jLfB4V2.png" 
-              alt="GAgency Logo" 
-              className="h-20 w-auto object-contain group-hover:scale-105 transition-all duration-300"
-            />
-          </Link>
+        <div className="flex justify-between md:justify-between items-center h-20">
+          {/* Logo - centered on mobile, left-aligned on desktop */}
+          <div className="flex-1 flex justify-center md:justify-start">
+            <Link to="/" className="flex items-center group">
+              <img 
+                src="https://i.imgur.com/jLfB4V2.png" 
+                alt="GAgency Logo" 
+                className="h-16 w-auto object-contain group-hover:scale-105 transition-all duration-300"
+              />
+            </Link>
+          </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1">
