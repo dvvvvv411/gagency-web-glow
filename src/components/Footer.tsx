@@ -13,7 +13,7 @@ const Footer = () => {
           <div>
             <div className="flex items-center mb-4">
               <img 
-                src="https://i.imgur.com/kvkcHAI.png" 
+                src="https://i.imgur.com/jLfB4V2.png" 
                 alt="GAgency Logo" 
                 className="h-16 w-auto object-contain"
               />

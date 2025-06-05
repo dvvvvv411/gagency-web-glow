@@ -38,7 +38,7 @@ const Navigation = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center group">
             <img 
-              src="https://i.imgur.com/kvkcHAI.png" 
+              src="https://i.imgur.com/jLfB4V2.png" 
               alt="GAgency Logo" 
               className="h-20 w-auto object-contain group-hover:scale-105 transition-all duration-300"
             />
