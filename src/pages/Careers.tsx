@@ -13,14 +13,20 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useToast } from '@/hooks/use-toast';
 
 const applicationSchema = z.object({
-  name: z.string().min(2, 'Name muss mindestens 2 Zeichen lang sein'),
+  vorname: z.string().min(2, 'Vorname muss mindestens 2 Zeichen lang sein'),
+  nachname: z.string().min(2, 'Nachname muss mindestens 2 Zeichen lang sein'),
   email: z.string().email('Bitte geben Sie eine gültige E-Mail-Adresse ein'),
   phone: z.string().min(10, 'Telefonnummer muss mindestens 10 Zeichen lang sein'),
+  adresse: z.string().min(5, 'Bitte geben Sie Ihre Adresse an'),
+  plz: z.string().min(4, 'PLZ muss mindestens 4 Zeichen lang sein'),
+  stadt: z.string().min(2, 'Bitte geben Sie Ihre Stadt an'),
+  staatsangehoerigkeit: z.string().min(2, 'Bitte geben Sie Ihre Staatsangehörigkeit an'),
   studiengang: z.string().min(2, 'Bitte geben Sie Ihren Studiengang an'),
   semester: z.string().min(1, 'Bitte geben Sie Ihr Semester an'),
   verfuegbarkeit: z.string().min(5, 'Bitte beschreiben Sie Ihre Verfügbarkeit'),
   motivation: z.string().min(100, 'Motivationsschreiben muss mindestens 100 Zeichen lang sein'),
   cv: z.any().refine((files) => files?.length > 0, 'Bitte laden Sie Ihren Lebenslauf hoch'),
+  anschreiben: z.any().refine((files) => files?.length > 0, 'Bitte laden Sie Ihr Anschreiben hoch'),
   datenschutz: z.boolean().refine((val) => val === true, 'Sie müssen den Datenschutzbestimmungen zustimmen'),
 });
 
@@ -33,9 +39,14 @@ const Careers = () => {
   const form = useForm<ApplicationForm>({
     resolver: zodResolver(applicationSchema),
     defaultValues: {
-      name: '',
+      vorname: '',
+      nachname: '',
       email: '',
       phone: '',
+      adresse: '',
+      plz: '',
+      stadt: '',
+      staatsangehoerigkeit: '',
       studiengang: '',
       semester: '',
       verfuegbarkeit: '',
@@ -101,31 +112,31 @@ const Careers = () => {
         </div>
       </section>
 
-      {/* Stellenanzeige und Bewerbungsformular - Zwei Spalten Layout */}
+      {/* Stellenanzeige und Bewerbungsformular - Verbundene Karten */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12">
-            {/* Linke Spalte - Stellenanzeige */}
-            <div>
-              <Card className="shadow-lg h-fit">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
+          {/* Connected Card Container */}
+          <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
+            <div className="grid lg:grid-cols-2">
+              {/* Linke Spalte - Stellenanzeige */}
+              <div className="bg-gradient-to-br from-primary-50 to-white p-8 lg:p-12">
+                <div className="h-full flex flex-col">
+                  <div className="flex items-start justify-between mb-8">
                     <div>
-                      <CardTitle className="text-2xl md:text-3xl text-primary-600 mb-2">
+                      <h2 className="text-2xl md:text-3xl font-bold text-primary-600 mb-2">
                         Digital Marketing Werkstudent (m/w/d)
-                      </CardTitle>
-                      <CardDescription className="text-lg">
+                      </h2>
+                      <p className="text-lg text-gray-600">
                         Unterstütze unser Marketing-Team bei spannenden Projekten
-                      </CardDescription>
+                      </p>
                     </div>
                     <div className="bg-primary-100 text-primary-700 px-3 py-1 rounded-full text-sm font-medium">
                       Werkstudent
                     </div>
                   </div>
-                </CardHeader>
-                <CardContent className="space-y-8">
+
                   {/* Job Details */}
-                  <div className="grid md:grid-cols-3 gap-6">
+                  <div className="grid md:grid-cols-3 gap-6 mb-8">
                     <div className="flex items-center space-x-3">
                       <Clock className="text-primary-500" size={20} />
                       <div>
@@ -150,7 +161,7 @@ const Careers = () => {
                   </div>
 
                   {/* Aufgaben */}
-                  <div>
+                  <div className="mb-8">
                     <h3 className="text-xl font-semibold text-gray-900 mb-4">Deine Aufgaben</h3>
                     <ul className="space-y-2 text-gray-600">
                       <li className="flex items-start">
@@ -177,7 +188,7 @@ const Careers = () => {
                   </div>
 
                   {/* Anforderungen */}
-                  <div>
+                  <div className="mb-8">
                     <h3 className="text-xl font-semibold text-gray-900 mb-4">Das bringst du mit</h3>
                     <ul className="space-y-2 text-gray-600">
                       <li className="flex items-start">
@@ -204,7 +215,7 @@ const Careers = () => {
                   </div>
 
                   {/* Benefits */}
-                  <div>
+                  <div className="flex-grow">
                     <h3 className="text-xl font-semibold text-gray-900 mb-4">Das bieten wir</h3>
                     <div className="grid md:grid-cols-2 gap-4">
                       <div className="flex items-center space-x-3">
@@ -233,183 +244,279 @@ const Careers = () => {
                       </div>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Rechte Spalte - Bewerbungsformular */}
-            <div>
-              <div className="mb-8">
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                  Jetzt bewerben
-                </h2>
-                <p className="text-xl text-gray-600">
-                  Sende uns deine Bewerbung und werde Teil unseres Teams
-                </p>
+                </div>
               </div>
 
-              <Card className="shadow-lg">
-                <CardContent className="p-8">
-                  <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                      {/* Persönliche Daten */}
-                      <div className="grid md:grid-cols-2 gap-6">
-                        <FormField
-                          control={form.control}
-                          name="name"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Vollständiger Name *</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Max Mustermann" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="email"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>E-Mail-Adresse *</FormLabel>
-                              <FormControl>
-                                <Input type="email" placeholder="max@beispiel.de" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
+              {/* Rechte Spalte - Bewerbungsformular */}
+              <div className="p-8 lg:p-12 bg-white">
+                <div className="h-full flex flex-col">
+                  <div className="mb-8">
+                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                      Jetzt bewerben
+                    </h2>
+                    <p className="text-xl text-gray-600">
+                      Sende uns deine Bewerbung und werde Teil unseres Teams
+                    </p>
+                  </div>
 
-                      <FormField
-                        control={form.control}
-                        name="phone"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Telefonnummer *</FormLabel>
-                            <FormControl>
-                              <Input placeholder="+49 123 456 789" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                  <div className="flex-grow">
+                    <Form {...form}>
+                      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 h-full flex flex-col">
+                        <div className="flex-grow space-y-6">
+                          {/* Persönliche Daten */}
+                          <div className="grid md:grid-cols-2 gap-6">
+                            <FormField
+                              control={form.control}
+                              name="vorname"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Vorname *</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder="Max" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name="nachname"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Nachname *</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder="Mustermann" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
 
-                      {/* Studium */}
-                      <div className="grid md:grid-cols-2 gap-6">
-                        <FormField
-                          control={form.control}
-                          name="studiengang"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Studiengang *</FormLabel>
-                              <FormControl>
-                                <Input placeholder="z.B. BWL, Marketing, Kommunikation" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="semester"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Aktuelles Semester *</FormLabel>
-                              <FormControl>
-                                <Input placeholder="z.B. 3. Semester" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
+                          <div className="grid md:grid-cols-2 gap-6">
+                            <FormField
+                              control={form.control}
+                              name="email"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>E-Mail-Adresse *</FormLabel>
+                                  <FormControl>
+                                    <Input type="email" placeholder="max@beispiel.de" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name="phone"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Telefonnummer *</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder="+49 123 456 789" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
 
-                      <FormField
-                        control={form.control}
-                        name="verfuegbarkeit"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Verfügbarkeit *</FormLabel>
-                            <FormControl>
-                              <Input placeholder="z.B. Mo-Fr vormittags, 15-20h/Woche" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                          {/* Adresse */}
+                          <FormField
+                            control={form.control}
+                            name="adresse"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Adresse *</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="Musterstraße 123" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
 
-                      <FormField
-                        control={form.control}
-                        name="motivation"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Motivationsschreiben *</FormLabel>
-                            <FormControl>
-                              <Textarea 
-                                placeholder="Erzählen Sie uns, warum Sie sich für diese Position interessieren und was Sie mitbringen..."
-                                className="min-h-[120px]"
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                          <div className="grid md:grid-cols-2 gap-6">
+                            <FormField
+                              control={form.control}
+                              name="plz"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>PLZ *</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder="12345" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name="stadt"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Stadt *</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder="Berlin" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
 
-                      <FormField
-                        control={form.control}
-                        name="cv"
-                        render={({ field: { onChange, ...field } }) => (
-                          <FormItem>
-                            <FormLabel>Lebenslauf (PDF) *</FormLabel>
-                            <FormControl>
-                              <Input
-                                type="file"
-                                accept=".pdf"
-                                onChange={(e) => onChange(e.target.files)}
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                          <FormField
+                            control={form.control}
+                            name="staatsangehoerigkeit"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Staatsangehörigkeit *</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="Deutsch" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
 
-                      <FormField
-                        control={form.control}
-                        name="datenschutz"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                            <div className="space-y-1 leading-none">
-                              <FormLabel>
-                                Ich stimme der Verarbeitung meiner Daten gemäß der Datenschutzerklärung zu *
-                              </FormLabel>
-                              <FormMessage />
-                            </div>
-                          </FormItem>
-                        )}
-                      />
+                          {/* Studium */}
+                          <div className="grid md:grid-cols-2 gap-6">
+                            <FormField
+                              control={form.control}
+                              name="studiengang"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Studiengang *</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder="z.B. BWL, Marketing, Kommunikation" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name="semester"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Aktuelles Semester *</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder="z.B. 3. Semester" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
 
-                      <Button 
-                        type="submit" 
-                        className="w-full" 
-                        disabled={isSubmitting}
-                        size="lg"
-                      >
-                        {isSubmitting ? 'Bewerbung wird eingereicht...' : 'Bewerbung einreichen'}
-                      </Button>
-                    </form>
-                  </Form>
-                </CardContent>
-              </Card>
+                          <FormField
+                            control={form.control}
+                            name="verfuegbarkeit"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Verfügbarkeit *</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="z.B. Mo-Fr vormittags, 15-20h/Woche" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                          <FormField
+                            control={form.control}
+                            name="motivation"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Motivationsschreiben *</FormLabel>
+                                <FormControl>
+                                  <Textarea 
+                                    placeholder="Erzählen Sie uns, warum Sie sich für diese Position interessieren und was Sie mitbringen..."
+                                    className="min-h-[100px]"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                          {/* File Uploads */}
+                          <div className="grid md:grid-cols-2 gap-6">
+                            <FormField
+                              control={form.control}
+                              name="cv"
+                              render={({ field: { onChange, ...field } }) => (
+                                <FormItem>
+                                  <FormLabel>Lebenslauf (PDF) *</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      type="file"
+                                      accept=".pdf"
+                                      onChange={(e) => onChange(e.target.files)}
+                                      {...field}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name="anschreiben"
+                              render={({ field: { onChange, ...field } }) => (
+                                <FormItem>
+                                  <FormLabel>Anschreiben (PDF) *</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      type="file"
+                                      accept=".pdf"
+                                      onChange={(e) => onChange(e.target.files)}
+                                      {...field}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+
+                          <FormField
+                            control={form.control}
+                            name="datenschutz"
+                            render={({ field }) => (
+                              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                  />
+                                </FormControl>
+                                <div className="space-y-1 leading-none">
+                                  <FormLabel>
+                                    Ich stimme der Verarbeitung meiner Daten gemäß der Datenschutzerklärung zu *
+                                  </FormLabel>
+                                  <FormMessage />
+                                </div>
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+
+                        <Button 
+                          type="submit" 
+                          className="w-full mt-6" 
+                          disabled={isSubmitting}
+                          size="lg"
+                        >
+                          {isSubmitting ? 'Bewerbung wird eingereicht...' : 'Bewerbung einreichen'}
+                        </Button>
+                      </form>
+                    </Form>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
