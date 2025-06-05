@@ -1,309 +1,243 @@
 
 import { useState } from 'react';
-import { Mail, MapPin, Phone } from 'lucide-react';
+import { Mail, MapPin, Phone, CheckCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent } from '@/components/ui/card';
 
 const Contact = () => {
   const [formState, setFormState] = useState({
     name: '',
     email: '',
-    phone: '',
-    company: '',
     message: '',
-    service: '',
+    privacy: false,
   });
 
-  const [formStatus, setFormStatus] = useState({
-    submitted: false,
-    error: false,
-    message: '',
-  });
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormState(prev => ({ ...prev, [name]: value }));
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target;
+    setFormState(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Here you would normally send the form data to your backend
-    // This is a mock implementation
+    // Simulate form submission
     setTimeout(() => {
-      setFormStatus({
-        submitted: true,
-        error: false,
-        message: 'Vielen Dank für Ihre Nachricht. Wir werden uns in Kürze bei Ihnen melden.',
-      });
-
-      // Reset form
-      setFormState({
-        name: '',
-        email: '',
-        phone: '',
-        company: '',
-        message: '',
-        service: '',
-      });
+      setIsSubmitted(true);
+      setFormState({ name: '', email: '', message: '', privacy: false });
     }, 1000);
   };
 
   return (
     <div className="min-h-screen bg-white pt-16">
       {/* Hero Section */}
-      <section className="pt-16 pb-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 animate-fade-in">
-              Kontaktieren Sie <span className="text-primary-500">uns</span>
-            </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto animate-fade-in-up">
-              Haben Sie Fragen oder möchten ein Projekt besprechen? Kontaktieren Sie uns und wir melden uns bei Ihnen.
-            </p>
-          </div>
+      <section className="pt-20 pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 animate-fade-in">
+            Lassen Sie uns <span className="text-primary">sprechen</span>
+          </h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto animate-fade-in">
+            Haben Sie ein Projekt im Kopf? Wir freuen uns darauf, Ihre Ideen in die Realität umzusetzen.
+          </p>
         </div>
       </section>
 
-      {/* Contact Info & Form */}
-      <section className="py-16">
+      {/* Contact Form & Info */}
+      <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12">
-            {/* Contact Info */}
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                Kontaktinformationen
-              </h2>
-              <p className="text-gray-600 mb-8">
-                Wir freuen uns darauf, von Ihnen zu hören. Sie können uns telefonisch, 
-                per E-Mail oder über das Kontaktformular erreichen.
-              </p>
-
-              <div className="space-y-6">
-                <div className="flex items-start space-x-4">
-                  <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <MapPin className="text-primary-600" size={20} />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Besuchen Sie uns</h3>
-                    <p className="text-gray-600">
-                      Musterstraße 123<br />
-                      10115 Berlin, Deutschland
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-4">
-                  <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Mail className="text-primary-600" size={20} />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">E-Mail</h3>
-                    <a href="mailto:info@gagency.de" className="text-primary-600 hover:underline">
-                      info@gagency.de
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-4">
-                  <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Phone className="text-primary-600" size={20} />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Telefon</h3>
-                    <a href="tel:+4930123456789" className="text-primary-600 hover:underline">
-                      +49 30 123 456 789
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-              {/* Google Maps Placeholder */}
-              <div className="mt-12">
-                <div className="aspect-[16/9] bg-gray-100 rounded-lg overflow-hidden">
-                  {/* In a real implementation, you would embed a Google Maps iframe here */}
-                  <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                    <span className="text-gray-500">Google Maps wird hier eingebettet</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
+          <div className="grid lg:grid-cols-2 gap-16">
             {/* Contact Form */}
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              <h2 className="text-3xl font-bold text-gray-900 mb-8">
                 Schreiben Sie uns
               </h2>
-              <div className="bg-gray-50 p-8 rounded-lg">
-                {formStatus.submitted ? (
-                  <div className="bg-green-50 p-6 rounded-lg border border-green-200">
-                    <h3 className="text-green-800 font-semibold text-lg mb-2">Nachricht gesendet!</h3>
-                    <p className="text-green-700">{formStatus.message}</p>
-                  </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div>
-                      <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                        Name*
-                      </label>
-                      <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={formState.name}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50"
-                      />
-                    </div>
+              
+              {isSubmitted ? (
+                <Card className="p-8 bg-green-50 border-green-200">
+                  <CardContent className="p-0 text-center">
+                    <CheckCircle className="mx-auto mb-4 text-green-600" size={48} />
+                    <h3 className="text-xl font-semibold text-green-800 mb-2">
+                      Vielen Dank für Ihre Nachricht!
+                    </h3>
+                    <p className="text-green-700">
+                      Wir melden uns innerhalb von 24 Stunden bei Ihnen.
+                    </p>
+                  </CardContent>
+                </Card>
+              ) : (
+                <Card className="p-8">
+                  <CardContent className="p-0">
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                      <div>
+                        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                          Name *
+                        </label>
+                        <Input
+                          type="text"
+                          id="name"
+                          name="name"
+                          value={formState.name}
+                          onChange={handleInputChange}
+                          required
+                          className="w-full"
+                        />
+                      </div>
 
-                    <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                        E-Mail*
-                      </label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formState.email}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50"
-                      />
-                    </div>
+                      <div>
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                          E-Mail *
+                        </label>
+                        <Input
+                          type="email"
+                          id="email"
+                          name="email"
+                          value={formState.email}
+                          onChange={handleInputChange}
+                          required
+                          className="w-full"
+                        />
+                      </div>
 
-                    <div>
-                      <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                        Telefon
-                      </label>
-                      <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        value={formState.phone}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50"
-                      />
-                    </div>
+                      <div>
+                        <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                          Nachricht *
+                        </label>
+                        <Textarea
+                          id="message"
+                          name="message"
+                          value={formState.message}
+                          onChange={handleInputChange}
+                          required
+                          rows={6}
+                          className="w-full"
+                        />
+                      </div>
 
-                    <div>
-                      <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">
-                        Unternehmen
-                      </label>
-                      <input
-                        type="text"
-                        id="company"
-                        name="company"
-                        value={formState.company}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50"
-                      />
-                    </div>
+                      <div className="flex items-start space-x-3">
+                        <input
+                          type="checkbox"
+                          id="privacy"
+                          name="privacy"
+                          checked={formState.privacy}
+                          onChange={handleInputChange}
+                          required
+                          className="mt-1"
+                        />
+                        <label htmlFor="privacy" className="text-sm text-gray-600">
+                          Ich stimme der Verarbeitung meiner Daten gemäß der Datenschutzerklärung zu. *
+                        </label>
+                      </div>
 
-                    <div>
-                      <label htmlFor="service" className="block text-sm font-medium text-gray-700 mb-1">
-                        Dienstleistung
-                      </label>
-                      <select
-                        id="service"
-                        name="service"
-                        value={formState.service}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50"
-                      >
-                        <option value="">Bitte wählen</option>
-                        <option value="web-development">Webentwicklung</option>
-                        <option value="design">UI/UX Design</option>
-                        <option value="ecommerce">E-Commerce</option>
-                        <option value="marketing">Online Marketing</option>
-                        <option value="other">Sonstiges</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                        Nachricht*
-                      </label>
-                      <textarea
-                        id="message"
-                        name="message"
-                        rows={5}
-                        value={formState.message}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50"
-                      ></textarea>
-                    </div>
-
-                    <div className="pt-2">
-                      <button
+                      <Button
                         type="submit"
-                        className="w-full bg-primary-500 text-white px-6 py-3 rounded-md font-medium hover:bg-primary-600 transition-colors duration-200"
+                        className="w-full"
+                        disabled={!formState.privacy}
                       >
                         Nachricht senden
-                      </button>
+                      </Button>
+                    </form>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+
+            {/* Contact Information */}
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-8">
+                Kontaktinformationen
+              </h2>
+              
+              <div className="space-y-6 mb-12">
+                <Card className="p-6 hover:shadow-lg transition-shadow">
+                  <CardContent className="p-0 flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Mail className="text-primary" size={24} />
                     </div>
-                  </form>
-                )}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-1">E-Mail</h3>
+                      <a href="mailto:info@gagency.de" className="text-primary hover:underline">
+                        info@gagency.de
+                      </a>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="p-6 hover:shadow-lg transition-shadow">
+                  <CardContent className="p-0 flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Phone className="text-primary" size={24} />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-1">Telefon</h3>
+                      <a href="tel:+492111234567" className="text-primary hover:underline">
+                        +49 211 123 456 7
+                      </a>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="p-6 hover:shadow-lg transition-shadow">
+                  <CardContent className="p-0 flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                      <MapPin className="text-primary" size={24} />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-1">Adresse</h3>
+                      <p className="text-gray-600">
+                        Königsallee 27<br />
+                        40212 Düsseldorf<br />
+                        Deutschland
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
+
+              {/* Call-to-Action */}
+              <Card className="p-8 bg-primary text-white">
+                <CardContent className="p-0 text-center">
+                  <h3 className="text-2xl font-bold mb-4">
+                    Kostenlose Erstberatung
+                  </h3>
+                  <p className="mb-6 opacity-90">
+                    Lassen Sie uns Ihr Projekt besprechen. 30 Minuten kostenloses Beratungsgespräch.
+                  </p>
+                  <Button variant="secondary" className="bg-white text-primary hover:bg-gray-100">
+                    Termin vereinbaren
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
       </section>
 
-      {/* FAQ Section */}
+      {/* Interactive Map */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Häufig gestellte Fragen
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Besuchen Sie uns
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Hier finden Sie Antworten auf häufig gestellte Fragen.
+            <p className="text-xl text-gray-600">
+              Mitten im Herzen von Düsseldorf
             </p>
           </div>
           
-          <div className="max-w-3xl mx-auto">
-            <div className="space-y-6">
-              <div className="bg-white p-6 rounded-lg shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                  Wie läuft ein typisches Projekt bei GAgency ab?
-                </h3>
-                <p className="text-gray-600">
-                  Ein Projekt beginnt mit einem Beratungsgespräch, bei dem wir Ihre Anforderungen und Ziele besprechen. 
-                  Anschließend erstellen wir ein Konzept und nach Ihrer Zustimmung beginnen wir mit der Umsetzung. 
-                  Während des gesamten Prozesses halten wir Sie auf dem Laufenden und liefern regelmäßige Updates.
+          <div className="rounded-lg overflow-hidden shadow-lg">
+            <div className="aspect-[16/9] bg-gray-200 flex items-center justify-center">
+              <div className="text-center">
+                <MapPin className="mx-auto mb-4 text-gray-400" size={48} />
+                <p className="text-gray-600 text-lg font-medium">
+                  Google Maps wird hier eingebettet
                 </p>
-              </div>
-              
-              <div className="bg-white p-6 rounded-lg shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                  Wie lange dauert die Entwicklung einer Website?
-                </h3>
-                <p className="text-gray-600">
-                  Die Dauer hängt von der Komplexität des Projekts ab. Eine einfache Website kann in 2-4 Wochen 
-                  erstellt werden, während komplexe Projekte mehrere Monate dauern können. Wir erstellen einen 
-                  detaillierten Zeitplan für jedes Projekt und halten uns an vereinbarte Deadlines.
-                </p>
-              </div>
-              
-              <div className="bg-white p-6 rounded-lg shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                  Was kostet eine Website oder Webanwendung?
-                </h3>
-                <p className="text-gray-600">
-                  Die Kosten variieren je nach Umfang und Komplexität des Projekts. Wir erstellen individuelle 
-                  Angebote basierend auf Ihren spezifischen Anforderungen. Kontaktieren Sie uns für ein 
-                  unverbindliches Beratungsgespräch und ein maßgeschneidertes Angebot.
-                </p>
-              </div>
-              
-              <div className="bg-white p-6 rounded-lg shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                  Bieten Sie auch Wartung und Support nach dem Launch an?
-                </h3>
-                <p className="text-gray-600">
-                  Ja, wir bieten verschiedene Wartungs- und Support-Pakete an, um sicherzustellen, dass Ihre Website 
-                  oder Anwendung optimal funktioniert und aktuell bleibt. Unser Team steht Ihnen auch nach dem Launch 
-                  zur Verfügung, um Fragen zu beantworten und bei Bedarf Updates vorzunehmen.
+                <p className="text-gray-500 text-sm mt-2">
+                  Königsallee 27, 40212 Düsseldorf
                 </p>
               </div>
             </div>
