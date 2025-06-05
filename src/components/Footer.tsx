@@ -15,7 +15,7 @@ const Footer = () => {
               <img 
                 src="https://i.imgur.com/kvkcHAI.png" 
                 alt="GAgency Logo" 
-                className="h-20 w-auto object-contain"
+                className="h-16 w-auto object-contain"
               />
             </div>
             <p className="text-gray-600 mb-4">

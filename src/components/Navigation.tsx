@@ -40,7 +40,7 @@ const Navigation = () => {
             <img 
               src="https://i.imgur.com/kvkcHAI.png" 
               alt="GAgency Logo" 
-              className="h-24 w-auto object-contain group-hover:scale-105 transition-all duration-300"
+              className="h-20 w-auto object-contain group-hover:scale-105 transition-all duration-300"
             />
           </Link>
 
