@@ -141,14 +141,14 @@ const Careers = () => {
                   <div className="flex items-start justify-between mb-8">
                     <div>
                       <h2 className="text-2xl md:text-3xl font-bold text-primary-600 mb-2">
-                        Digital Marketing Werkstudent (m/w/d)
+                        Assistenz im digitalen Projektmanagement (m/w/d)
                       </h2>
                       <p className="text-lg text-gray-600">
-                        Unterstütze unser Marketing-Team bei spannenden Projekten
+                        Bringe Ordnung in unsere Abläufe und unterstütze bei digitalen Projekten
                       </p>
                     </div>
                     <div className="bg-primary-100 text-primary-700 px-3 py-1 rounded-full text-sm font-medium">
-                      Werkstudent
+                      Minijob
                     </div>
                   </div>
 
@@ -158,14 +158,14 @@ const Careers = () => {
                       <Clock className="text-primary-500" size={20} />
                       <div>
                         <p className="font-medium">Arbeitszeit</p>
-                        <p className="text-gray-600">15-20h/Woche</p>
+                        <p className="text-gray-600">10h/Woche</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
                       <MapPin className="text-primary-500" size={20} />
                       <div>
                         <p className="font-medium">Standort</p>
-                        <p className="text-gray-600">Berlin / Remote</p>
+                        <p className="text-gray-600">München / Remote</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
@@ -183,23 +183,23 @@ const Careers = () => {
                     <ul className="space-y-2 text-gray-600">
                       <li className="flex items-start">
                         <Star className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
-                        Erstellung und Pflege von Social Media Content für verschiedene Plattformen
+                        Du arbeitest mit an der Koordination kleiner Webprojekte und bringst Ordnung in unsere Abläufe
                       </li>
                       <li className="flex items-start">
                         <Star className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
-                        Content Creation: Texte, Grafiken und Videos für Marketing-Kampagnen
+                        Du recherchierst digitale Tools, neue Online-Trends und Weblösungen
                       </li>
                       <li className="flex items-start">
                         <Star className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
-                        Analyse und Reporting von Marketing-KPIs und Social Media Metriken
+                        Du unterstützt bei der Erstellung von Projektplänen, Briefings und Präsentationen
                       </li>
                       <li className="flex items-start">
                         <Star className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
-                        Unterstützung bei der Planung und Umsetzung von Marketing-Strategien
+                        Du stimmst dich mit unserem Team und gelegentlich auch mit Kund:innen ab
                       </li>
                       <li className="flex items-start">
                         <Star className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
-                        Marktrecherche und Competitor-Analyse
+                        Du übernimmst organisatorische Aufgaben und sorgst dafür, dass nichts untergeht
                       </li>
                     </ul>
                   </div>
@@ -209,23 +209,23 @@ const Careers = () => {
                     <ul className="space-y-2 text-gray-600">
                       <li className="flex items-start">
                         <GraduationCap className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
-                        Immatrikulierter Student (vorzugsweise Marketing, BWL, Kommunikation oder ähnlich)
+                        Interesse an Websites, digitalen Produkten und Online-Tools
                       </li>
                       <li className="flex items-start">
                         <GraduationCap className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
-                        Grundkenntnisse im Digital Marketing und Social Media
+                        Strukturierte und zuverlässige Arbeitsweise – du behältst gerne den Überblick
                       </li>
                       <li className="flex items-start">
                         <GraduationCap className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
-                        Kreativität und Gespür für Trends
+                        Sicherer Umgang mit gängigen Tools wie Google Workspace, MS Office o. ä.
                       </li>
                       <li className="flex items-start">
                         <GraduationCap className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
-                        Sehr gute Deutsch- und Englischkenntnisse
+                        Offenheit, Neues zu lernen und eigenständig Aufgaben umzusetzen
                       </li>
                       <li className="flex items-start">
                         <GraduationCap className="text-primary-500 mt-1 mr-2 flex-shrink-0" size={16} />
-                        Zuverlässigkeit und eigenständige Arbeitsweise
+                        Gute schriftliche Ausdrucksweise und Kommunikation
                       </li>
                     </ul>
                   </div>
