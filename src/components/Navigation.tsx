@@ -100,12 +100,6 @@ const Navigation = () => {
             ) : (
               <div className="flex items-center space-x-3">
                 <Link
-                  to="/auth"
-                  className="text-gray-700 hover:text-primary-600 px-4 py-2 text-sm font-semibold transition-all duration-300 rounded-xl hover:bg-gray-50/80"
-                >
-                  Anmelden
-                </Link>
-                <Link
                   to="/contact"
                   className="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-primary-600 hover:to-primary-700 transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl hover:scale-105 group"
                 >
@@ -164,13 +158,6 @@ const Navigation = () => {
                 </div>
               ) : (
                 <div className="space-y-2 pt-4 border-t border-gray-200">
-                  <Link
-                    to="/auth"
-                    onClick={() => setIsOpen(false)}
-                    className="block px-4 py-3 text-base font-semibold text-gray-700 hover:text-primary-600 hover:bg-gray-50/80 rounded-xl"
-                  >
-                    Anmelden
-                  </Link>
                   <Link
                     to="/contact"
                     onClick={() => setIsOpen(false)}
