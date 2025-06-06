@@ -152,7 +152,7 @@ const BenefitsSlider = () => {
           value: '90%'
         }, {
           label: 'Kundenprojekte',
-          value: '100+'
+          value: '150+'
         }, {
           label: 'Team-Zufriedenheit',
           value: '4.9/5'
