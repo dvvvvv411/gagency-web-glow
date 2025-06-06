@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Sparkles, User, LogOut, Shield } from 'lucide-react';
+import { Menu, X, Sparkles, User, LogOut } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,7 +15,7 @@ import {
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
-  const { user, signOut, isAdmin } = useAuth();
+  const { user, signOut } = useAuth();
 
   const navItems = [
     { name: 'Startseite', path: '/' },
@@ -75,16 +75,6 @@ const Navigation = () => {
           <div className="hidden md:flex items-center space-x-4">
             {user ? (
               <div className="flex items-center space-x-2">
-                {isAdmin && (
-                  <Link
-                    to="/admin"
-                    className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-yellow-700 bg-yellow-50 hover:bg-yellow-100 rounded-xl transition-all duration-300"
-                  >
-                    <Shield size={16} />
-                    Admin
-                  </Link>
-                )}
-                
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="flex items-center gap-2 px-3 py-2 rounded-xl">
@@ -97,17 +87,6 @@ const Navigation = () => {
                       {user.email}
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    {isAdmin && (
-                      <>
-                        <DropdownMenuItem asChild>
-                          <Link to="/admin" className="flex items-center gap-2">
-                            <Shield size={16} />
-                            Admin Dashboard
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                      </>
-                    )}
                     <DropdownMenuItem 
                       onClick={handleSignOut}
                       className="flex items-center gap-2 text-red-600"
@@ -172,16 +151,6 @@ const Navigation = () => {
                   <div className="px-4 py-2 text-sm text-gray-500">
                     {user.email}
                   </div>
-                  {isAdmin && (
-                    <Link
-                      to="/admin"
-                      onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-2 px-4 py-3 text-base font-semibold text-yellow-700 bg-yellow-50 rounded-xl"
-                    >
-                      <Shield size={16} />
-                      Admin Dashboard
-                    </Link>
-                  )}
                   <button
                     onClick={() => {
                       handleSignOut();
