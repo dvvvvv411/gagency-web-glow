@@ -44,7 +44,6 @@ const handler = async (req: Request): Promise<Response> => {
             
             <!-- Header with gradient -->
             <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 30px; text-align: center;">
-              <img src="https://i.imgur.com/bJnPIVv.png" alt="AMCD Logo" style="height: 50px; width: auto; margin-bottom: 20px;">
               <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 600;">Vielen Dank für Ihre Bewerbung!</h1>
             </div>
             
