@@ -1,4 +1,3 @@
-
 import { Mail, MapPin, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -62,8 +61,8 @@ const Contact = () => {
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-1">Telefon</h3>
-                      <a href="tel:+492111234567" className="text-primary-600 hover:text-primary-700 hover:underline transition-all duration-200">
-                        +49 211 123 456 7
+                      <a href="tel:+498941435250" className="text-primary-600 hover:text-primary-700 hover:underline transition-all duration-200">
+                        +49 89 41435250
                       </a>
                     </div>
                   </CardContent>

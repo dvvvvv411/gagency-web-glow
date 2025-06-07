@@ -1,4 +1,3 @@
-
 const Impressum = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 pt-16">
@@ -20,7 +19,7 @@ const Impressum = () => {
             <div>
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">Kontakt</h2>
               <div className="space-y-2">
-                <p><strong>Telefon:</strong> +49 30 12345678</p>
+                <p><strong>Telefon:</strong> +49 89 41435250</p>
                 <p><strong>E-Mail:</strong> info@amcd-agentur.de</p>
               </div>
             </div>

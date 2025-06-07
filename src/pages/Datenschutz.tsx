@@ -1,4 +1,3 @@
-
 const Datenschutz = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 pt-16">
@@ -75,7 +74,7 @@ const Datenschutz = () => {
               <p className="leading-relaxed">
                 Bei Fragen zum Datenschutz wenden Sie sich bitte an: <br />
                 <strong>E-Mail:</strong> datenschutz@amcd.de <br />
-                <strong>Telefon:</strong> +49 30 12345678
+                <strong>Telefon:</strong> +49 89 41435250
               </p>
             </div>
           </div>
