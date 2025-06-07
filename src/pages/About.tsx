@@ -1,32 +1,24 @@
 import { Calendar, Target, Users, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
 const About = () => {
-  const timeline = [
-    {
-      year: '2013',
-      title: 'Gründung',
-      description: 'Start als kleines Designstudio mit Fokus auf digitale Lösungen'
-    },
-    {
-      year: '2018',
-      title: 'Expansion',
-      description: 'Erweiterung um Development-Team und erste Enterprise-Kunden'
-    },
-    {
-      year: '2021',
-      title: 'Innovation',
-      description: 'Spezialisierung auf KI-gestützte digitale Transformation'
-    },
-    {
-      year: '2024',
-      title: 'Heute',
-      description: 'Führende Digitalagentur mit 30+ Experten und 100+ Projekten'
-    }
-  ];
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
+  const timeline = [{
+    year: '2013',
+    title: 'Gründung',
+    description: 'Start als kleines Designstudio mit Fokus auf digitale Lösungen'
+  }, {
+    year: '2018',
+    title: 'Expansion',
+    description: 'Erweiterung um Development-Team und erste Enterprise-Kunden'
+  }, {
+    year: '2021',
+    title: 'Innovation',
+    description: 'Spezialisierung auf KI-gestützte digitale Transformation'
+  }, {
+    year: '2024',
+    title: 'Heute',
+    description: 'Führende Digitalagentur mit 30+ Experten und 100+ Projekten'
+  }];
+  return <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50">
         {/* Background Pattern */}
@@ -86,7 +78,7 @@ const About = () => {
                   </div>
                   <div className="bg-white rounded-2xl p-6 shadow-lg transform hover:scale-105 transition-transform duration-300">
                     <Zap className="text-blue-500 mb-3" size={32} />
-                    <div className="text-2xl font-bold text-gray-900">100+</div>
+                    <div className="text-2xl font-bold text-gray-900">150+</div>
                     <div className="text-gray-600">Projekte</div>
                   </div>
                   <div className="bg-white rounded-2xl p-6 shadow-lg transform hover:scale-105 transition-transform duration-300">
@@ -123,14 +115,9 @@ const About = () => {
             <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-primary-500 via-blue-500 to-purple-500 rounded-full"></div>
             
             <div className="space-y-16">
-              {timeline.map((item, index) => (
-                <div
-                  key={item.year}
-                  className={`flex items-center ${
-                    index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'
-                  } animate-fade-in`}
-                  style={{ animationDelay: `${index * 0.2}s` }}
-                >
+              {timeline.map((item, index) => <div key={item.year} className={`flex items-center ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} animate-fade-in`} style={{
+              animationDelay: `${index * 0.2}s`
+            }}>
                   <div className={`lg:w-1/2 ${index % 2 === 0 ? 'lg:pr-12' : 'lg:pl-12'}`}>
                     <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
                       <div className="flex items-center mb-4">
@@ -152,8 +139,7 @@ const About = () => {
                   <div className="lg:w-1/2">
                     {/* Spacer for alternating layout */}
                   </div>
-                </div>
-              ))}
+                </div>)}
             </div>
           </div>
         </div>
@@ -183,7 +169,9 @@ const About = () => {
               </p>
             </div>
             
-            <div className="group bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 animate-fade-in hover:scale-105" style={{ animationDelay: '0.2s' }}>
+            <div className="group bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 animate-fade-in hover:scale-105" style={{
+            animationDelay: '0.2s'
+          }}>
               <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                 <Target className="text-white" size={32} />
               </div>
@@ -194,7 +182,9 @@ const About = () => {
               </p>
             </div>
             
-            <div className="group bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 animate-fade-in hover:scale-105" style={{ animationDelay: '0.4s' }}>
+            <div className="group bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 animate-fade-in hover:scale-105" style={{
+            animationDelay: '0.4s'
+          }}>
               <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                 <Users className="text-white" size={32} />
               </div>
@@ -220,23 +210,15 @@ const About = () => {
             für die digitale Zukunft rüsten.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
-            <Link
-              to="/contact"
-              className="bg-white text-primary-600 px-8 py-4 rounded-2xl font-semibold hover:bg-gray-100 transition-colors duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105"
-            >
+            <Link to="/contact" className="bg-white text-primary-600 px-8 py-4 rounded-2xl font-semibold hover:bg-gray-100 transition-colors duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105">
               Projekt besprechen
             </Link>
-            <Link
-              to="/services"
-              className="border-2 border-white text-white px-8 py-4 rounded-2xl font-semibold hover:bg-white hover:text-primary-600 transition-all duration-300 inline-flex items-center justify-center transform hover:scale-105"
-            >
+            <Link to="/services" className="border-2 border-white text-white px-8 py-4 rounded-2xl font-semibold hover:bg-white hover:text-primary-600 transition-all duration-300 inline-flex items-center justify-center transform hover:scale-105">
               Services entdecken
             </Link>
           </div>
         </div>
       </section>
-    </div>
-  );
+    </div>;
 };
-
 export default About;
