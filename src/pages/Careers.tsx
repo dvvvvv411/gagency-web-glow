@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -63,6 +64,35 @@ const Careers = () => {
     return data.path;
   };
 
+  const sendConfirmationEmail = async (vorname: string, nachname: string, email: string) => {
+    try {
+      console.log('Sending confirmation email to:', email);
+      
+      const { data, error } = await supabase.functions.invoke('send-application-confirmation', {
+        body: {
+          vorname,
+          nachname,
+          email,
+        },
+      });
+
+      if (error) {
+        console.error('Error sending confirmation email:', error);
+        // Don't throw here - we don't want to fail the entire application if email fails
+        toast({
+          title: "Hinweis",
+          description: "Ihre Bewerbung wurde erfolgreich eingereicht. Die Bestätigungs-E-Mail konnte jedoch nicht versendet werden.",
+          variant: "default",
+        });
+      } else {
+        console.log('Confirmation email sent successfully:', data);
+      }
+    } catch (error) {
+      console.error('Error in sendConfirmationEmail:', error);
+      // Don't throw - just log the error
+    }
+  };
+
   const onSubmit = async (data: ApplicationForm) => {
     setIsSubmitting(true);
     
@@ -99,7 +129,10 @@ const Careers = () => {
         throw dbError;
       }
 
-      // Show success popup with confetti instead of toast
+      // Send confirmation email (non-blocking)
+      await sendConfirmationEmail(data.vorname, data.nachname, data.email);
+
+      // Show success popup with confetti
       setShowSuccessPopup(true);
       form.reset();
     } catch (error) {
