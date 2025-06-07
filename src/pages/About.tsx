@@ -73,7 +73,7 @@ const About = () => {
                 <div className="grid grid-cols-2 gap-6 w-full">
                   <div className="bg-white rounded-2xl p-6 shadow-lg transform hover:scale-105 transition-transform duration-300">
                     <Users className="text-primary-500 mb-3" size={32} />
-                    <div className="text-2xl font-bold text-gray-900">50+</div>
+                    <div className="text-2xl font-bold text-gray-900">99+</div>
                     <div className="text-gray-600">Kunden</div>
                   </div>
                   <div className="bg-white rounded-2xl p-6 shadow-lg transform hover:scale-105 transition-transform duration-300">
