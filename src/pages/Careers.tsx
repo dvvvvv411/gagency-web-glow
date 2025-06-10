@@ -1,9 +1,8 @@
-
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { MapPin, Clock, Users, GraduationCap, Briefcase, Star, Shield, Lock, TestTube } from 'lucide-react';
+import { MapPin, Clock, Users, GraduationCap, Briefcase, Star, Shield, Lock, TestTube, Euro } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -186,7 +185,7 @@ const Careers = () => {
                   </div>
 
                   {/* Job Details */}
-                  <div className="grid md:grid-cols-3 gap-6 mb-8">
+                  <div className="grid md:grid-cols-4 gap-6 mb-8">
                     <div className="flex items-center space-x-3">
                       <Clock className="text-primary-500" size={20} />
                       <div>
@@ -206,6 +205,13 @@ const Careers = () => {
                       <div>
                         <p className="font-medium">Start</p>
                         <p className="text-gray-600">Ab sofort</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <Euro className="text-primary-500" size={20} />
+                      <div>
+                        <p className="font-medium">Gehalt</p>
+                        <p className="text-gray-600">556€ pro Monat</p>
                       </div>
                     </div>
                   </div>
