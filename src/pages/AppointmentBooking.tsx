@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import FluidBackground from '@/components/backgrounds/FluidBackground';
@@ -221,9 +222,9 @@ const AppointmentBooking = () => {
   };
 
   const getTimeSlotTooltip = (slot: TimeSlotInfo) => {
-    if (slot.reason === 'booked') return 'Bereits gebucht';
-    if (slot.reason === 'past') return 'Vergangene Uhrzeit';
-    return 'Verfügbar';
+    if (slot.reason === 'booked') return 'Dieser Termin ist bereits gebucht';
+    if (slot.reason === 'past') return 'Dieser Zeitpunkt liegt in der Vergangenheit';
+    return 'Verfügbar - Klicken Sie zum Auswählen';
   };
 
   if (loading) {
@@ -410,28 +411,31 @@ const AppointmentBooking = () => {
                                 {form.watch('date') ? (
                                   timeSlots.length > 0 ? (
                                     <>
-                                      <div className="grid grid-cols-2 gap-3 max-h-80 overflow-y-auto">
-                                        {timeSlots.map((slot) => (
-                                          <div key={slot.time} className="relative">
-                                            <Button
-                                              type="button"
-                                              variant="outline"
-                                              disabled={!slot.isAvailable}
-                                              onClick={() => slot.isAvailable && field.onChange(slot.time)}
-                                              className={getTimeSlotButtonStyle(slot, field.value === slot.time)}
-                                              title={getTimeSlotTooltip(slot)}
-                                            >
-                                              <Clock className="h-4 w-4 mr-2" />
-                                              {slot.time}
-                                              {!slot.isAvailable && (
-                                                <span className="ml-2 text-xs">
-                                                  {slot.reason === 'booked' ? '(Belegt)' : '(Vorbei)'}
-                                                </span>
-                                              )}
-                                            </Button>
-                                          </div>
-                                        ))}
-                                      </div>
+                                      <TooltipProvider>
+                                        <div className="grid grid-cols-2 gap-3 max-h-80 overflow-y-auto">
+                                          {timeSlots.map((slot) => (
+                                            <Tooltip key={slot.time}>
+                                              <TooltipTrigger asChild>
+                                                <div>
+                                                  <Button
+                                                    type="button"
+                                                    variant="outline"
+                                                    disabled={!slot.isAvailable}
+                                                    onClick={() => slot.isAvailable && field.onChange(slot.time)}
+                                                    className={getTimeSlotButtonStyle(slot, field.value === slot.time)}
+                                                  >
+                                                    <Clock className="h-4 w-4 mr-2" />
+                                                    {slot.time}
+                                                  </Button>
+                                                </div>
+                                              </TooltipTrigger>
+                                              <TooltipContent>
+                                                <p>{getTimeSlotTooltip(slot)}</p>
+                                              </TooltipContent>
+                                            </Tooltip>
+                                          ))}
+                                        </div>
+                                      </TooltipProvider>
                                       <div className="flex items-center gap-4 text-sm text-gray-600 mt-4 p-3 bg-gray-50 rounded-lg">
                                         <div className="flex items-center gap-2">
                                           <div className="w-3 h-3 bg-primary rounded"></div>
