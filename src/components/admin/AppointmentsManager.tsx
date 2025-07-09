@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -74,6 +73,39 @@ const AppointmentsManager = () => {
     }
   };
 
+  const sendCompletionEmail = async (appointment: Appointment) => {
+    try {
+      console.log('Sending completion email for appointment:', appointment.id);
+      
+      const { error } = await supabase.functions.invoke('send-application-confirmation', {
+        body: {
+          applicantEmail: appointment.applicant_email,
+          applicantName: appointment.applicant_name,
+          appointmentId: appointment.id,
+          type: 'appointment_completed'
+        }
+      });
+
+      if (error) {
+        console.error('Error sending completion email:', error);
+        throw error;
+      }
+
+      console.log('Completion email sent successfully');
+      toast({
+        title: "E-Mail gesendet",
+        description: `Bestätigungs-E-Mail wurde an ${appointment.applicant_name} gesendet.`,
+      });
+    } catch (error) {
+      console.error('Error sending completion email:', error);
+      toast({
+        title: "E-Mail Fehler",
+        description: "Fehler beim Senden der Bestätigungs-E-Mail.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const updateAppointmentStatus = async (appointmentId: string, newStatus: string) => {
     if (processingIds.has(appointmentId)) return;
     
@@ -91,6 +123,14 @@ const AppointmentsManager = () => {
         title: "Status aktualisiert",
         description: `Termin-Status wurde auf "${newStatus}" geändert.`,
       });
+
+      // If the appointment is marked as completed, send email
+      if (newStatus === 'completed') {
+        const appointment = appointments.find(app => app.id === appointmentId);
+        if (appointment) {
+          await sendCompletionEmail(appointment);
+        }
+      }
 
       fetchAppointments();
     } catch (error) {
