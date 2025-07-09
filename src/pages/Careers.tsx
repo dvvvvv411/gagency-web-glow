@@ -70,9 +70,9 @@ const Careers = () => {
       
       const { data, error } = await supabase.functions.invoke('send-application-confirmation', {
         body: {
-          vorname,
-          nachname,
-          email,
+          applicantEmail: email,
+          applicantName: `${vorname} ${nachname}`,
+          type: 'confirmation',
         },
       });
 
