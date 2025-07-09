@@ -61,6 +61,123 @@ export type Database = {
           },
         ]
       }
+      employment_contracts: {
+        Row: {
+          account_holder: string
+          address: string
+          application_id: string
+          appointment_id: string
+          bank_name: string
+          bic: string
+          birth_date: string
+          birth_place: string
+          church_tax: boolean
+          city: string
+          created_at: string
+          email: string
+          first_name: string
+          health_insurance_company: string
+          health_insurance_number: string
+          iban: string
+          id: string
+          id_back_file_path: string | null
+          id_front_file_path: string | null
+          last_name: string
+          marital_status: string
+          nationality: string
+          notes: string | null
+          pension_insurance_number: string
+          phone: string
+          postal_code: string
+          status: string
+          tax_class: string
+          tax_id: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          account_holder: string
+          address: string
+          application_id: string
+          appointment_id: string
+          bank_name: string
+          bic: string
+          birth_date: string
+          birth_place: string
+          church_tax?: boolean
+          city: string
+          created_at?: string
+          email: string
+          first_name: string
+          health_insurance_company: string
+          health_insurance_number: string
+          iban: string
+          id?: string
+          id_back_file_path?: string | null
+          id_front_file_path?: string | null
+          last_name: string
+          marital_status: string
+          nationality: string
+          notes?: string | null
+          pension_insurance_number: string
+          phone: string
+          postal_code: string
+          status?: string
+          tax_class: string
+          tax_id: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          account_holder?: string
+          address?: string
+          application_id?: string
+          appointment_id?: string
+          bank_name?: string
+          bic?: string
+          birth_date?: string
+          birth_place?: string
+          church_tax?: boolean
+          city?: string
+          created_at?: string
+          email?: string
+          first_name?: string
+          health_insurance_company?: string
+          health_insurance_number?: string
+          iban?: string
+          id?: string
+          id_back_file_path?: string | null
+          id_front_file_path?: string | null
+          last_name?: string
+          marital_status?: string
+          nationality?: string
+          notes?: string | null
+          pension_insurance_number?: string
+          phone?: string
+          postal_code?: string
+          status?: string
+          tax_class?: string
+          tax_id?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "employment_contracts_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "job_applications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "employment_contracts_appointment_id_fkey"
+            columns: ["appointment_id"]
+            isOneToOne: false
+            referencedRelation: "appointments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       job_applications: {
         Row: {
           accepted_at: string | null

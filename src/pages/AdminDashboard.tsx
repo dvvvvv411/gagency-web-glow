@@ -11,6 +11,7 @@ import FluidBackground from '@/components/backgrounds/FluidBackground';
 import { AnimatedSection } from '@/components/ui/animated-section';
 import JobApplicationsManager from '@/components/admin/JobApplicationsManager';
 import AppointmentsManager from '@/components/admin/AppointmentsManager';
+import EmploymentContractsManager from '@/components/admin/EmploymentContractsManager';
 import ResendManager from '@/components/admin/ResendManager';
 import { 
   Users, 
@@ -23,7 +24,8 @@ import {
   FileText,
   Briefcase,
   Calendar,
-  Mail
+  Mail,
+  Building
 } from 'lucide-react';
 
 interface Profile {
@@ -38,6 +40,7 @@ const AdminDashboard = () => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [applicationsCount, setApplicationsCount] = useState(0);
   const [appointmentsCount, setAppointmentsCount] = useState(0);
+  const [contractsCount, setContractsCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const { user, signOut, isAdmin } = useAuth();
   const { toast } = useToast();
@@ -47,6 +50,7 @@ const AdminDashboard = () => {
       fetchProfiles();
       fetchApplicationsCount();
       fetchAppointmentsCount();
+      fetchContractsCount();
     }
   }, [isAdmin]);
 
@@ -112,6 +116,19 @@ const AdminDashboard = () => {
       setAppointmentsCount(count || 0);
     } catch (error) {
       console.error('Error fetching appointments count:', error);
+    }
+  };
+
+  const fetchContractsCount = async () => {
+    try {
+      const { count, error } = await supabase
+        .from('employment_contracts')
+        .select('*', { count: 'exact', head: true });
+
+      if (error) throw error;
+      setContractsCount(count || 0);
+    } catch (error) {
+      console.error('Error fetching contracts count:', error);
     }
   };
 
@@ -192,7 +209,7 @@ const AdminDashboard = () => {
         </AnimatedSection>
 
         {/* Stats Cards */}
-        <AnimatedSection className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8" delay={100}>
+        <AnimatedSection className="grid grid-cols-1 md:grid-cols-6 gap-6 mb-8" delay={100}>
           <Card className="bg-white/70 backdrop-blur-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Gesamte Benutzer</CardTitle>
@@ -246,12 +263,22 @@ const AdminDashboard = () => {
               <div className="text-2xl font-bold">{appointmentsCount}</div>
             </CardContent>
           </Card>
+
+          <Card className="bg-white/70 backdrop-blur-sm">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Verträge</CardTitle>
+              <Building className="h-4 w-4 text-orange-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{contractsCount}</div>
+            </CardContent>
+          </Card>
         </AnimatedSection>
 
         {/* Tabs for different management sections */}
         <AnimatedSection delay={200}>
           <Tabs defaultValue="users" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="users" className="flex items-center gap-2">
                 <UserCheck className="h-4 w-4" />
                 Benutzerverwaltung
@@ -263,6 +290,10 @@ const AdminDashboard = () => {
               <TabsTrigger value="appointments" className="flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
                 Terminkalender
+              </TabsTrigger>
+              <TabsTrigger value="contracts" className="flex items-center gap-2">
+                <Building className="h-4 w-4" />
+                Verträge
               </TabsTrigger>
               <TabsTrigger value="resend" className="flex items-center gap-2">
                 <Mail className="h-4 w-4" />
@@ -343,6 +374,10 @@ const AdminDashboard = () => {
 
             <TabsContent value="appointments">
               <AppointmentsManager />
+            </TabsContent>
+
+            <TabsContent value="contracts">
+              <EmploymentContractsManager />
             </TabsContent>
 
             <TabsContent value="resend">
