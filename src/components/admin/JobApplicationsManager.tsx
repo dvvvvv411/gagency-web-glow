@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { FileText, Eye, Phone, Mail, MapPin, User, Flag, Check, Calendar } from 'lucide-react';
+import { FileText, Eye, Phone, Mail, MapPin, User, Flag, Check, Calendar, ExternalLink, Copy } from 'lucide-react';
 import PDFViewerDialog from './PDFViewerDialog';
 
 interface JobApplication {
@@ -150,6 +150,22 @@ const JobApplicationsManager = () => {
     }
   };
 
+  const getAppointmentBookingLink = (applicationId: string) => {
+    return `${window.location.origin}/termin-buchen?applicationId=${applicationId}`;
+  };
+
+  const copyLinkToClipboard = (link: string) => {
+    navigator.clipboard.writeText(link);
+    toast({
+      title: "Link kopiert",
+      description: "Der Terminbuchungs-Link wurde in die Zwischenablage kopiert.",
+    });
+  };
+
+  const openLinkInNewTab = (link: string) => {
+    window.open(link, '_blank');
+  };
+
   const getStatusBadge = (status: string, acceptedAt: string | null) => {
     if (status === 'angenommen' || acceptedAt) {
       return (
@@ -195,6 +211,7 @@ const JobApplicationsManager = () => {
                       <TableHead className="w-[100px]">Nation</TableHead>
                       <TableHead className="w-[90px]">Status</TableHead>
                       <TableHead className="w-[140px]">Dokumente</TableHead>
+                      <TableHead className="w-[160px]">Terminbuchung</TableHead>
                       <TableHead className="w-[120px]">Aktion</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -279,6 +296,35 @@ const JobApplicationsManager = () => {
                               <span className="text-xs text-gray-500">Keine</span>
                             )}
                           </div>
+                        </TableCell>
+
+                        <TableCell className="p-3">
+                          {(application.status === 'angenommen' || application.accepted_at) ? (
+                            <div className="space-y-1">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => openLinkInNewTab(getAppointmentBookingLink(application.id))}
+                                className="w-full justify-start text-xs h-7 px-2"
+                              >
+                                <ExternalLink className="h-3 w-3 mr-1" />
+                                Öffnen
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => copyLinkToClipboard(getAppointmentBookingLink(application.id))}
+                                className="w-full justify-start text-xs h-7 px-2"
+                              >
+                                <Copy className="h-3 w-3 mr-1" />
+                                Kopieren
+                              </Button>
+                            </div>
+                          ) : (
+                            <span className="text-xs text-gray-500">
+                              Nach Akzeptierung verfügbar
+                            </span>
+                          )}
                         </TableCell>
                         
                         <TableCell className="p-3">
