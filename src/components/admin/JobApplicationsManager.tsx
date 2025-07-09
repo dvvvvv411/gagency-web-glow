@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -190,81 +189,79 @@ const JobApplicationsManager = () => {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="min-w-[150px]">Persönliche Daten</TableHead>
-                      <TableHead className="min-w-[200px]">Kontakt</TableHead>
-                      <TableHead className="min-w-[200px]">Adresse</TableHead>
-                      <TableHead className="min-w-[120px]">Staatsangehörigkeit</TableHead>
-                      <TableHead className="min-w-[100px]">Status</TableHead>
-                      <TableHead className="min-w-[100px]">Eingereicht</TableHead>
-                      <TableHead className="min-w-[200px]">Dokumente</TableHead>
-                      <TableHead className="min-w-[150px]">Aktionen</TableHead>
+                      <TableHead className="w-[200px]">Bewerber</TableHead>
+                      <TableHead className="w-[180px]">Kontakt</TableHead>
+                      <TableHead className="w-[160px]">Ort</TableHead>
+                      <TableHead className="w-[100px]">Nation</TableHead>
+                      <TableHead className="w-[90px]">Status</TableHead>
+                      <TableHead className="w-[140px]">Dokumente</TableHead>
+                      <TableHead className="w-[120px]">Aktion</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {applications.map((application) => (
                       <TableRow key={application.id} className="align-top">
-                        <TableCell>
+                        <TableCell className="p-3">
                           <div className="space-y-1">
                             <div className="flex items-center gap-1">
-                              <User className="h-3 w-3 text-gray-500" />
-                              <span className="font-medium text-sm">
+                              <User className="h-3 w-3 text-gray-500 flex-shrink-0" />
+                              <span className="font-medium text-sm break-words">
                                 {application.vorname} {application.nachname}
                               </span>
                             </div>
-                          </div>
-                        </TableCell>
-                        
-                        <TableCell>
-                          <div className="space-y-1 text-sm">
-                            <div className="flex items-center gap-1">
-                              <Mail className="h-3 w-3 text-gray-500" />
-                              <span>{application.email}</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <Phone className="h-3 w-3 text-gray-500" />
-                              <span>{application.phone}</span>
+                            <div className="text-xs text-gray-500">
+                              {new Date(application.created_at).toLocaleDateString('de-DE')}
                             </div>
                           </div>
                         </TableCell>
                         
-                        <TableCell>
-                          <div className="space-y-1 text-sm">
+                        <TableCell className="p-3">
+                          <div className="space-y-1 text-xs">
                             <div className="flex items-center gap-1">
-                              <MapPin className="h-3 w-3 text-gray-500" />
-                              <div>
-                                <div>{application.adresse}</div>
+                              <Mail className="h-3 w-3 text-gray-500 flex-shrink-0" />
+                              <span className="break-all">{application.email}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Phone className="h-3 w-3 text-gray-500 flex-shrink-0" />
+                              <span className="break-words">{application.phone}</span>
+                            </div>
+                          </div>
+                        </TableCell>
+                        
+                        <TableCell className="p-3">
+                          <div className="space-y-1 text-xs">
+                            <div className="flex items-center gap-1">
+                              <MapPin className="h-3 w-3 text-gray-500 flex-shrink-0" />
+                              <div className="break-words">
                                 <div>{application.plz} {application.stadt}</div>
+                                <div className="text-gray-400 truncate">{application.adresse}</div>
                               </div>
                             </div>
                           </div>
                         </TableCell>
                         
-                        <TableCell>
-                          <div className="flex items-center gap-1 text-sm">
-                            <Flag className="h-3 w-3 text-gray-500" />
-                            <span>{application.staatsangehoerigkeit}</span>
+                        <TableCell className="p-3">
+                          <div className="flex items-center gap-1 text-xs">
+                            <Flag className="h-3 w-3 text-gray-500 flex-shrink-0" />
+                            <span className="break-words">{application.staatsangehoerigkeit}</span>
                           </div>
                         </TableCell>
                         
-                        <TableCell>
+                        <TableCell className="p-3">
                           {getStatusBadge(application.status, application.accepted_at)}
                         </TableCell>
                         
-                        <TableCell className="text-sm">
-                          {new Date(application.created_at).toLocaleDateString('de-DE')}
-                        </TableCell>
-                        
-                        <TableCell>
-                          <div className="space-y-2">
+                        <TableCell className="p-3">
+                          <div className="space-y-1">
                             {application.cv_file_path && (
                               <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => viewFile(application.cv_file_path!, 'Lebenslauf', application)}
-                                className="w-full justify-start text-xs"
+                                className="w-full justify-start text-xs h-7 px-2"
                               >
                                 <Eye className="h-3 w-3 mr-1" />
-                                Lebenslauf anzeigen
+                                CV
                               </Button>
                             )}
                             {application.anschreiben_file_path && (
@@ -272,28 +269,28 @@ const JobApplicationsManager = () => {
                                 variant="outline"
                                 size="sm"
                                 onClick={() => viewFile(application.anschreiben_file_path!, 'Anschreiben', application)}
-                                className="w-full justify-start text-xs"
+                                className="w-full justify-start text-xs h-7 px-2"
                               >
                                 <Eye className="h-3 w-3 mr-1" />
-                                Anschreiben anzeigen
+                                Brief
                               </Button>
                             )}
                             {!application.cv_file_path && !application.anschreiben_file_path && (
-                              <span className="text-xs text-gray-500">Keine Dokumente</span>
+                              <span className="text-xs text-gray-500">Keine</span>
                             )}
                           </div>
                         </TableCell>
                         
-                        <TableCell>
+                        <TableCell className="p-3">
                           {!application.accepted_at && application.status !== 'accepted' ? (
                             <Button
                               onClick={() => acceptApplication(application)}
                               disabled={processingIds.has(application.id)}
                               size="sm"
-                              className="w-full bg-green-600 hover:bg-green-700 text-white"
+                              className="w-full bg-green-600 hover:bg-green-700 text-white text-xs h-8"
                             >
                               {processingIds.has(application.id) ? (
-                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                                <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
                               ) : (
                                 <>
                                   <Check className="h-3 w-3 mr-1" />
@@ -302,9 +299,9 @@ const JobApplicationsManager = () => {
                               )}
                             </Button>
                           ) : (
-                            <div className="text-sm text-green-600 font-medium">
-                              <Check className="h-4 w-4 inline mr-1" />
-                              Akzeptiert am {new Date(application.accepted_at!).toLocaleDateString('de-DE')}
+                            <div className="text-xs text-green-600 font-medium break-words">
+                              <Check className="h-3 w-3 inline mr-1" />
+                              Akzeptiert
                             </div>
                           )}
                         </TableCell>
