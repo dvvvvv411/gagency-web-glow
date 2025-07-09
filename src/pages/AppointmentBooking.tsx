@@ -211,14 +211,14 @@ const AppointmentBooking = () => {
 
   const getTimeSlotButtonStyle = (slot: TimeSlotInfo, isSelected: boolean) => {
     if (!slot.isAvailable) {
-      return "h-12 text-base font-medium bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200";
+      return "h-14 w-full text-base font-medium bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200 justify-center items-center";
     }
     
     if (isSelected) {
-      return "h-12 text-base font-medium bg-primary text-primary-foreground hover:bg-primary/90";
+      return "h-14 w-full text-base font-medium bg-primary text-primary-foreground hover:bg-primary/90 justify-center items-center";
     }
     
-    return "h-12 text-base font-medium border-input bg-background hover:bg-accent hover:text-accent-foreground";
+    return "h-14 w-full text-base font-medium border-input bg-background hover:bg-accent hover:text-accent-foreground justify-center items-center";
   };
 
   const getTimeSlotTooltip = (slot: TimeSlotInfo) => {
@@ -412,7 +412,7 @@ const AppointmentBooking = () => {
                                   timeSlots.length > 0 ? (
                                     <>
                                       <TooltipProvider>
-                                        <div className="grid grid-cols-2 gap-3 max-h-80 overflow-y-auto">
+                                        <div className="grid grid-cols-2 gap-2 max-h-80 overflow-y-auto">
                                           {timeSlots.map((slot) => (
                                             <Tooltip key={slot.time}>
                                               <TooltipTrigger asChild>
