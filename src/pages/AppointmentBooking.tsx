@@ -6,22 +6,19 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Calendar } from '@/components/ui/calendar';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import FluidBackground from '@/components/backgrounds/FluidBackground';
 import { AnimatedSection } from '@/components/ui/animated-section';
-import { Calendar as CalendarIcon, Clock, User, Mail, Phone, CheckCircle, AlertCircle } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, User, Mail, Phone, CheckCircle, AlertCircle, ArrowRight } from 'lucide-react';
 
 const bookingSchema = z.object({
   date: z.date({
     required_error: "Bitte wählen Sie ein Datum aus",
   }),
   time: z.string().min(1, "Bitte wählen Sie eine Uhrzeit aus"),
-  notes: z.string().optional(),
 });
 
 type BookingFormData = z.infer<typeof bookingSchema>;
@@ -38,7 +35,6 @@ const AppointmentBooking = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [application, setApplication] = useState<Application | null>(null);
-  const [bookedAppointments, setBookedAppointments] = useState<Date[]>([]);
   const [availableTimes, setAvailableTimes] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -102,12 +98,6 @@ const AppointmentBooking = () => {
         .eq('status', 'scheduled');
 
       if (error) throw error;
-
-      const bookedDates = data?.map(appointment => 
-        new Date(appointment.appointment_date)
-      ) || [];
-      
-      setBookedAppointments(bookedDates);
     } catch (error) {
       console.error('Error fetching appointments:', error);
     }
@@ -119,7 +109,6 @@ const AppointmentBooking = () => {
       return;
     }
 
-    // Get appointments for the selected date
     const dateString = selectedDate.toISOString().split('T')[0];
     
     supabase
@@ -152,7 +141,6 @@ const AppointmentBooking = () => {
           appointment_time: data.time,
           applicant_name: `${application.vorname} ${application.nachname}`,
           applicant_email: application.email,
-          notes: data.notes || null,
         });
 
       if (error) throw error;
@@ -189,9 +177,9 @@ const AppointmentBooking = () => {
   if (loading) {
     return (
       <FluidBackground className="min-h-screen flex items-center justify-center">
-        <Card className="max-w-md mx-auto bg-white/70 backdrop-blur-sm">
-          <CardContent className="flex items-center justify-center p-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+        <Card className="max-w-md mx-auto bg-white/80 backdrop-blur-md shadow-xl border-0">
+          <CardContent className="flex items-center justify-center p-12">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
           </CardContent>
         </Card>
       </FluidBackground>
@@ -201,17 +189,19 @@ const AppointmentBooking = () => {
   if (error) {
     return (
       <FluidBackground className="min-h-screen flex items-center justify-center">
-        <AnimatedSection className="max-w-md mx-auto">
-          <Card className="bg-white/70 backdrop-blur-sm text-center">
-            <CardHeader>
-              <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-              <CardTitle className="text-red-600">Fehler</CardTitle>
-              <CardDescription>
+        <AnimatedSection className="max-w-lg mx-auto px-4">
+          <Card className="bg-white/80 backdrop-blur-md shadow-xl border-0 text-center">
+            <CardHeader className="pb-4">
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <AlertCircle className="w-8 h-8 text-red-600" />
+              </div>
+              <CardTitle className="text-xl text-red-600">Zugang nicht möglich</CardTitle>
+              <CardDescription className="text-gray-600 text-base leading-relaxed">
                 {error}
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <Button onClick={() => navigate('/')} className="w-full">
+            <CardContent className="pt-0">
+              <Button onClick={() => navigate('/')} className="w-full" size="lg">
                 Zur Startseite
               </Button>
             </CardContent>
@@ -224,17 +214,25 @@ const AppointmentBooking = () => {
   if (success) {
     return (
       <FluidBackground className="min-h-screen flex items-center justify-center">
-        <AnimatedSection className="max-w-md mx-auto">
-          <Card className="bg-white/70 backdrop-blur-sm text-center">
-            <CardHeader>
-              <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-              <CardTitle className="text-green-600">Termin erfolgreich gebucht!</CardTitle>
-              <CardDescription>
-                Ihr Telefontermin wurde bestätigt. Sie erhalten eine Bestätigungs-E-Mail mit allen Details.
+        <AnimatedSection className="max-w-lg mx-auto px-4">
+          <Card className="bg-white/80 backdrop-blur-md shadow-xl border-0 text-center">
+            <CardHeader className="pb-4">
+              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <CheckCircle className="w-10 h-10 text-green-600" />
+              </div>
+              <CardTitle className="text-2xl text-green-600 mb-2">Termin erfolgreich gebucht!</CardTitle>
+              <CardDescription className="text-gray-600 text-base leading-relaxed">
+                Ihr Telefontermin wurde bestätigt. Sie erhalten in Kürze eine Bestätigungs-E-Mail mit allen Details.
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <Button onClick={() => navigate('/')} className="w-full">
+            <CardContent className="pt-0 space-y-4">
+              <div className="bg-green-50 rounded-lg p-4 text-left">
+                <p className="text-sm text-green-800 font-medium">Nächste Schritte:</p>
+                <p className="text-sm text-green-700 mt-1">
+                  Halten Sie sich bitte zum gebuchten Termin telefonisch bereit. Wir rufen Sie an.
+                </p>
+              </div>
+              <Button onClick={() => navigate('/')} className="w-full" size="lg">
                 Zur Startseite
               </Button>
             </CardContent>
@@ -245,39 +243,50 @@ const AppointmentBooking = () => {
   }
 
   return (
-    <FluidBackground className="min-h-screen py-12">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <AnimatedSection className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+    <FluidBackground className="min-h-screen py-8">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <AnimatedSection className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Telefontermin buchen
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Buchen Sie Ihren persönlichen Telefontermin für das Bewerbungsgespräch.
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Vereinbaren Sie Ihren persönlichen Telefontermin für das Bewerbungsgespräch
           </p>
         </AnimatedSection>
 
         {application && (
-          <AnimatedSection delay={100}>
-            <Card className="bg-white/70 backdrop-blur-sm mb-8">
+          <AnimatedSection delay={100} className="mb-8">
+            <Card className="bg-white/80 backdrop-blur-md shadow-lg border-0">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <User className="h-5 w-5" />
-                  Bewerberdaten
+                <CardTitle className="flex items-center gap-3 text-lg">
+                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                    <User className="h-5 w-5 text-blue-600" />
+                  </div>
+                  Ihre Bewerberdaten
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="flex items-center gap-2">
-                    <User className="h-4 w-4 text-gray-500" />
-                    <span className="font-medium">{application.vorname} {application.nachname}</span>
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                    <User className="h-5 w-5 text-gray-500 flex-shrink-0" />
+                    <div>
+                      <p className="text-sm text-gray-500">Name</p>
+                      <p className="font-medium text-gray-900">{application.vorname} {application.nachname}</p>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Mail className="h-4 w-4 text-gray-500" />
-                    <span>{application.email}</span>
+                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                    <Mail className="h-5 w-5 text-gray-500 flex-shrink-0" />
+                    <div>
+                      <p className="text-sm text-gray-500">E-Mail</p>
+                      <p className="font-medium text-gray-900">{application.email}</p>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Phone className="h-4 w-4 text-gray-500" />
-                    <span>{application.phone}</span>
+                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                    <Phone className="h-5 w-5 text-gray-500 flex-shrink-0" />
+                    <div>
+                      <p className="text-sm text-gray-500">Telefon</p>
+                      <p className="font-medium text-gray-900">{application.phone}</p>
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -286,88 +295,96 @@ const AppointmentBooking = () => {
         )}
 
         <AnimatedSection delay={200}>
-          <Card className="bg-white/70 backdrop-blur-sm">
+          <Card className="bg-white/80 backdrop-blur-md shadow-lg border-0">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <CalendarIcon className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-3 text-xl">
+                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                  <CalendarIcon className="h-5 w-5 text-green-600" />
+                </div>
                 Termin auswählen
               </CardTitle>
-              <CardDescription>
-                Wählen Sie ein Datum und eine Uhrzeit für Ihr Telefoninterview.
+              <CardDescription className="text-base">
+                Wählen Sie einen passenden Termin für Ihr Telefoninterview aus.
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-8">
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <FormField
-                      control={form.control}
-                      name="date"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                          <FormLabel>Datum auswählen</FormLabel>
-                          <FormControl>
-                            <Calendar
-                              mode="single"
-                              selected={field.value}
-                              onSelect={(date) => {
-                                field.onChange(date);
-                                if (date) updateAvailableTimes(date);
-                              }}
-                              disabled={isDateDisabled}
-                              className="rounded-md border"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                  <div className="grid lg:grid-cols-2 gap-8">
+                    {/* Calendar Section */}
+                    <div className="space-y-4">
+                      <FormField
+                        control={form.control}
+                        name="date"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-base font-semibold flex items-center gap-2">
+                              <CalendarIcon className="h-4 w-4" />
+                              Datum auswählen
+                            </FormLabel>
+                            <FormControl>
+                              <div className="bg-white rounded-lg border shadow-sm">
+                                <Calendar
+                                  mode="single"
+                                  selected={field.value}
+                                  onSelect={(date) => {
+                                    field.onChange(date);
+                                    if (date) updateAvailableTimes(date);
+                                  }}
+                                  disabled={isDateDisabled}
+                                  className="rounded-lg"
+                                />
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
 
+                    {/* Time Selection */}
                     <div className="space-y-4">
                       <FormField
                         control={form.control}
                         name="time"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Verfügbare Uhrzeiten</FormLabel>
+                            <FormLabel className="text-base font-semibold flex items-center gap-2">
+                              <Clock className="h-4 w-4" />
+                              Verfügbare Uhrzeiten
+                            </FormLabel>
                             <FormControl>
-                              <div className="grid grid-cols-2 gap-2 max-h-60 overflow-y-auto">
-                                {availableTimes.map((time) => (
-                                  <Button
-                                    key={time}
-                                    type="button"
-                                    variant={field.value === time ? "default" : "outline"}
-                                    size="sm"
-                                    onClick={() => field.onChange(time)}
-                                    className="justify-start"
-                                  >
-                                    <Clock className="h-3 w-3 mr-1" />
-                                    {time}
-                                  </Button>
-                                ))}
+                              <div className="space-y-3">
+                                {form.watch('date') ? (
+                                  availableTimes.length > 0 ? (
+                                    <div className="grid grid-cols-2 gap-3 max-h-80 overflow-y-auto">
+                                      {availableTimes.map((time) => (
+                                        <Button
+                                          key={time}
+                                          type="button"
+                                          variant={field.value === time ? "default" : "outline"}
+                                          size="lg"
+                                          onClick={() => field.onChange(time)}
+                                          className="h-12 text-base font-medium"
+                                        >
+                                          <Clock className="h-4 w-4 mr-2" />
+                                          {time}
+                                        </Button>
+                                      ))}
+                                    </div>
+                                  ) : (
+                                    <div className="text-center py-8 bg-gray-50 rounded-lg">
+                                      <Clock className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                                      <p className="text-gray-500">Keine verfügbaren Termine für diesen Tag</p>
+                                    </div>
+                                  )
+                                ) : (
+                                  <div className="text-center py-8 bg-gray-50 rounded-lg">
+                                    <CalendarIcon className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                                    <p className="text-gray-500">Bitte wählen Sie zuerst ein Datum aus</p>
+                                  </div>
+                                )}
                               </div>
-                            </FormControl>
-                            {form.watch('date') && availableTimes.length === 0 && (
-                              <p className="text-sm text-gray-500">
-                                Keine verfügbaren Termine für diesen Tag.
-                              </p>
-                            )}
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="notes"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Anmerkungen (optional)</FormLabel>
-                            <FormControl>
-                              <Textarea
-                                placeholder="Besondere Wünsche oder Anmerkungen..."
-                                {...field}
-                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -376,18 +393,23 @@ const AppointmentBooking = () => {
                     </div>
                   </div>
 
-                  <Button 
-                    type="submit" 
-                    disabled={submitting}
-                    className="w-full"
-                  >
-                    {submitting ? (
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    ) : (
-                      <CalendarIcon className="h-4 w-4 mr-2" />
-                    )}
-                    Termin buchen
-                  </Button>
+                  {/* Submit Button */}
+                  <div className="pt-6 border-t">
+                    <Button 
+                      type="submit" 
+                      disabled={submitting || !form.watch('date') || !form.watch('time')}
+                      className="w-full h-14 text-lg font-semibold"
+                      size="lg"
+                    >
+                      {submitting ? (
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                      ) : (
+                        <CalendarIcon className="h-5 w-5 mr-3" />
+                      )}
+                      {submitting ? 'Termin wird gebucht...' : 'Termin jetzt buchen'}
+                      {!submitting && <ArrowRight className="h-5 w-5 ml-3" />}
+                    </Button>
+                  </div>
                 </form>
               </Form>
             </CardContent>
