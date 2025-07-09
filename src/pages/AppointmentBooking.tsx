@@ -44,7 +44,7 @@ const AppointmentBooking = () => {
   const [success, setSuccess] = useState(false);
   const { toast } = useToast();
 
-  const applicationId = searchParams.get('application');
+  const applicationId = searchParams.get('applicationId');
 
   const form = useForm<BookingFormData>({
     resolver: zodResolver(bookingSchema),
