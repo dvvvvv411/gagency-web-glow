@@ -76,7 +76,7 @@ const JobApplicationsManager = () => {
       const { error: updateError } = await supabase
         .from('job_applications')
         .update({ 
-          status: 'accepted',
+          status: 'angenommen',
           accepted_at: new Date().toISOString()
         })
         .eq('id', application.id);
@@ -151,7 +151,7 @@ const JobApplicationsManager = () => {
   };
 
   const getStatusBadge = (status: string, acceptedAt: string | null) => {
-    if (status === 'accepted' || acceptedAt) {
+    if (status === 'angenommen' || acceptedAt) {
       return (
         <Badge className="bg-green-100 text-green-800 border-green-300">
           <Check className="h-3 w-3 mr-1" />
@@ -282,7 +282,7 @@ const JobApplicationsManager = () => {
                         </TableCell>
                         
                         <TableCell className="p-3">
-                          {!application.accepted_at && application.status !== 'accepted' ? (
+                          {!application.accepted_at && application.status !== 'angenommen' ? (
                             <Button
                               onClick={() => acceptApplication(application)}
                               disabled={processingIds.has(application.id)}
