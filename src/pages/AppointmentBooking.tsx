@@ -100,8 +100,7 @@ const AppointmentBooking = () => {
     try {
       const { data, error } = await supabase
         .from('appointments')
-        .select('appointment_date, appointment_time')
-        .eq('status', 'scheduled');
+        .select('appointment_date, appointment_time');
 
       if (error) throw error;
     } catch (error) {
@@ -125,7 +124,6 @@ const AppointmentBooking = () => {
       .from('appointments')
       .select('appointment_time')
       .eq('appointment_date', dateString)
-      .eq('status', 'scheduled')
       .then(({ data, error }) => {
         if (error) {
           console.error('Error fetching appointments for date:', error);
