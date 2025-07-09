@@ -11,6 +11,7 @@ import FluidBackground from '@/components/backgrounds/FluidBackground';
 import { AnimatedSection } from '@/components/ui/animated-section';
 import JobApplicationsManager from '@/components/admin/JobApplicationsManager';
 import AppointmentsManager from '@/components/admin/AppointmentsManager';
+import ResendManager from '@/components/admin/ResendManager';
 import { 
   Users, 
   Shield, 
@@ -21,7 +22,8 @@ import {
   LogOut,
   FileText,
   Briefcase,
-  Calendar
+  Calendar,
+  Mail
 } from 'lucide-react';
 
 interface Profile {
@@ -249,7 +251,7 @@ const AdminDashboard = () => {
         {/* Tabs for different management sections */}
         <AnimatedSection delay={200}>
           <Tabs defaultValue="users" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="users" className="flex items-center gap-2">
                 <UserCheck className="h-4 w-4" />
                 Benutzerverwaltung
@@ -261,6 +263,10 @@ const AdminDashboard = () => {
               <TabsTrigger value="appointments" className="flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
                 Terminkalender
+              </TabsTrigger>
+              <TabsTrigger value="resend" className="flex items-center gap-2">
+                <Mail className="h-4 w-4" />
+                E-Mail Setup
               </TabsTrigger>
             </TabsList>
 
@@ -337,6 +343,10 @@ const AdminDashboard = () => {
 
             <TabsContent value="appointments">
               <AppointmentsManager />
+            </TabsContent>
+
+            <TabsContent value="resend">
+              <ResendManager />
             </TabsContent>
           </Tabs>
         </AnimatedSection>

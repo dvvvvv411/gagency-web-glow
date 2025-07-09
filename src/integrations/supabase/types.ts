@@ -142,6 +142,30 @@ export type Database = {
         }
         Relationships: []
       }
+      resend_config: {
+        Row: {
+          created_at: string
+          id: string
+          sender_email: string
+          sender_name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          sender_email: string
+          sender_name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          sender_email?: string
+          sender_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string

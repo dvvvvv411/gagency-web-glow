@@ -1,5 +1,6 @@
 
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 import { Resend } from "npm:resend@2.0.0";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
@@ -14,7 +15,12 @@ interface ApplicationEmailRequest {
   applicantEmail: string;
   applicantName: string;
   applicationId?: string;
-  type: 'confirmation' | 'acceptance';
+  type: 'confirmation' | 'acceptance' | 'test';
+}
+
+interface ResendConfig {
+  sender_email: string;
+  sender_name: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -29,10 +35,72 @@ const handler = async (req: Request): Promise<Response> => {
     const { applicantEmail, applicantName, applicationId, type }: ApplicationEmailRequest = await req.json();
     console.log("Processing email request:", { applicantEmail, applicantName, applicationId, type });
 
+    // Initialize Supabase client
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Fetch Resend configuration from database
+    let resendConfig: ResendConfig = {
+      sender_email: "onboarding@resend.dev",
+      sender_name: "Bewerbungsteam"
+    };
+
+    try {
+      const { data: configData, error: configError } = await supabase
+        .from('resend_config')
+        .select('sender_email, sender_name')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (configError) {
+        console.error('Error fetching resend config:', configError);
+      } else if (configData) {
+        resendConfig = configData;
+        console.log('Using custom resend config:', resendConfig);
+      } else {
+        console.log('No custom resend config found, using defaults');
+      }
+    } catch (error) {
+      console.error('Error fetching resend config:', error);
+      console.log('Using default resend config');
+    }
+
     let emailSubject: string;
     let emailHtml: string;
 
-    if (type === 'acceptance') {
+    if (type === 'test') {
+      emailSubject = "Test E-Mail - Resend Konfiguration";
+      emailHtml = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 10px; text-align: center;">
+            <h1 style="margin: 0; font-size: 28px;">🧪 Test E-Mail</h1>
+            <p style="margin: 10px 0 0 0; font-size: 18px; opacity: 0.9;">Resend Konfiguration erfolgreich</p>
+          </div>
+          
+          <div style="background-color: white; padding: 30px; border-radius: 0 0 10px 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <p style="font-size: 16px; color: #374151; margin-bottom: 20px;">
+              Diese Test-E-Mail bestätigt, dass Ihre Resend-Konfiguration korrekt funktioniert.
+            </p>
+            
+            <div style="background-color: #f0f9ff; border-left: 4px solid #3b82f6; padding: 20px; margin: 20px 0; border-radius: 5px;">
+              <h3 style="color: #1e40af; margin: 0 0 10px 0; font-size: 18px;">✅ Konfiguration aktiv</h3>
+              <p style="color: #374151; margin: 0; line-height: 1.6;">
+                Absender: ${resendConfig.sender_name} &lt;${resendConfig.sender_email}&gt;
+              </p>
+            </div>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+              <p style="color: #6b7280; font-size: 14px; margin: 0;">
+                Mit freundlichen Grüßen,<br>
+                <strong>${resendConfig.sender_name}</strong>
+              </p>
+            </div>
+          </div>
+        </div>
+      `;
+    } else if (type === 'acceptance') {
       // Generate appointment booking link
       const bookingUrl = `${req.headers.get('origin') || 'https://id-preview--70742796-8eb6-4d9f-a870-1f297bf01653.lovable.app'}/termin-buchen?application=${applicationId}`;
       
@@ -91,7 +159,7 @@ const handler = async (req: Request): Promise<Response> => {
             <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
               <p style="color: #6b7280; font-size: 14px; margin: 0;">
                 Mit freundlichen Grüßen,<br>
-                <strong>Ihr Team</strong>
+                <strong>${resendConfig.sender_name}</strong>
               </p>
             </div>
           </div>
@@ -135,7 +203,7 @@ const handler = async (req: Request): Promise<Response> => {
             <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
               <p style="color: #6b7280; font-size: 14px; margin: 0;">
                 Mit freundlichen Grüßen,<br>
-                <strong>Ihr Bewerbungsteam</strong>
+                <strong>${resendConfig.sender_name}</strong>
               </p>
             </div>
           </div>
@@ -147,8 +215,11 @@ const handler = async (req: Request): Promise<Response> => {
       `;
     }
 
+    const fromEmail = `${resendConfig.sender_name} <${resendConfig.sender_email}>`;
+    console.log('Sending email from:', fromEmail);
+
     const emailResponse = await resend.emails.send({
-      from: "Bewerbungsteam <onboarding@resend.dev>",
+      from: fromEmail,
       to: [applicantEmail],
       subject: emailSubject,
       html: emailHtml,
