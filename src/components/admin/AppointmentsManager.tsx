@@ -15,6 +15,7 @@ interface Appointment {
   appointment_time: string;
   applicant_name: string;
   applicant_email: string;
+  applicant_phone?: string;
   status: string;
   notes: string | null;
   created_at: string;
@@ -23,6 +24,7 @@ interface Appointment {
 
 const AppointmentsManager = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [nextAppointment, setNextAppointment] = useState<Appointment | null>(null);
   const [loading, setLoading] = useState(true);
   const [processingIds, setProcessingIds] = useState<Set<string>>(new Set());
   const { toast } = useToast();
@@ -36,12 +38,30 @@ const AppointmentsManager = () => {
       setLoading(true);
       const { data, error } = await supabase
         .from('appointments')
-        .select('*')
+        .select(`
+          *,
+          job_applications!inner(phone)
+        `)
         .order('appointment_date', { ascending: true })
         .order('appointment_time', { ascending: true });
 
       if (error) throw error;
-      setAppointments(data || []);
+
+      // Transform data to include phone numbers
+      const appointmentsWithPhone = (data || []).map(appointment => ({
+        ...appointment,
+        applicant_phone: appointment.job_applications?.phone
+      }));
+
+      // Find the next upcoming appointment
+      const now = new Date();
+      const upcoming = appointmentsWithPhone.find(appointment => {
+        const appointmentDateTime = new Date(`${appointment.appointment_date}T${appointment.appointment_time}`);
+        return appointmentDateTime > now && appointment.status === 'scheduled';
+      });
+
+      setAppointments(appointmentsWithPhone);
+      setNextAppointment(upcoming || null);
     } catch (error) {
       console.error('Error fetching appointments:', error);
       toast({
@@ -139,164 +159,270 @@ const AppointmentsManager = () => {
     return appointmentDateTime > new Date();
   };
 
+  const formatPhoneNumber = (phone: string) => {
+    // Simple phone number formatting for German numbers
+    if (!phone) return phone;
+    
+    // Remove all non-digit characters
+    const cleaned = phone.replace(/\D/g, '');
+    
+    // Format based on length
+    if (cleaned.length === 11 && cleaned.startsWith('49')) {
+      // +49 xxx xxxx xxxx
+      return `+${cleaned.slice(0, 2)} ${cleaned.slice(2, 5)} ${cleaned.slice(5, 9)} ${cleaned.slice(9)}`;
+    } else if (cleaned.length === 10) {
+      // 0xxx xxxx xxxx
+      return `${cleaned.slice(0, 4)} ${cleaned.slice(4, 8)} ${cleaned.slice(8)}`;
+    }
+    
+    return phone; // Return original if no pattern matches
+  };
+
   return (
-    <Card className="bg-white/70 backdrop-blur-sm">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Calendar className="h-5 w-5" />
-          Terminkalender
-        </CardTitle>
-        <CardDescription>
-          Übersicht und Verwaltung aller gebuchten Termine
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        {loading ? (
-          <div className="flex justify-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="min-w-[150px]">Datum & Zeit</TableHead>
-                    <TableHead className="min-w-[150px]">Bewerber</TableHead>
-                    <TableHead className="min-w-[200px]">Kontakt</TableHead>
-                    <TableHead className="min-w-[100px]">Status</TableHead>
-                    <TableHead className="min-w-[200px]">Anmerkungen</TableHead>
-                    <TableHead className="min-w-[100px]">Gebucht am</TableHead>
-                    <TableHead className="min-w-[150px]">Aktionen</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {appointments.map((appointment) => (
-                    <TableRow 
-                      key={appointment.id} 
-                      className={`align-top ${
-                        isUpcoming(appointment.appointment_date, appointment.appointment_time) 
-                          ? 'bg-blue-50/50' 
-                          : ''
-                      }`}
-                    >
-                      <TableCell>
-                        <div className="space-y-1">
+    <div className="space-y-6">
+      {/* Next Appointment Card */}
+      {nextAppointment && (
+        <Card className="bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-blue-800">
+              <Calendar className="h-5 w-5" />
+              Nächster Termin
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col md:flex-row md:items-center gap-4">
+              <div className="flex-1">
+                <div className="flex items-center gap-4 text-sm">
+                  <div className="flex items-center gap-1">
+                    <Calendar className="h-4 w-4 text-blue-600" />
+                    <span className="font-medium">
+                      {formatDate(nextAppointment.appointment_date)}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Clock className="h-4 w-4 text-blue-600" />
+                    <span className="font-medium">
+                      {formatTime(nextAppointment.appointment_time)}
+                    </span>
+                  </div>
+                </div>
+                <div className="mt-2 flex flex-col gap-1">
+                  <div className="flex items-center gap-1">
+                    <User className="h-4 w-4 text-blue-600" />
+                    <span className="font-semibold text-blue-900">
+                      {nextAppointment.applicant_name}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-4 text-sm text-blue-700">
+                    <div className="flex items-center gap-1">
+                      <Mail className="h-3 w-3" />
+                      <span>{nextAppointment.applicant_email}</span>
+                    </div>
+                    {nextAppointment.applicant_phone && (
+                      <div className="flex items-center gap-1">
+                        <Phone className="h-3 w-3" />
+                        <span>{formatPhoneNumber(nextAppointment.applicant_phone)}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => updateAppointmentStatus(nextAppointment.id, 'completed')}
+                  disabled={processingIds.has(nextAppointment.id)}
+                  size="sm"
+                  className="bg-green-600 hover:bg-green-700 text-white"
+                >
+                  {processingIds.has(nextAppointment.id) ? (
+                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                  ) : (
+                    <>
+                      <CheckCircle className="h-3 w-3 mr-1" />
+                      Abschließen
+                    </>
+                  )}
+                </Button>
+                <Button
+                  onClick={() => updateAppointmentStatus(nextAppointment.id, 'cancelled')}
+                  disabled={processingIds.has(nextAppointment.id)}
+                  size="sm"
+                  variant="destructive"
+                >
+                  {processingIds.has(nextAppointment.id) ? (
+                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                  ) : (
+                    <>
+                      <XCircle className="h-3 w-3 mr-1" />
+                      Stornieren
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Main Appointments Table */}
+      <Card className="bg-white/70 backdrop-blur-sm">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Calendar className="h-5 w-5" />
+            Terminkalender
+          </CardTitle>
+          <CardDescription>
+            Übersicht und Verwaltung aller gebuchten Termine
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <div className="flex justify-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="min-w-[150px]">Datum & Zeit</TableHead>
+                      <TableHead className="min-w-[150px]">Bewerber</TableHead>
+                      <TableHead className="min-w-[200px]">E-Mail</TableHead>
+                      <TableHead className="min-w-[150px]">Telefonnummer</TableHead>
+                      <TableHead className="min-w-[100px]">Status</TableHead>
+                      <TableHead className="min-w-[100px]">Gebucht am</TableHead>
+                      <TableHead className="min-w-[150px]">Aktionen</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {appointments.map((appointment) => (
+                      <TableRow 
+                        key={appointment.id} 
+                        className={`align-top ${
+                          isUpcoming(appointment.appointment_date, appointment.appointment_time) 
+                            ? 'bg-blue-50/50' 
+                            : ''
+                        }`}
+                      >
+                        <TableCell>
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-1">
+                              <Calendar className="h-3 w-3 text-gray-500" />
+                              <span className="font-medium text-sm">
+                                {formatDate(appointment.appointment_date)}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Clock className="h-3 w-3 text-gray-500" />
+                              <span className="text-sm">
+                                {formatTime(appointment.appointment_time)}
+                              </span>
+                            </div>
+                          </div>
+                        </TableCell>
+                        
+                        <TableCell>
                           <div className="flex items-center gap-1">
-                            <Calendar className="h-3 w-3 text-gray-500" />
+                            <User className="h-3 w-3 text-gray-500" />
                             <span className="font-medium text-sm">
-                              {formatDate(appointment.appointment_date)}
+                              {appointment.applicant_name}
                             </span>
                           </div>
-                          <div className="flex items-center gap-1">
-                            <Clock className="h-3 w-3 text-gray-500" />
-                            <span className="text-sm">
-                              {formatTime(appointment.appointment_time)}
-                            </span>
-                          </div>
-                        </div>
-                      </TableCell>
-                      
-                      <TableCell>
-                        <div className="flex items-center gap-1">
-                          <User className="h-3 w-3 text-gray-500" />
-                          <span className="font-medium text-sm">
-                            {appointment.applicant_name}
-                          </span>
-                        </div>
-                      </TableCell>
-                      
-                      <TableCell>
-                        <div className="space-y-1 text-sm">
+                        </TableCell>
+                        
+                        <TableCell>
                           <div className="flex items-center gap-1">
                             <Mail className="h-3 w-3 text-gray-500" />
-                            <span>{appointment.applicant_email}</span>
+                            <span className="text-sm">{appointment.applicant_email}</span>
                           </div>
-                        </div>
-                      </TableCell>
-                      
-                      <TableCell>
-                        {getStatusBadge(appointment.status)}
-                      </TableCell>
-                      
-                      <TableCell className="text-sm max-w-xs">
-                        {appointment.notes ? (
-                          <div className="truncate" title={appointment.notes}>
-                            {appointment.notes}
+                        </TableCell>
+
+                        <TableCell>
+                          <div className="flex items-center gap-1">
+                            <Phone className="h-3 w-3 text-gray-500" />
+                            <span className="text-sm">
+                              {appointment.applicant_phone 
+                                ? formatPhoneNumber(appointment.applicant_phone)
+                                : '-'
+                              }
+                            </span>
                           </div>
-                        ) : (
-                          <span className="text-gray-400">-</span>
-                        )}
-                      </TableCell>
-                      
-                      <TableCell className="text-sm">
-                        {new Date(appointment.created_at).toLocaleDateString('de-DE')}
-                      </TableCell>
-                      
-                      <TableCell>
-                        <div className="flex flex-col gap-1">
-                          {appointment.status === 'scheduled' && (
-                            <>
-                              <Button
-                                onClick={() => updateAppointmentStatus(appointment.id, 'completed')}
-                                disabled={processingIds.has(appointment.id)}
-                                size="sm"
-                                className="text-xs bg-green-600 hover:bg-green-700 text-white"
-                              >
-                                {processingIds.has(appointment.id) ? (
-                                  <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
-                                ) : (
-                                  <>
-                                    <CheckCircle className="h-3 w-3 mr-1" />
-                                    Abschließen
-                                  </>
-                                )}
-                              </Button>
-                              <Button
-                                onClick={() => updateAppointmentStatus(appointment.id, 'cancelled')}
-                                disabled={processingIds.has(appointment.id)}
-                                size="sm"
-                                variant="destructive"
-                                className="text-xs"
-                              >
-                                {processingIds.has(appointment.id) ? (
-                                  <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
-                                ) : (
-                                  <>
-                                    <XCircle className="h-3 w-3 mr-1" />
-                                    Stornieren
-                                  </>
-                                )}
-                              </Button>
-                            </>
-                          )}
-                          {appointment.status === 'completed' && (
-                            <span className="text-xs text-green-600 font-medium">
-                              ✓ Abgeschlossen
-                            </span>
-                          )}
-                          {appointment.status === 'cancelled' && (
-                            <span className="text-xs text-red-600 font-medium">
-                              ✗ Storniert
-                            </span>
-                          )}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-            
-            {appointments.length === 0 && (
-              <div className="text-center py-8 text-gray-500">
-                Noch keine Termine gebucht.
+                        </TableCell>
+                        
+                        <TableCell>
+                          {getStatusBadge(appointment.status)}
+                        </TableCell>
+                        
+                        <TableCell className="text-sm">
+                          {new Date(appointment.created_at).toLocaleDateString('de-DE')}
+                        </TableCell>
+                        
+                        <TableCell>
+                          <div className="flex flex-col gap-1">
+                            {appointment.status === 'scheduled' && (
+                              <>
+                                <Button
+                                  onClick={() => updateAppointmentStatus(appointment.id, 'completed')}
+                                  disabled={processingIds.has(appointment.id)}
+                                  size="sm"
+                                  className="text-xs bg-green-600 hover:bg-green-700 text-white"
+                                >
+                                  {processingIds.has(appointment.id) ? (
+                                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                                  ) : (
+                                    <>
+                                      <CheckCircle className="h-3 w-3 mr-1" />
+                                      Abschließen
+                                    </>
+                                  )}
+                                </Button>
+                                <Button
+                                  onClick={() => updateAppointmentStatus(appointment.id, 'cancelled')}
+                                  disabled={processingIds.has(appointment.id)}
+                                  size="sm"
+                                  variant="destructive"
+                                  className="text-xs"
+                                >
+                                  {processingIds.has(appointment.id) ? (
+                                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                                  ) : (
+                                    <>
+                                      <XCircle className="h-3 w-3 mr-1" />
+                                      Stornieren
+                                    </>
+                                  )}
+                                </Button>
+                              </>
+                            )}
+                            {appointment.status === 'completed' && (
+                              <span className="text-xs text-green-600 font-medium">
+                                ✓ Abgeschlossen
+                              </span>
+                            )}
+                            {appointment.status === 'cancelled' && (
+                              <span className="text-xs text-red-600 font-medium">
+                                ✗ Storniert
+                              </span>
+                            )}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </div>
-            )}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+              
+              {appointments.length === 0 && (
+                <div className="text-center py-8 text-gray-500">
+                  Noch keine Termine gebucht.
+                </div>
+              )}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 
