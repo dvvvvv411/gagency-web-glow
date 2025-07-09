@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -73,7 +72,7 @@ const AppointmentBooking = () => {
         .from('job_applications')
         .select('id, vorname, nachname, email, phone')
         .eq('id', applicationId)
-        .eq('status', 'accepted')
+        .eq('status', 'angenommen')
         .single();
 
       if (error) throw error;
