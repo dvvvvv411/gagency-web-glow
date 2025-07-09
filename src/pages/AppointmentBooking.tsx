@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -31,11 +30,17 @@ interface Application {
   phone: string;
 }
 
+interface TimeSlotInfo {
+  time: string;
+  isAvailable: boolean;
+  reason?: 'booked' | 'past';
+}
+
 const AppointmentBooking = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [application, setApplication] = useState<Application | null>(null);
-  const [availableTimes, setAvailableTimes] = useState<string[]>([]);
+  const [timeSlots, setTimeSlots] = useState<TimeSlotInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -48,8 +53,8 @@ const AppointmentBooking = () => {
     resolver: zodResolver(bookingSchema),
   });
 
-  // Available time slots (9 AM to 5 PM, 30-minute intervals)
-  const timeSlots = [
+  // Base time slots (9 AM to 5 PM, 30-minute intervals)
+  const baseTimeSlots = [
     '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
     '12:00', '12:30', '13:00', '13:30', '14:00', '14:30',
     '15:00', '15:30', '16:00', '16:30', '17:00'
@@ -103,13 +108,17 @@ const AppointmentBooking = () => {
     }
   };
 
-  const updateAvailableTimes = (selectedDate: Date) => {
+  const updateTimeSlots = (selectedDate: Date) => {
     if (!selectedDate) {
-      setAvailableTimes([]);
+      setTimeSlots([]);
       return;
     }
 
     const dateString = selectedDate.toISOString().split('T')[0];
+    const now = new Date();
+    const selectedDateObj = new Date(selectedDate);
+    const isToday = selectedDateObj.toDateString() === now.toDateString();
+    const currentTime = now.getHours() * 60 + now.getMinutes(); // minutes since midnight
     
     supabase
       .from('appointments')
@@ -123,8 +132,33 @@ const AppointmentBooking = () => {
         }
 
         const bookedTimes = data?.map(app => app.appointment_time) || [];
-        const available = timeSlots.filter(time => !bookedTimes.includes(time));
-        setAvailableTimes(available);
+        
+        const slotsWithAvailability: TimeSlotInfo[] = baseTimeSlots.map(time => {
+          const [hours, minutes] = time.split(':').map(Number);
+          const slotTime = hours * 60 + minutes; // minutes since midnight
+          
+          let isAvailable = true;
+          let reason: 'booked' | 'past' | undefined;
+
+          // Check if time slot is booked
+          if (bookedTimes.includes(time)) {
+            isAvailable = false;
+            reason = 'booked';
+          }
+          // Check if time slot is in the past (only for today)
+          else if (isToday && slotTime <= currentTime) {
+            isAvailable = false;
+            reason = 'past';
+          }
+
+          return {
+            time,
+            isAvailable,
+            reason
+          };
+        });
+
+        setTimeSlots(slotsWithAvailability);
       });
   };
 
@@ -172,6 +206,24 @@ const AppointmentBooking = () => {
     }
 
     return false;
+  };
+
+  const getTimeSlotButtonStyle = (slot: TimeSlotInfo, isSelected: boolean) => {
+    if (!slot.isAvailable) {
+      return "h-12 text-base font-medium bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200";
+    }
+    
+    if (isSelected) {
+      return "h-12 text-base font-medium bg-primary text-primary-foreground hover:bg-primary/90";
+    }
+    
+    return "h-12 text-base font-medium border-input bg-background hover:bg-accent hover:text-accent-foreground";
+  };
+
+  const getTimeSlotTooltip = (slot: TimeSlotInfo) => {
+    if (slot.reason === 'booked') return 'Bereits gebucht';
+    if (slot.reason === 'past') return 'Vergangene Uhrzeit';
+    return 'Verfügbar';
   };
 
   if (loading) {
@@ -329,7 +381,7 @@ const AppointmentBooking = () => {
                                   selected={field.value}
                                   onSelect={(date) => {
                                     field.onChange(date);
-                                    if (date) updateAvailableTimes(date);
+                                    if (date) updateTimeSlots(date);
                                   }}
                                   disabled={isDateDisabled}
                                   className="rounded-lg"
@@ -351,31 +403,50 @@ const AppointmentBooking = () => {
                           <FormItem>
                             <FormLabel className="text-base font-semibold flex items-center gap-2">
                               <Clock className="h-4 w-4" />
-                              Verfügbare Uhrzeiten
+                              Uhrzeiten
                             </FormLabel>
                             <FormControl>
                               <div className="space-y-3">
                                 {form.watch('date') ? (
-                                  availableTimes.length > 0 ? (
-                                    <div className="grid grid-cols-2 gap-3 max-h-80 overflow-y-auto">
-                                      {availableTimes.map((time) => (
-                                        <Button
-                                          key={time}
-                                          type="button"
-                                          variant={field.value === time ? "default" : "outline"}
-                                          size="lg"
-                                          onClick={() => field.onChange(time)}
-                                          className="h-12 text-base font-medium"
-                                        >
-                                          <Clock className="h-4 w-4 mr-2" />
-                                          {time}
-                                        </Button>
-                                      ))}
-                                    </div>
+                                  timeSlots.length > 0 ? (
+                                    <>
+                                      <div className="grid grid-cols-2 gap-3 max-h-80 overflow-y-auto">
+                                        {timeSlots.map((slot) => (
+                                          <div key={slot.time} className="relative">
+                                            <Button
+                                              type="button"
+                                              variant="outline"
+                                              disabled={!slot.isAvailable}
+                                              onClick={() => slot.isAvailable && field.onChange(slot.time)}
+                                              className={getTimeSlotButtonStyle(slot, field.value === slot.time)}
+                                              title={getTimeSlotTooltip(slot)}
+                                            >
+                                              <Clock className="h-4 w-4 mr-2" />
+                                              {slot.time}
+                                              {!slot.isAvailable && (
+                                                <span className="ml-2 text-xs">
+                                                  {slot.reason === 'booked' ? '(Belegt)' : '(Vorbei)'}
+                                                </span>
+                                              )}
+                                            </Button>
+                                          </div>
+                                        ))}
+                                      </div>
+                                      <div className="flex items-center gap-4 text-sm text-gray-600 mt-4 p-3 bg-gray-50 rounded-lg">
+                                        <div className="flex items-center gap-2">
+                                          <div className="w-3 h-3 bg-primary rounded"></div>
+                                          <span>Verfügbar</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                          <div className="w-3 h-3 bg-gray-300 rounded"></div>
+                                          <span>Nicht verfügbar</span>
+                                        </div>
+                                      </div>
+                                    </>
                                   ) : (
                                     <div className="text-center py-8 bg-gray-50 rounded-lg">
                                       <Clock className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                                      <p className="text-gray-500">Keine verfügbaren Termine für diesen Tag</p>
+                                      <p className="text-gray-500">Keine Termine für diesen Tag verfügbar</p>
                                     </div>
                                   )
                                 ) : (
