@@ -151,7 +151,7 @@ const JobApplicationsManager = () => {
   };
 
   const getAppointmentBookingLink = (applicationId: string) => {
-    return `${window.location.origin}/termin-buchen?applicationId=${applicationId}`;
+    return `${window.location.origin}/appointment-booking?applicationId=${applicationId}`;
   };
 
   const copyLinkToClipboard = (link: string) => {
