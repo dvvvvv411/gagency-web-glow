@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -22,7 +23,7 @@ const applicationSchema = z.object({
   stadt: z.string().min(2, 'Bitte geben Sie Ihre Stadt an'),
   staatsangehoerigkeit: z.string().min(2, 'Bitte geben Sie Ihre Staatsangehörigkeit an'),
   cv: z.any().refine((files) => files?.length > 0, 'Bitte laden Sie Ihren Lebenslauf hoch'),
-  anschreiben: z.any().refine((files) => files?.length > 0, 'Bitte laden Sie Ihr Anschreiben hoch'),
+  anschreiben: z.any().optional(),
   datenschutz: z.boolean().refine((val) => val === true, 'Sie müssen den Datenschutzbestimmungen zustimmen'),
 });
 
@@ -100,12 +101,14 @@ const Careers = () => {
       
       // Upload files
       const cvFile = data.cv[0];
-      const anschreibenFile = data.anschreiben[0];
+      const anschreibenFile = data.anschreiben?.[0];
       
-      const [cvPath, anschreibenPath] = await Promise.all([
-        uploadFile(cvFile, 'cv', applicantName),
-        uploadFile(anschreibenFile, 'anschreiben', applicantName)
-      ]);
+      const cvPath = await uploadFile(cvFile, 'cv', applicantName);
+      let anschreibenPath = null;
+      
+      if (anschreibenFile) {
+        anschreibenPath = await uploadFile(anschreibenFile, 'anschreiben', applicantName);
+      }
 
       // Save application to database
       const { error: dbError } = await supabase
@@ -320,7 +323,6 @@ const Careers = () => {
                     <p className="text-xl text-gray-600 mb-6">
                       Sende uns deine Bewerbung und werde Teil unseres Teams
                     </p>
-                    
                   </div>
 
                   <div className="flex-grow">
@@ -469,7 +471,7 @@ const Careers = () => {
                               name="anschreiben"
                               render={({ field: { value, onChange, ...fieldProps } }) => (
                                 <FormItem>
-                                  <FormLabel>Anschreiben (PDF) *</FormLabel>
+                                  <FormLabel>Anschreiben (PDF)</FormLabel>
                                   <FormControl>
                                     <Input
                                       {...fieldProps}
