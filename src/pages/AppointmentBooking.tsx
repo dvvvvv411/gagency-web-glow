@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -13,7 +14,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import FluidBackground from '@/components/backgrounds/FluidBackground';
 import { AnimatedSection } from '@/components/ui/animated-section';
-import { Calendar as CalendarIcon, Clock, User, Mail, Phone, CheckCircle } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, User, Mail, Phone, CheckCircle, AlertCircle } from 'lucide-react';
 
 const bookingSchema = z.object({
   date: z.date({
@@ -42,6 +43,7 @@ const AppointmentBooking = () => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
   const applicationId = searchParams.get('applicationId');
@@ -59,7 +61,8 @@ const AppointmentBooking = () => {
 
   useEffect(() => {
     if (!applicationId) {
-      navigate('/');
+      setError("Keine Bewerbungs-ID gefunden. Bitte verwenden Sie den Link aus Ihrer E-Mail.");
+      setLoading(false);
       return;
     }
     fetchApplicationData();
@@ -68,6 +71,7 @@ const AppointmentBooking = () => {
 
   const fetchApplicationData = async () => {
     try {
+      console.log('Fetching application with ID:', applicationId);
       const { data, error } = await supabase
         .from('job_applications')
         .select('id, vorname, nachname, email, phone')
@@ -75,16 +79,16 @@ const AppointmentBooking = () => {
         .eq('status', 'angenommen')
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching application:', error);
+        throw error;
+      }
+      
+      console.log('Application data:', data);
       setApplication(data);
     } catch (error) {
       console.error('Error fetching application:', error);
-      toast({
-        title: "Fehler",
-        description: "Bewerbung nicht gefunden oder nicht berechtigt.",
-        variant: "destructive",
-      });
-      navigate('/');
+      setError("Bewerbung nicht gefunden oder nicht berechtigt für Terminbuchung.");
     } finally {
       setLoading(false);
     }
@@ -190,6 +194,29 @@ const AppointmentBooking = () => {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
           </CardContent>
         </Card>
+      </FluidBackground>
+    );
+  }
+
+  if (error) {
+    return (
+      <FluidBackground className="min-h-screen flex items-center justify-center">
+        <AnimatedSection className="max-w-md mx-auto">
+          <Card className="bg-white/70 backdrop-blur-sm text-center">
+            <CardHeader>
+              <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+              <CardTitle className="text-red-600">Fehler</CardTitle>
+              <CardDescription>
+                {error}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button onClick={() => navigate('/')} className="w-full">
+                Zur Startseite
+              </Button>
+            </CardContent>
+          </Card>
+        </AnimatedSection>
       </FluidBackground>
     );
   }
