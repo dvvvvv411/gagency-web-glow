@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import FluidBackground from '@/components/backgrounds/FluidBackground';
 import { AnimatedSection } from '@/components/ui/animated-section';
 import JobApplicationsManager from '@/components/admin/JobApplicationsManager';
+import AppointmentsManager from '@/components/admin/AppointmentsManager';
 import { 
   Users, 
   Shield, 
@@ -19,7 +20,8 @@ import {
   Crown,
   LogOut,
   FileText,
-  Briefcase
+  Briefcase,
+  Calendar
 } from 'lucide-react';
 
 interface Profile {
@@ -33,6 +35,7 @@ interface Profile {
 const AdminDashboard = () => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [applicationsCount, setApplicationsCount] = useState(0);
+  const [appointmentsCount, setAppointmentsCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const { user, signOut, isAdmin } = useAuth();
   const { toast } = useToast();
@@ -41,6 +44,7 @@ const AdminDashboard = () => {
     if (isAdmin) {
       fetchProfiles();
       fetchApplicationsCount();
+      fetchAppointmentsCount();
     }
   }, [isAdmin]);
 
@@ -93,6 +97,19 @@ const AdminDashboard = () => {
       setApplicationsCount(count || 0);
     } catch (error) {
       console.error('Error fetching applications count:', error);
+    }
+  };
+
+  const fetchAppointmentsCount = async () => {
+    try {
+      const { count, error } = await supabase
+        .from('appointments')
+        .select('*', { count: 'exact', head: true });
+
+      if (error) throw error;
+      setAppointmentsCount(count || 0);
+    } catch (error) {
+      console.error('Error fetching appointments count:', error);
     }
   };
 
@@ -173,7 +190,7 @@ const AdminDashboard = () => {
         </AnimatedSection>
 
         {/* Stats Cards */}
-        <AnimatedSection className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8" delay={100}>
+        <AnimatedSection className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8" delay={100}>
           <Card className="bg-white/70 backdrop-blur-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Gesamte Benutzer</CardTitle>
@@ -217,12 +234,22 @@ const AdminDashboard = () => {
               <div className="text-2xl font-bold">{applicationsCount}</div>
             </CardContent>
           </Card>
+
+          <Card className="bg-white/70 backdrop-blur-sm">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Termine</CardTitle>
+              <Calendar className="h-4 w-4 text-purple-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{appointmentsCount}</div>
+            </CardContent>
+          </Card>
         </AnimatedSection>
 
         {/* Tabs for different management sections */}
         <AnimatedSection delay={200}>
           <Tabs defaultValue="users" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="users" className="flex items-center gap-2">
                 <UserCheck className="h-4 w-4" />
                 Benutzerverwaltung
@@ -230,6 +257,10 @@ const AdminDashboard = () => {
               <TabsTrigger value="applications" className="flex items-center gap-2">
                 <FileText className="h-4 w-4" />
                 Bewerbungen
+              </TabsTrigger>
+              <TabsTrigger value="appointments" className="flex items-center gap-2">
+                <Calendar className="h-4 w-4" />
+                Terminkalender
               </TabsTrigger>
             </TabsList>
 
@@ -302,6 +333,10 @@ const AdminDashboard = () => {
 
             <TabsContent value="applications">
               <JobApplicationsManager />
+            </TabsContent>
+
+            <TabsContent value="appointments">
+              <AppointmentsManager />
             </TabsContent>
           </Tabs>
         </AnimatedSection>

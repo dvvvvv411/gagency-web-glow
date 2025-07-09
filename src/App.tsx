@@ -14,6 +14,7 @@ import Careers from "./pages/Careers";
 import Contact from "./pages/Contact";
 import Auth from "./pages/Auth";
 import AdminDashboard from "./pages/AdminDashboard";
+import AppointmentBooking from "./pages/AppointmentBooking";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./pages/NotFound";
 import Impressum from "./pages/Impressum";
@@ -45,6 +46,7 @@ const App: React.FC = () => (
               <Route path="/careers" element={<Careers />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/termin-buchen" element={<AppointmentBooking />} />
               <Route path="/impressum" element={<Impressum />} />
               <Route path="/datenschutz" element={<Datenschutz />} />
               <Route path="/agb" element={<AGB />} />

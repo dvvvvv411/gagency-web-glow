@@ -10,108 +10,153 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-interface ConfirmationEmailRequest {
-  vorname: string;
-  nachname: string;
-  email: string;
+interface ApplicationEmailRequest {
+  applicantEmail: string;
+  applicantName: string;
+  applicationId?: string;
+  type: 'confirmation' | 'acceptance';
 }
 
 const handler = async (req: Request): Promise<Response> => {
+  console.log("Function called with method:", req.method);
+
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { vorname, nachname, email }: ConfirmationEmailRequest = await req.json();
+    const { applicantEmail, applicantName, applicationId, type }: ApplicationEmailRequest = await req.json();
+    console.log("Processing email request:", { applicantEmail, applicantName, applicationId, type });
 
-    console.log(`Sending confirmation email to: ${email}`);
+    let emailSubject: string;
+    let emailHtml: string;
 
-    const emailResponse = await resend.emails.send({
-      from: "AMCD Consult <noreply@amcd-agentur.de>",
-      to: [email],
-      subject: "Bestätigung Ihrer Bewerbung - AMCD Consult GmbH",
-      html: `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="utf-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Bewerbungsbestätigung</title>
-        </head>
-        <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc; line-height: 1.6;">
-          <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+    if (type === 'acceptance') {
+      // Generate appointment booking link
+      const bookingUrl = `${req.headers.get('origin') || 'https://id-preview--70742796-8eb6-4d9f-a870-1f297bf01653.lovable.app'}/termin-buchen?application=${applicationId}`;
+      
+      emailSubject = "🎉 Ihre Bewerbung wurde akzeptiert!";
+      emailHtml = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 10px 10px 0 0; text-align: center;">
+            <h1 style="margin: 0; font-size: 28px;">🎉 Herzlichen Glückwunsch!</h1>
+            <p style="margin: 10px 0 0 0; font-size: 18px; opacity: 0.9;">Ihre Bewerbung wurde akzeptiert</p>
+          </div>
+          
+          <div style="background-color: white; padding: 30px; border-radius: 0 0 10px 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <p style="font-size: 16px; color: #374151; margin-bottom: 20px;">
+              Liebe/r ${applicantName},
+            </p>
             
-            <!-- Header with gradient -->
-            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 30px; text-align: center;">
-              <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 600;">Vielen Dank für Ihre Bewerbung!</h1>
-            </div>
+            <p style="font-size: 16px; color: #374151; line-height: 1.6; margin-bottom: 20px;">
+              wir freuen uns, Ihnen mitteilen zu können, dass Ihre Bewerbung bei unserem Unternehmen erfolgreich war! 
+              Nach sorgfältiger Prüfung Ihrer Unterlagen sind wir von Ihren Qualifikationen überzeugt.
+            </p>
             
-            <!-- Main content -->
-            <div style="padding: 40px 30px;">
-              <p style="color: #374151; font-size: 18px; margin-bottom: 20px;">Liebe/r ${vorname} ${nachname},</p>
-              
-              <p style="color: #6b7280; font-size: 16px; margin-bottom: 20px;">
-                vielen Dank für Ihr Interesse an der Position <strong>Assistenz im digitalen Projektmanagement (m/w/d)</strong> bei der AMCD Consult GmbH.
-              </p>
-              
-              <p style="color: #6b7280; font-size: 16px; margin-bottom: 20px;">
-                Wir haben Ihre Bewerbungsunterlagen erfolgreich erhalten und werden diese sorgfältig prüfen. 
-                Sie können davon ausgehen, dass wir uns innerhalb der nächsten <strong>2 Wochen</strong> bei Ihnen melden.
-              </p>
-              
-              <!-- Info box -->
-              <div style="background-color: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 20px; margin: 30px 0; border-radius: 6px;">
-                <h3 style="color: #0c4a6e; margin: 0 0 10px 0; font-size: 16px;">Was passiert als nächstes?</h3>
-                <ul style="color: #075985; margin: 0; padding-left: 20px; font-size: 14px;">
-                  <li>Unser HR-Team prüft Ihre Unterlagen</li>
-                  <li>Bei positiver Ersteinschätzung laden wir Sie zu einem Gespräch ein</li>
-                  <li>Sie erhalten von uns eine Rückmeldung - in jedem Fall</li>
-                </ul>
-              </div>
-              
-              <p style="color: #6b7280; font-size: 16px; margin-bottom: 30px;">
-                Sollten Sie noch Fragen haben, können Sie uns gerne unter 
-                <a href="mailto:info@amcd-agentur.de" style="color: #667eea; text-decoration: none;">info@amcd-agentur.de</a> 
-                oder telefonisch unter <a href="tel:+498941435250" style="color: #667eea; text-decoration: none;">+49 89 41435250</a> erreichen.
-              </p>
-              
-              <p style="color: #6b7280; font-size: 16px; margin-bottom: 10px;">
-                Mit freundlichen Grüßen
-              </p>
-              <p style="color: #374151; font-size: 16px; font-weight: 600; margin: 0;">
-                Ihr AMCD Consult Team
+            <div style="background-color: #f0f9ff; border-left: 4px solid #3b82f6; padding: 20px; margin: 20px 0; border-radius: 5px;">
+              <h3 style="color: #1e40af; margin: 0 0 10px 0; font-size: 18px;">📞 Nächster Schritt: Telefoninterview</h3>
+              <p style="color: #374151; margin: 0; line-height: 1.6;">
+                Um Sie persönlich kennenzulernen und weitere Details zu besprechen, würden wir gerne ein Telefoninterview mit Ihnen führen.
               </p>
             </div>
             
-            <!-- Footer -->
-            <div style="background-color: #f9fafb; padding: 30px; text-align: center; border-top: 1px solid #e5e7eb;">
-              <div style="margin-bottom: 20px;">
-                <strong style="color: #374151; font-size: 16px;">AMCD Consult GmbH</strong>
-              </div>
-              <div style="color: #6b7280; font-size: 14px; line-height: 1.5;">
-                Rubensstr. 13<br>
-                81245 München<br>
-                Deutschland<br><br>
-                <a href="tel:+498941435250" style="color: #667eea; text-decoration: none;">+49 89 41435250</a> | 
-                <a href="mailto:info@amcd-agentur.de" style="color: #667eea; text-decoration: none;">info@amcd-agentur.de</a><br>
-                <a href="https://amcd-agentur.de" style="color: #667eea; text-decoration: none;">www.amcd-agentur.de</a>
-              </div>
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${bookingUrl}" 
+                 style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                        color: white; 
+                        text-decoration: none; 
+                        padding: 15px 30px; 
+                        border-radius: 25px; 
+                        font-weight: bold; 
+                        font-size: 16px; 
+                        display: inline-block;
+                        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+                        transition: all 0.3s ease;">
+                🗓️ Jetzt Termin buchen
+              </a>
+            </div>
+            
+            <div style="background-color: #fef3c7; border: 1px solid #f59e0b; padding: 15px; border-radius: 5px; margin: 20px 0;">
+              <p style="color: #92400e; margin: 0; font-size: 14px;">
+                <strong>💡 Hinweis:</strong> Bitte buchen Sie Ihren Termin innerhalb der nächsten 7 Tage. 
+                Bei Fragen stehen wir Ihnen gerne zur Verfügung.
+              </p>
+            </div>
+            
+            <p style="font-size: 16px; color: #374151; line-height: 1.6; margin-top: 30px;">
+              Wir freuen uns auf das Gespräch mit Ihnen!
+            </p>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+              <p style="color: #6b7280; font-size: 14px; margin: 0;">
+                Mit freundlichen Grüßen,<br>
+                <strong>Ihr Team</strong>
+              </p>
             </div>
           </div>
           
-          <!-- Disclaimer -->
-          <div style="max-width: 600px; margin: 20px auto; text-align: center; color: #9ca3af; font-size: 12px;">
-            Diese E-Mail wurde automatisch generiert. Bitte antworten Sie nicht direkt auf diese E-Mail.
+          <div style="text-align: center; margin-top: 20px; color: #6b7280; font-size: 12px;">
+            <p>Diese E-Mail wurde automatisch generiert. Bei Fragen kontaktieren Sie uns bitte direkt.</p>
           </div>
-        </body>
-        </html>
-      `,
+        </div>
+      `;
+    } else {
+      // Confirmation email for new applications
+      emailSubject = "Bestätigung Ihrer Bewerbung";
+      emailHtml = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 10px 10px 0 0; text-align: center;">
+            <h1 style="margin: 0; font-size: 28px;">📧 Bewerbung erhalten</h1>
+            <p style="margin: 10px 0 0 0; font-size: 18px; opacity: 0.9;">Vielen Dank für Ihr Interesse</p>
+          </div>
+          
+          <div style="background-color: white; padding: 30px; border-radius: 0 0 10px 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <p style="font-size: 16px; color: #374151; margin-bottom: 20px;">
+              Liebe/r ${applicantName},
+            </p>
+            
+            <p style="font-size: 16px; color: #374151; line-height: 1.6; margin-bottom: 20px;">
+              vielen Dank für Ihre Bewerbung! Wir haben Ihre Unterlagen erfolgreich erhalten und werden diese sorgfältig prüfen.
+            </p>
+            
+            <div style="background-color: #f0f9ff; border-left: 4px solid #3b82f6; padding: 20px; margin: 20px 0; border-radius: 5px;">
+              <h3 style="color: #1e40af; margin: 0 0 10px 0; font-size: 18px;">⏰ Wie geht es weiter?</h3>
+              <p style="color: #374151; margin: 0; line-height: 1.6;">
+                Unser Team wird Ihre Bewerbung in den nächsten Tagen bearbeiten. 
+                Sie erhalten von uns eine Rückmeldung, sobald wir eine Entscheidung getroffen haben.
+              </p>
+            </div>
+            
+            <p style="font-size: 16px; color: #374151; line-height: 1.6;">
+              Bei Fragen stehen wir Ihnen gerne zur Verfügung.
+            </p>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+              <p style="color: #6b7280; font-size: 14px; margin: 0;">
+                Mit freundlichen Grüßen,<br>
+                <strong>Ihr Bewerbungsteam</strong>
+              </p>
+            </div>
+          </div>
+          
+          <div style="text-align: center; margin-top: 20px; color: #6b7280; font-size: 12px;">
+            <p>Diese E-Mail wurde automatisch generiert. Bei Fragen kontaktieren Sie uns bitte direkt.</p>
+          </div>
+        </div>
+      `;
+    }
+
+    const emailResponse = await resend.emails.send({
+      from: "Bewerbungsteam <onboarding@resend.dev>",
+      to: [applicantEmail],
+      subject: emailSubject,
+      html: emailHtml,
     });
 
     console.log("Email sent successfully:", emailResponse);
 
-    return new Response(JSON.stringify({ success: true, emailId: emailResponse.data?.id }), {
+    return new Response(JSON.stringify(emailResponse), {
       status: 200,
       headers: {
         "Content-Type": "application/json",
