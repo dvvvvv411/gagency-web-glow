@@ -68,7 +68,6 @@ const AppointmentBooking = () => {
       return;
     }
     fetchApplicationData();
-    fetchBookedAppointments();
   }, [applicationId]);
 
   const fetchApplicationData = async () => {
@@ -96,18 +95,6 @@ const AppointmentBooking = () => {
     }
   };
 
-  const fetchBookedAppointments = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('appointments')
-        .select('appointment_date, appointment_time');
-
-      if (error) throw error;
-    } catch (error) {
-      console.error('Error fetching appointments:', error);
-    }
-  };
-
   const updateTimeSlots = (selectedDate: Date) => {
     if (!selectedDate) {
       setTimeSlots([]);
@@ -120,9 +107,11 @@ const AppointmentBooking = () => {
     const isToday = selectedDateObj.toDateString() === now.toDateString();
     const currentTime = now.getHours() * 60 + now.getMinutes(); // minutes since midnight
     
+    console.log('Fetching appointments for date:', dateString);
+    
     supabase
       .from('appointments')
-      .select('appointment_time')
+      .select('appointment_time, status')
       .eq('appointment_date', dateString)
       .then(({ data, error }) => {
         if (error) {
@@ -130,7 +119,12 @@ const AppointmentBooking = () => {
           return;
         }
 
+        console.log('Appointments found for date:', data);
+        
+        // All appointments are considered as booked, regardless of status
+        // This prevents double-booking even when appointments are completed/cancelled
         const bookedTimes = data?.map(app => app.appointment_time) || [];
+        console.log('Booked times:', bookedTimes);
         
         const slotsWithAvailability: TimeSlotInfo[] = baseTimeSlots.map(time => {
           const [hours, minutes] = time.split(':').map(Number);
@@ -139,15 +133,17 @@ const AppointmentBooking = () => {
           let isAvailable = true;
           let reason: 'booked' | 'past' | undefined;
 
-          // Check if time slot is booked
+          // Check if time slot is booked (any appointment, regardless of status)
           if (bookedTimes.includes(time)) {
             isAvailable = false;
             reason = 'booked';
+            console.log(`Time slot ${time} is booked`);
           }
           // Check if time slot is in the past (only for today)
           else if (isToday && slotTime <= currentTime) {
             isAvailable = false;
             reason = 'past';
+            console.log(`Time slot ${time} is in the past`);
           }
 
           return {
@@ -157,6 +153,7 @@ const AppointmentBooking = () => {
           };
         });
 
+        console.log('Time slots with availability:', slotsWithAvailability);
         setTimeSlots(slotsWithAvailability);
       });
   };
@@ -165,19 +162,54 @@ const AppointmentBooking = () => {
     if (!application) return;
 
     setSubmitting(true);
+    console.log('Attempting to book appointment:', {
+      date: data.date.toISOString().split('T')[0],
+      time: data.time,
+      applicationId: application.id
+    });
+
     try {
+      // Double-check availability before booking
+      const dateString = data.date.toISOString().split('T')[0];
+      const { data: existingAppointments, error: checkError } = await supabase
+        .from('appointments')
+        .select('id')
+        .eq('appointment_date', dateString)
+        .eq('appointment_time', data.time);
+
+      if (checkError) {
+        console.error('Error checking appointment availability:', checkError);
+        throw checkError;
+      }
+
+      if (existingAppointments && existingAppointments.length > 0) {
+        console.log('Time slot already booked:', existingAppointments);
+        toast({
+          title: "Termin nicht verfügbar",
+          description: "Dieser Zeitslot ist bereits belegt. Bitte wählen Sie eine andere Zeit.",
+          variant: "destructive",
+        });
+        // Refresh the time slots to show current availability
+        updateTimeSlots(data.date);
+        return;
+      }
+
       const { error } = await supabase
         .from('appointments')
         .insert({
           application_id: application.id,
-          appointment_date: data.date.toISOString().split('T')[0],
+          appointment_date: dateString,
           appointment_time: data.time,
           applicant_name: `${application.vorname} ${application.nachname}`,
           applicant_email: application.email,
         });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error inserting appointment:', error);
+        throw error;
+      }
 
+      console.log('Appointment booked successfully');
       setSuccess(true);
       toast({
         title: "Termin gebucht",
