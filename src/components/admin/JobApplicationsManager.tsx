@@ -83,13 +83,12 @@ const JobApplicationsManager = () => {
 
       if (updateError) throw updateError;
 
-      // Send acceptance email with appointment booking link
-      const { error: emailError } = await supabase.functions.invoke('send-application-confirmation', {
+      // Send acceptance email using the new edge function
+      const { error: emailError } = await supabase.functions.invoke('send-acceptance-email', {
         body: {
           applicantEmail: application.email,
           applicantName: `${application.vorname} ${application.nachname}`,
-          applicationId: application.id,
-          type: 'acceptance'
+          applicationId: application.id
         }
       });
 
@@ -103,7 +102,7 @@ const JobApplicationsManager = () => {
       } else {
         toast({
           title: "Bewerbung akzeptiert",
-          description: "Die Bewerbung wurde erfolgreich akzeptiert und der Bewerber wurde per E-Mail benachrichtigt.",
+          description: "Die Bewerbung wurde erfolgreich akzeptiert und der Bewerber wurde per E-Mail mit Terminbuchungslink benachrichtigt.",
         });
       }
 
