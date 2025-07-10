@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -5,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Calendar, Clock, User, Mail, Phone, CheckCircle, XCircle, Edit } from 'lucide-react';
+import { Calendar, Clock, User, Mail, Phone, CheckCircle, XCircle, Edit, ExternalLink, Copy } from 'lucide-react';
 
 interface Appointment {
   id: string;
@@ -147,6 +148,30 @@ const AppointmentsManager = () => {
         return newSet;
       });
     }
+  };
+
+  const copyContractLink = async (appointmentId: string) => {
+    const contractUrl = `${window.location.origin}/employment-contract?appointment=${appointmentId}`;
+    
+    try {
+      await navigator.clipboard.writeText(contractUrl);
+      toast({
+        title: "Link kopiert",
+        description: "Der Arbeitsvertrag-Link wurde in die Zwischenablage kopiert.",
+      });
+    } catch (error) {
+      console.error('Error copying to clipboard:', error);
+      toast({
+        title: "Fehler",
+        description: "Fehler beim Kopieren des Links.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const openContractLink = (appointmentId: string) => {
+    const contractUrl = `${window.location.origin}/employment-contract?appointment=${appointmentId}`;
+    window.open(contractUrl, '_blank');
   };
 
   const getStatusBadge = (status: string) => {
@@ -332,7 +357,7 @@ const AppointmentsManager = () => {
                       <TableHead className="min-w-[150px]">Telefonnummer</TableHead>
                       <TableHead className="min-w-[100px]">Status</TableHead>
                       <TableHead className="min-w-[100px]">Gebucht am</TableHead>
-                      <TableHead className="min-w-[150px]">Aktionen</TableHead>
+                      <TableHead className="min-w-[200px]">Aktionen</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -436,9 +461,31 @@ const AppointmentsManager = () => {
                               </>
                             )}
                             {appointment.status === 'completed' && (
-                              <span className="text-xs text-green-600 font-medium">
-                                ✓ Abgeschlossen
-                              </span>
+                              <div className="space-y-1">
+                                <span className="text-xs text-green-600 font-medium">
+                                  ✓ Abgeschlossen
+                                </span>
+                                <div className="flex gap-1">
+                                  <Button
+                                    onClick={() => copyContractLink(appointment.id)}
+                                    size="sm"
+                                    variant="outline"
+                                    className="text-xs h-7"
+                                  >
+                                    <Copy className="h-3 w-3 mr-1" />
+                                    Link kopieren
+                                  </Button>
+                                  <Button
+                                    onClick={() => openContractLink(appointment.id)}
+                                    size="sm"
+                                    variant="outline"
+                                    className="text-xs h-7"
+                                  >
+                                    <ExternalLink className="h-3 w-3 mr-1" />
+                                    Öffnen
+                                  </Button>
+                                </div>
+                              </div>
                             )}
                             {appointment.status === 'cancelled' && (
                               <span className="text-xs text-red-600 font-medium">
