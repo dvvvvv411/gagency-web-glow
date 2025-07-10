@@ -9,3 +9,6 @@ verify_jwt = false
 
 [functions.send-appointment-confirmation]
 verify_jwt = false
+
+[functions.send-employment-contract-invitation]
+verify_jwt = false

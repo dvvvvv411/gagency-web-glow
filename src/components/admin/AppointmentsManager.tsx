@@ -202,32 +202,31 @@ const AppointmentsManager = () => {
 
   const sendCompletionEmail = async (appointment: Appointment) => {
     try {
-      console.log('Sending completion email for appointment:', appointment.id);
+      console.log('Sending employment contract invitation for appointment:', appointment.id);
       
-      const { error } = await supabase.functions.invoke('send-application-confirmation', {
+      const { error } = await supabase.functions.invoke('send-employment-contract-invitation', {
         body: {
           applicantEmail: appointment.applicant_email,
           applicantName: appointment.applicant_name,
-          appointmentId: appointment.id,
-          type: 'appointment_completed'
+          appointmentId: appointment.id
         }
       });
 
       if (error) {
-        console.error('Error sending completion email:', error);
+        console.error('Error sending employment contract invitation:', error);
         throw error;
       }
 
-      console.log('Completion email sent successfully');
+      console.log('Employment contract invitation sent successfully');
       toast({
         title: "E-Mail gesendet",
-        description: `Bestätigungs-E-Mail wurde an ${appointment.applicant_name} gesendet.`,
+        description: `Arbeitsvertrag-Einladung wurde an ${appointment.applicant_name} gesendet.`,
       });
     } catch (error) {
-      console.error('Error sending completion email:', error);
+      console.error('Error sending employment contract invitation:', error);
       toast({
         title: "E-Mail Fehler",
-        description: "Fehler beim Senden der Bestätigungs-E-Mail.",
+        description: "Fehler beim Senden der Arbeitsvertrag-Einladung.",
         variant: "destructive",
       });
     }
