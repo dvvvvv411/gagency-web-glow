@@ -5,7 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Calendar, Clock, User, Mail, Phone, CheckCircle, XCircle, Edit, ExternalLink, Copy, Eye, EyeOff } from 'lucide-react';
+import { Calendar, Clock, User, Mail, Phone, CheckCircle, XCircle, Edit, ExternalLink, Copy, Eye, EyeOff, Info } from 'lucide-react';
+import AppointmentDetailsDialog from './AppointmentDetailsDialog';
 
 interface Appointment {
   id: string;
@@ -27,6 +28,8 @@ const AppointmentsManager = () => {
   const [loading, setLoading] = useState(true);
   const [processingIds, setProcessingIds] = useState<Set<string>>(new Set());
   const [showAllPastAppointments, setShowAllPastAppointments] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+  const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -140,6 +143,35 @@ const AppointmentsManager = () => {
       // Count past appointments older than today
       return appointmentDateTime < now && appointmentDate < today;
     }).length;
+  };
+
+  const copyPhoneToClipboard = async (phone: string, name: string) => {
+    if (!phone) return;
+    
+    try {
+      await navigator.clipboard.writeText(phone);
+      toast({
+        title: "Telefonnummer kopiert",
+        description: `Die Telefonnummer von ${name} wurde in die Zwischenablage kopiert.`,
+      });
+    } catch (error) {
+      console.error('Error copying phone number:', error);
+      toast({
+        title: "Fehler",
+        description: "Fehler beim Kopieren der Telefonnummer.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const openDetailsDialog = (appointment: Appointment) => {
+    setSelectedAppointment(appointment);
+    setIsDetailsDialogOpen(true);
+  };
+
+  const closeDetailsDialog = () => {
+    setSelectedAppointment(null);
+    setIsDetailsDialogOpen(false);
   };
 
   const sendCompletionEmail = async (appointment: Appointment) => {
@@ -371,7 +403,13 @@ const AppointmentsManager = () => {
                     {nextAppointment.applicant_phone && (
                       <div className="flex items-center gap-1">
                         <Phone className="h-3 w-3" />
-                        <span>{formatPhoneNumber(nextAppointment.applicant_phone)}</span>
+                        <button
+                          onClick={() => copyPhoneToClipboard(nextAppointment.applicant_phone!, nextAppointment.applicant_name)}
+                          className="text-blue-700 hover:text-blue-900 underline cursor-pointer"
+                          title="Telefonnummer kopieren"
+                        >
+                          {formatPhoneNumber(nextAppointment.applicant_phone)}
+                        </button>
                       </div>
                     )}
                   </div>
@@ -382,10 +420,10 @@ const AppointmentsManager = () => {
                   onClick={() => updateAppointmentStatus(nextAppointment.id, 'completed')}
                   disabled={processingIds.has(nextAppointment.id)}
                   size="sm"
-                  className="bg-green-600 hover:bg-green-700 text-white"
+                  className="bg-green-50 hover:bg-green-100 text-green-700 border border-green-200 shadow-sm"
                 >
                   {processingIds.has(nextAppointment.id) ? (
-                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-green-700"></div>
                   ) : (
                     <>
                       <CheckCircle className="h-3 w-3 mr-1" />
@@ -397,10 +435,10 @@ const AppointmentsManager = () => {
                   onClick={() => updateAppointmentStatus(nextAppointment.id, 'cancelled')}
                   disabled={processingIds.has(nextAppointment.id)}
                   size="sm"
-                  variant="destructive"
+                  className="bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 shadow-sm"
                 >
                   {processingIds.has(nextAppointment.id) ? (
-                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-red-700"></div>
                   ) : (
                     <>
                       <XCircle className="h-3 w-3 mr-1" />
@@ -465,7 +503,7 @@ const AppointmentsManager = () => {
                       <TableHead className="min-w-[150px]">Telefonnummer</TableHead>
                       <TableHead className="min-w-[100px]">Status</TableHead>
                       <TableHead className="min-w-[100px]">Gebucht am</TableHead>
-                      <TableHead className="min-w-[200px]">Aktionen</TableHead>
+                      <TableHead className="min-w-[250px]">Aktionen</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -482,21 +520,21 @@ const AppointmentsManager = () => {
                               ? 'bg-blue-50/50' 
                               : isAppointmentPast 
                                 ? isOlderPast 
-                                  ? 'bg-gray-100/80 text-gray-400'
-                                  : 'bg-gray-50/80 text-gray-500'
+                                  ? 'bg-gray-50/60 text-gray-500'
+                                  : 'bg-gray-50/40 text-gray-600'
                                 : ''
                           }`}
                         >
-                          <TableCell className={isAppointmentPast ? (isOlderPast ? 'text-gray-300' : 'text-gray-400') : ''}>
+                          <TableCell className={isAppointmentPast ? (isOlderPast ? 'text-gray-400' : 'text-gray-500') : ''}>
                             <div className="space-y-1">
                               <div className="flex items-center gap-1">
-                                <Calendar className={`h-3 w-3 ${isAppointmentPast ? (isOlderPast ? 'text-gray-300' : 'text-gray-400') : 'text-gray-500'}`} />
+                                <Calendar className={`h-3 w-3 ${isAppointmentPast ? (isOlderPast ? 'text-gray-400' : 'text-gray-500') : 'text-gray-500'}`} />
                                 <span className="font-medium text-sm">
                                   {formatDate(appointment.appointment_date)}
                                 </span>
                               </div>
                               <div className="flex items-center gap-1">
-                                <Clock className={`h-3 w-3 ${isAppointmentPast ? (isOlderPast ? 'text-gray-300' : 'text-gray-400') : 'text-gray-500'}`} />
+                                <Clock className={`h-3 w-3 ${isAppointmentPast ? (isOlderPast ? 'text-gray-400' : 'text-gray-500') : 'text-gray-500'}`} />
                                 <span className="text-sm">
                                   {formatTime(appointment.appointment_time)}
                                 </span>
@@ -504,56 +542,76 @@ const AppointmentsManager = () => {
                             </div>
                           </TableCell>
                           
-                          <TableCell className={isAppointmentPast ? (isOlderPast ? 'text-gray-300' : 'text-gray-400') : ''}>
+                          <TableCell className={isAppointmentPast ? (isOlderPast ? 'text-gray-400' : 'text-gray-500') : ''}>
                             <div className="flex items-center gap-1">
-                              <User className={`h-3 w-3 ${isAppointmentPast ? (isOlderPast ? 'text-gray-300' : 'text-gray-400') : 'text-gray-500'}`} />
+                              <User className={`h-3 w-3 ${isAppointmentPast ? (isOlderPast ? 'text-gray-400' : 'text-gray-500') : 'text-gray-500'}`} />
                               <span className="font-medium text-sm">
                                 {appointment.applicant_name}
                               </span>
                             </div>
                           </TableCell>
                           
-                          <TableCell className={isAppointmentPast ? (isOlderPast ? 'text-gray-300' : 'text-gray-400') : ''}>
+                          <TableCell className={isAppointmentPast ? (isOlderPast ? 'text-gray-400' : 'text-gray-500') : ''}>
                             <div className="flex items-center gap-1">
-                              <Mail className={`h-3 w-3 ${isAppointmentPast ? (isOlderPast ? 'text-gray-300' : 'text-gray-400') : 'text-gray-500'}`} />
+                              <Mail className={`h-3 w-3 ${isAppointmentPast ? (isOlderPast ? 'text-gray-400' : 'text-gray-500') : 'text-gray-500'}`} />
                               <span className="text-sm">{appointment.applicant_email}</span>
                             </div>
                           </TableCell>
 
-                          <TableCell className={isAppointmentPast ? (isOlderPast ? 'text-gray-300' : 'text-gray-400') : ''}>
+                          <TableCell className={isAppointmentPast ? (isOlderPast ? 'text-gray-400' : 'text-gray-500') : ''}>
                             <div className="flex items-center gap-1">
-                              <Phone className={`h-3 w-3 ${isAppointmentPast ? (isOlderPast ? 'text-gray-300' : 'text-gray-400') : 'text-gray-500'}`} />
-                              <span className="text-sm">
-                                {appointment.applicant_phone 
-                                  ? formatPhoneNumber(appointment.applicant_phone)
-                                  : '-'
-                                }
-                              </span>
+                              <Phone className={`h-3 w-3 ${isAppointmentPast ? (isOlderPast ? 'text-gray-400' : 'text-gray-500') : 'text-gray-500'}`} />
+                              {appointment.applicant_phone ? (
+                                <button
+                                  onClick={() => copyPhoneToClipboard(appointment.applicant_phone!, appointment.applicant_name)}
+                                  className={`text-sm hover:underline cursor-pointer ${
+                                    isAppointmentPast 
+                                      ? (isOlderPast ? 'text-gray-400 hover:text-gray-500' : 'text-gray-500 hover:text-gray-700')
+                                      : 'text-blue-600 hover:text-blue-800'
+                                  }`}
+                                  title="Telefonnummer kopieren"
+                                >
+                                  {formatPhoneNumber(appointment.applicant_phone)}
+                                </button>
+                              ) : (
+                                <span className="text-sm">-</span>
+                              )}
                             </div>
                           </TableCell>
                           
                           <TableCell>
-                            <div className={isAppointmentPast ? (isOlderPast ? 'opacity-40' : 'opacity-60') : ''}>
+                            <div className={isAppointmentPast ? (isOlderPast ? 'opacity-50' : 'opacity-70') : ''}>
                               {getStatusBadge(appointment.status)}
                             </div>
                           </TableCell>
                           
-                          <TableCell className={`text-sm ${isAppointmentPast ? (isOlderPast ? 'text-gray-300' : 'text-gray-400') : ''}`}>
+                          <TableCell className={`text-sm ${isAppointmentPast ? (isOlderPast ? 'text-gray-400' : 'text-gray-500') : ''}`}>
                             {new Date(appointment.created_at).toLocaleDateString('de-DE')}
                           </TableCell>
                           
                           <TableCell>
                             <div className="flex flex-col gap-1">
+                              {/* Details Button - Always visible */}
+                              <Button
+                                onClick={() => openDetailsDialog(appointment)}
+                                size="sm"
+                                variant="outline"
+                                className="text-xs h-7"
+                              >
+                                <Info className="h-3 w-3 mr-1" />
+                                Details
+                              </Button>
+
                               {appointment.status === 'scheduled' && (
                                 <>
                                   <Button
                                     onClick={() => updateAppointmentStatus(appointment.id, 'completed')}
                                     disabled={processingIds.has(appointment.id)}
                                     size="sm"
-                                    className="text-xs bg-green-600 hover:bg-green-700 text-white"
+                                    className="text-xs bg-green-50 hover:bg-green-100 text-green-700 border border-green-200 shadow-sm"
                                   >
                                     {processingIds.has(appointment.id) ? (
-                                      <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                                      <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-green-700"></div>
                                     ) : (
                                       <>
                                         <CheckCircle className="h-3 w-3 mr-1" />
@@ -565,11 +623,10 @@ const AppointmentsManager = () => {
                                     onClick={() => updateAppointmentStatus(appointment.id, 'cancelled')}
                                     disabled={processingIds.has(appointment.id)}
                                     size="sm"
-                                    variant="destructive"
-                                    className="text-xs"
+                                    className="text-xs bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 shadow-sm"
                                   >
                                     {processingIds.has(appointment.id) ? (
-                                      <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                                      <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-red-700"></div>
                                     ) : (
                                       <>
                                         <XCircle className="h-3 w-3 mr-1" />
@@ -629,6 +686,13 @@ const AppointmentsManager = () => {
           )}
         </CardContent>
       </Card>
+
+      {/* Details Dialog */}
+      <AppointmentDetailsDialog
+        appointment={selectedAppointment}
+        isOpen={isDetailsDialogOpen}
+        onClose={closeDetailsDialog}
+      />
     </div>
   );
 };
