@@ -1,4 +1,6 @@
 
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import FluidBackground from '@/components/backgrounds/FluidBackground';
 import HeroSection from '@/components/sections/HeroSection';
 import ServicesShowcase from '@/components/sections/ServicesShowcase';
@@ -6,6 +8,22 @@ import StatsBar from '@/components/sections/StatsBar';
 import TestimonialsSection from '@/components/sections/TestimonialsSection';
 
 const Index = () => {
+  const { isAdmin, loading } = useAuth();
+
+  // Show loading state while checking authentication
+  if (loading) {
+    return (
+      <FluidBackground variant="primary" className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+      </FluidBackground>
+    );
+  }
+
+  // Redirect admin users to the admin dashboard
+  if (isAdmin) {
+    return <Navigate to="/admin" replace />;
+  }
+
   return (
     <FluidBackground variant="primary" className="min-h-screen">
       {/* Floating Particles Background */}
