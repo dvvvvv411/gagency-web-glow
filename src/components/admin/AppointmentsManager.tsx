@@ -20,6 +20,20 @@ interface Appointment {
   notes: string | null;
   created_at: string;
   updated_at: string;
+  // Extended job application data
+  job_applications?: {
+    phone: string;
+    adresse: string;
+    plz: string;
+    stadt: string;
+    staatsangehoerigkeit: string;
+    cv_file_path: string | null;
+    anschreiben_file_path: string | null;
+    status: string | null;
+    notes: string | null;
+    created_at: string;
+    accepted_at: string | null;
+  };
 }
 
 const AppointmentsManager = () => {
@@ -43,7 +57,19 @@ const AppointmentsManager = () => {
         .from('appointments')
         .select(`
           *,
-          job_applications(phone)
+          job_applications(
+            phone,
+            adresse,
+            plz,
+            stadt,
+            staatsangehoerigkeit,
+            cv_file_path,
+            anschreiben_file_path,
+            status,
+            notes,
+            created_at,
+            accepted_at
+          )
         `)
         .order('appointment_date', { ascending: true })
         .order('appointment_time', { ascending: true });
