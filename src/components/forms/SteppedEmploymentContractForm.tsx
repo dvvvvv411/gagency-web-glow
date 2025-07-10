@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { 
@@ -17,7 +16,9 @@ import {
   CheckCircle,
   ChevronRight,
   ChevronLeft,
-  Check
+  Check,
+  FileImage,
+  File
 } from 'lucide-react';
 
 interface SteppedEmploymentContractFormProps {
@@ -65,9 +66,7 @@ const SteppedEmploymentContractForm: React.FC<SteppedEmploymentContractFormProps
     marital_status: '',
     tax_id: '',
     tax_class: '',
-    church_tax: false,
     health_insurance_company: '',
-    health_insurance_number: '',
     pension_insurance_number: '',
     bank_name: '',
     iban: '',
@@ -168,7 +167,8 @@ const SteppedEmploymentContractForm: React.FC<SteppedEmploymentContractFormProps
         .insert({
           appointment_id: appointmentId,
           application_id: applicationId,
-          ...formData
+          ...formData,
+          church_tax: false // Set to false since we removed the checkbox
         });
 
       if (error) throw error;
@@ -214,7 +214,7 @@ const SteppedEmploymentContractForm: React.FC<SteppedEmploymentContractFormProps
                formData.email && formData.marital_status;
       case 2:
         return formData.tax_id && formData.tax_class && formData.health_insurance_company && 
-               formData.health_insurance_number && formData.pension_insurance_number;
+               formData.pension_insurance_number;
       case 3:
         return formData.bank_name && formData.iban && formData.bic && formData.account_holder;
       case 4:
@@ -230,6 +230,101 @@ const SteppedEmploymentContractForm: React.FC<SteppedEmploymentContractFormProps
     { number: 3, title: 'Bankverbindung', icon: Building },
     { number: 4, title: 'Ausweisdokumente', icon: CreditCard }
   ];
+
+  const BankCard = () => (
+    <div className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 rounded-xl p-6 text-white shadow-lg overflow-hidden mb-6">
+      <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+      <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-12 -translate-x-12"></div>
+      
+      <div className="relative z-10">
+        <div className="flex justify-between items-start mb-8">
+          <div>
+            <div className="text-sm opacity-75 mb-1">Bank</div>
+            <div className="text-lg font-semibold">
+              {formData.bank_name || 'Ihre Bank'}
+            </div>
+          </div>
+          <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+            <CreditCard className="w-5 h-5" />
+          </div>
+        </div>
+        
+        <div className="mb-6">
+          <div className="text-sm opacity-75 mb-1">IBAN</div>
+          <div className="text-lg font-mono tracking-wider">
+            {formData.iban || '•••• •••• •••• ••••'}
+          </div>
+        </div>
+        
+        <div className="flex justify-between items-end">
+          <div>
+            <div className="text-sm opacity-75 mb-1">Kontoinhaber</div>
+            <div className="text-base font-medium">
+              {formData.account_holder || 'Ihr Name'}
+            </div>
+          </div>
+          <div>
+            <div className="text-sm opacity-75 mb-1">BIC</div>
+            <div className="text-sm font-mono">
+              {formData.bic || '••••••••'}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const DocumentUploadCard = ({ type, label }: { type: 'front' | 'back', label: string }) => {
+    const isUploaded = formData[`id_${type}_file_path` as keyof typeof formData];
+    const isUploading = uploading[type];
+
+    return (
+      <Card className={`border-2 border-dashed transition-colors ${
+        isUploaded ? 'border-green-300 bg-green-50' : 'border-gray-300 hover:border-gray-400'
+      }`}>
+        <CardContent className="p-6">
+          <div className="text-center">
+            {isUploaded ? (
+              <div className="space-y-3">
+                <CheckCircle className="w-12 h-12 text-green-500 mx-auto" />
+                <div>
+                  <p className="text-sm font-medium text-green-700">{label} hochgeladen</p>
+                  <p className="text-xs text-green-600">Datei erfolgreich gespeichert</p>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto">
+                  {isUploading ? (
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+                  ) : (
+                    <Upload className="w-6 h-6 text-gray-400" />
+                  )}
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-700">{label}</p>
+                  <p className="text-xs text-gray-500">
+                    {isUploading ? 'Wird hochgeladen...' : 'Klicken Sie hier zum Hochladen'}
+                  </p>
+                </div>
+              </div>
+            )}
+            
+            <Input
+              type="file"
+              accept="image/*,.pdf"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) handleFileUpload(file, type);
+              }}
+              disabled={isUploading}
+              className="mt-4 cursor-pointer"
+            />
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -385,24 +480,15 @@ const SteppedEmploymentContractForm: React.FC<SteppedEmploymentContractFormProps
                     <SelectValue placeholder="Wählen Sie Ihre Steuerklasse" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="1">Klasse I</SelectItem>
-                    <SelectItem value="2">Klasse II</SelectItem>
-                    <SelectItem value="3">Klasse III</SelectItem>
-                    <SelectItem value="4">Klasse IV</SelectItem>
-                    <SelectItem value="5">Klasse V</SelectItem>
-                    <SelectItem value="6">Klasse VI</SelectItem>
+                    <SelectItem value="1">1</SelectItem>
+                    <SelectItem value="2">2</SelectItem>
+                    <SelectItem value="3">3</SelectItem>
+                    <SelectItem value="4">4</SelectItem>
+                    <SelectItem value="5">5</SelectItem>
+                    <SelectItem value="6">6</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="church_tax"
-                checked={formData.church_tax}
-                onCheckedChange={(checked) => handleInputChange('church_tax', checked as boolean)}
-              />
-              <Label htmlFor="church_tax">Kirchensteuerpflichtig</Label>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -417,24 +503,14 @@ const SteppedEmploymentContractForm: React.FC<SteppedEmploymentContractFormProps
               </div>
               
               <div>
-                <Label htmlFor="health_insurance_number">Krankenversicherungsnummer *</Label>
+                <Label htmlFor="pension_insurance_number">Sozialversicherungsnummer *</Label>
                 <Input
-                  id="health_insurance_number"
-                  value={formData.health_insurance_number}
-                  onChange={(e) => handleInputChange('health_insurance_number', e.target.value)}
+                  id="pension_insurance_number"
+                  value={formData.pension_insurance_number}
+                  onChange={(e) => handleInputChange('pension_insurance_number', e.target.value)}
                   required
                 />
               </div>
-            </div>
-            
-            <div>
-              <Label htmlFor="pension_insurance_number">Rentenversicherungsnummer *</Label>
-              <Input
-                id="pension_insurance_number"
-                value={formData.pension_insurance_number}
-                onChange={(e) => handleInputChange('pension_insurance_number', e.target.value)}
-                required
-              />
             </div>
           </div>
         );
@@ -442,6 +518,8 @@ const SteppedEmploymentContractForm: React.FC<SteppedEmploymentContractFormProps
       case 3:
         return (
           <div className="space-y-6">
+            <BankCard />
+            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="bank_name">Bank *</Label>
@@ -491,56 +569,9 @@ const SteppedEmploymentContractForm: React.FC<SteppedEmploymentContractFormProps
       case 4:
         return (
           <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="id_front">Vorderseite des Ausweises *</Label>
-                <div className="mt-2">
-                  <Input
-                    id="id_front"
-                    type="file"
-                    accept="image/*,.pdf"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) handleFileUpload(file, 'front');
-                    }}
-                    disabled={uploading.front}
-                  />
-                  {uploading.front && (
-                    <p className="text-sm text-gray-500 mt-1">Hochladen...</p>
-                  )}
-                  {formData.id_front_file_path && (
-                    <p className="text-sm text-green-600 mt-1 flex items-center gap-1">
-                      <CheckCircle className="h-3 w-3" />
-                      Hochgeladen
-                    </p>
-                  )}
-                </div>
-              </div>
-              
-              <div>
-                <Label htmlFor="id_back">Rückseite des Ausweises *</Label>
-                <div className="mt-2">
-                  <Input
-                    id="id_back"
-                    type="file"
-                    accept="image/*,.pdf"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) handleFileUpload(file, 'back');
-                    }}
-                    disabled={uploading.back}
-                  />
-                  {uploading.back && (
-                    <p className="text-sm text-gray-500 mt-1">Hochladen...</p>
-                  )}
-                  {formData.id_back_file_path && (
-                    <p className="text-sm text-green-600 mt-1 flex items-center gap-1">
-                      <CheckCircle className="h-3 w-3" />
-                      Hochgeladen
-                    </p>
-                  )}
-                </div>
-              </div>
+            <div className="grid grid-cols-1 gap-6">
+              <DocumentUploadCard type="front" label="Vorderseite des Ausweises" />
+              <DocumentUploadCard type="back" label="Rückseite des Ausweises" />
             </div>
           </div>
         );
