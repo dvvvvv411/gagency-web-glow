@@ -4,7 +4,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import FluidBackground from '@/components/backgrounds/FluidBackground';
-import EmploymentContractForm from '@/components/forms/EmploymentContractForm';
+import SteppedEmploymentContractForm from '@/components/forms/SteppedEmploymentContractForm';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { CheckCircle, AlertCircle, ArrowLeft } from 'lucide-react';
@@ -100,9 +100,9 @@ const EmploymentContract = () => {
   if (loading) {
     return (
       <FluidBackground className="min-h-screen flex items-center justify-center">
-        <Card className="max-w-md mx-auto bg-white/70 backdrop-blur-sm">
+        <Card className="max-w-md mx-auto bg-white/80 backdrop-blur-sm shadow-xl">
           <CardContent className="flex items-center justify-center p-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
           </CardContent>
         </Card>
       </FluidBackground>
@@ -112,7 +112,7 @@ const EmploymentContract = () => {
   if (!appointmentId || !appointment) {
     return (
       <FluidBackground className="min-h-screen flex items-center justify-center">
-        <Card className="max-w-md mx-auto bg-white/70 backdrop-blur-sm">
+        <Card className="max-w-md mx-auto bg-white/80 backdrop-blur-sm shadow-xl">
           <CardHeader className="text-center">
             <AlertCircle className="w-12 h-12 mx-auto text-red-500 mb-4" />
             <CardTitle className="text-red-600">Ungültiger Link</CardTitle>
@@ -137,7 +137,7 @@ const EmploymentContract = () => {
   if (existingContract) {
     return (
       <FluidBackground className="min-h-screen flex items-center justify-center">
-        <Card className="max-w-md mx-auto bg-white/70 backdrop-blur-sm">
+        <Card className="max-w-md mx-auto bg-white/80 backdrop-blur-sm shadow-xl">
           <CardHeader className="text-center">
             <CheckCircle className="w-12 h-12 mx-auto text-green-500 mb-4" />
             <CardTitle className="text-green-600">Bereits übermittelt</CardTitle>
@@ -162,7 +162,7 @@ const EmploymentContract = () => {
   if (submitted) {
     return (
       <FluidBackground className="min-h-screen flex items-center justify-center">
-        <Card className="max-w-md mx-auto bg-white/70 backdrop-blur-sm">
+        <Card className="max-w-md mx-auto bg-white/80 backdrop-blur-sm shadow-xl">
           <CardHeader className="text-center">
             <CheckCircle className="w-12 h-12 mx-auto text-green-500 mb-4" />
             <CardTitle className="text-green-600">Erfolgreich übermittelt</CardTitle>
@@ -187,27 +187,19 @@ const EmploymentContract = () => {
   return (
     <FluidBackground className="min-h-screen py-12">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <Card className="mb-8 bg-white/70 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle className="text-2xl text-center">
-              Arbeitsvertrag - Datenerfassung
-            </CardTitle>
-            <CardDescription className="text-center">
-              Herzlich willkommen! Bitte füllen Sie das folgende Formular aus, um Ihre Vertragsdaten zu erfassen.
-            </CardDescription>
-            <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-              <div className="text-sm text-blue-800">
-                <p><strong>Bewerber:</strong> {appointment.applicant_name}</p>
-                <p><strong>E-Mail:</strong> {appointment.applicant_email}</p>
-                <p><strong>Termin:</strong> {new Date(appointment.appointment_date).toLocaleDateString('de-DE')} um {appointment.appointment_time.slice(0, 5)}</p>
-              </div>
+        {/* Header Info */}
+        <div className="mb-8 text-center">
+          <div className="inline-flex items-center justify-center p-4 bg-white/80 backdrop-blur-sm rounded-lg shadow-lg">
+            <div className="text-sm text-gray-600">
+              <p><strong>Bewerber:</strong> {appointment.applicant_name}</p>
+              <p><strong>E-Mail:</strong> {appointment.applicant_email}</p>
+              <p><strong>Termin:</strong> {new Date(appointment.appointment_date).toLocaleDateString('de-DE')} um {appointment.appointment_time.slice(0, 5)}</p>
             </div>
-          </CardHeader>
-        </Card>
+          </div>
+        </div>
 
-        {/* Form */}
-        <EmploymentContractForm
+        {/* Stepped Form */}
+        <SteppedEmploymentContractForm
           appointmentId={appointment.id}
           applicationId={appointment.application_id}
           applicantName={appointment.applicant_name}
