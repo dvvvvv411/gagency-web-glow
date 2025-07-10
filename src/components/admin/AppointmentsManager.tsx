@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -437,7 +438,7 @@ const AppointmentsManager = () => {
                           
                           <TableCell>
                             <div className="flex flex-col gap-1">
-                              {appointment.status === 'scheduled' && !isAppointmentPast && (
+                              {appointment.status === 'scheduled' && (
                                 <>
                                   <Button
                                     onClick={() => updateAppointmentStatus(appointment.id, 'completed')}
@@ -471,11 +472,6 @@ const AppointmentsManager = () => {
                                     )}
                                   </Button>
                                 </>
-                              )}
-                              {appointment.status === 'scheduled' && isAppointmentPast && (
-                                <span className="text-xs text-orange-500 font-medium">
-                                  ⏰ Verpasst
-                                </span>
                               )}
                               {appointment.status === 'completed' && (
                                 <div className="space-y-1">
