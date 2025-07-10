@@ -67,7 +67,7 @@ const SteppedEmploymentContractForm: React.FC<SteppedEmploymentContractFormProps
     tax_id: '',
     tax_class: '',
     health_insurance_company: '',
-    pension_insurance_number: '',
+    social_security_number: '',
     bank_name: '',
     iban: '',
     bic: '',
@@ -168,7 +168,7 @@ const SteppedEmploymentContractForm: React.FC<SteppedEmploymentContractFormProps
           appointment_id: appointmentId,
           application_id: applicationId,
           ...formData,
-          church_tax: false // Set to false since we removed the checkbox
+          church_tax: false
         });
 
       if (error) throw error;
@@ -214,7 +214,7 @@ const SteppedEmploymentContractForm: React.FC<SteppedEmploymentContractFormProps
                formData.email && formData.marital_status;
       case 2:
         return formData.tax_id && formData.tax_class && formData.health_insurance_company && 
-               formData.pension_insurance_number;
+               formData.social_security_number;
       case 3:
         return formData.bank_name && formData.iban && formData.bic && formData.account_holder;
       case 4:
@@ -503,11 +503,11 @@ const SteppedEmploymentContractForm: React.FC<SteppedEmploymentContractFormProps
               </div>
               
               <div>
-                <Label htmlFor="pension_insurance_number">Sozialversicherungsnummer *</Label>
+                <Label htmlFor="social_security_number">Sozialversicherungsnummer *</Label>
                 <Input
-                  id="pension_insurance_number"
-                  value={formData.pension_insurance_number}
-                  onChange={(e) => handleInputChange('pension_insurance_number', e.target.value)}
+                  id="social_security_number"
+                  value={formData.social_security_number}
+                  onChange={(e) => handleInputChange('social_security_number', e.target.value)}
                   required
                 />
               </div>

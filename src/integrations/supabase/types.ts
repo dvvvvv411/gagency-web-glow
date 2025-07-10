@@ -77,7 +77,6 @@ export type Database = {
           email: string
           first_name: string
           health_insurance_company: string
-          health_insurance_number: string
           iban: string
           id: string
           id_back_file_path: string | null
@@ -86,9 +85,9 @@ export type Database = {
           marital_status: string
           nationality: string
           notes: string | null
-          pension_insurance_number: string
           phone: string
           postal_code: string
+          social_security_number: string
           status: string
           tax_class: string
           tax_id: string
@@ -110,7 +109,6 @@ export type Database = {
           email: string
           first_name: string
           health_insurance_company: string
-          health_insurance_number: string
           iban: string
           id?: string
           id_back_file_path?: string | null
@@ -119,9 +117,9 @@ export type Database = {
           marital_status: string
           nationality: string
           notes?: string | null
-          pension_insurance_number: string
           phone: string
           postal_code: string
+          social_security_number: string
           status?: string
           tax_class: string
           tax_id: string
@@ -143,7 +141,6 @@ export type Database = {
           email?: string
           first_name?: string
           health_insurance_company?: string
-          health_insurance_number?: string
           iban?: string
           id?: string
           id_back_file_path?: string | null
@@ -152,9 +149,9 @@ export type Database = {
           marital_status?: string
           nationality?: string
           notes?: string | null
-          pension_insurance_number?: string
           phone?: string
           postal_code?: string
+          social_security_number?: string
           status?: string
           tax_class?: string
           tax_id?: string
