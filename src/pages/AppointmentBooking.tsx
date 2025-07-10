@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { format, startOfDay, isAfter, isBefore, parseISO } from 'date-fns';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -101,13 +102,18 @@ const AppointmentBooking = () => {
       return;
     }
 
-    const dateString = selectedDate.toISOString().split('T')[0];
+    // Use consistent date formatting - format as YYYY-MM-DD in local timezone
+    const dateString = format(selectedDate, 'yyyy-MM-dd');
     const now = new Date();
-    const selectedDateObj = new Date(selectedDate);
-    const isToday = selectedDateObj.toDateString() === now.toDateString();
+    const selectedDateStart = startOfDay(selectedDate);
+    const todayStart = startOfDay(now);
+    const isToday = selectedDateStart.getTime() === todayStart.getTime();
     const currentTime = now.getHours() * 60 + now.getMinutes(); // minutes since midnight
     
-    console.log('Fetching appointments for date:', dateString);
+    console.log('Selected date:', selectedDate);
+    console.log('Date string for query:', dateString);
+    console.log('Is today:', isToday);
+    console.log('Current time (minutes):', currentTime);
     
     supabase
       .from('appointments')
@@ -162,15 +168,34 @@ const AppointmentBooking = () => {
     if (!application) return;
 
     setSubmitting(true);
+    
+    // Format date consistently in local timezone as YYYY-MM-DD
+    const dateString = format(data.date, 'yyyy-MM-dd');
+    
     console.log('Attempting to book appointment:', {
-      date: data.date.toISOString().split('T')[0],
+      originalDate: data.date,
+      formattedDate: dateString,
       time: data.time,
       applicationId: application.id
     });
 
+    // Additional validation: prevent booking in the past
+    const selectedDateTime = new Date(`${dateString}T${data.time}:00`);
+    const now = new Date();
+    
+    if (isBefore(selectedDateTime, now)) {
+      console.error('Attempted to book appointment in the past:', selectedDateTime, 'vs now:', now);
+      toast({
+        title: "Ungültiger Termin",
+        description: "Sie können keinen Termin in der Vergangenheit buchen.",
+        variant: "destructive",
+      });
+      setSubmitting(false);
+      return;
+    }
+
     try {
       // Double-check availability before booking
-      const dateString = data.date.toISOString().split('T')[0];
       const { data: existingAppointments, error: checkError } = await supabase
         .from('appointments')
         .select('id')
@@ -209,7 +234,7 @@ const AppointmentBooking = () => {
         throw error;
       }
 
-      console.log('Appointment booked successfully');
+      console.log('Appointment booked successfully for date:', dateString);
 
       // Send appointment confirmation email
       try {
@@ -252,11 +277,11 @@ const AppointmentBooking = () => {
   };
 
   const isDateDisabled = (date: Date) => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const today = startOfDay(new Date());
+    const checkDate = startOfDay(date);
     
-    // Disable past dates and weekends
-    if (date < today || date.getDay() === 0 || date.getDay() === 6) {
+    // Disable past dates (before today) and weekends
+    if (isBefore(checkDate, today) || date.getDay() === 0 || date.getDay() === 6) {
       return true;
     }
 
