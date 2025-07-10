@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -20,7 +19,8 @@ import {
   CheckCircle,
   Clock,
   AlertCircle,
-  X
+  X,
+  HelpCircle
 } from 'lucide-react';
 
 interface EmploymentContract {
@@ -189,7 +189,8 @@ const EmploymentContractsManager = () => {
         );
       default:
         return (
-          <Badge variant="secondary">
+          <Badge className="bg-gray-100 text-gray-800 border-gray-300">
+            <HelpCircle className="h-3 w-3 mr-1" />
             {status}
           </Badge>
         );
