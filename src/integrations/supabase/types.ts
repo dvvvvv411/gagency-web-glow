@@ -74,6 +74,7 @@ export type Database = {
           church_tax: boolean
           city: string
           created_at: string
+          desired_start_date: string | null
           email: string
           first_name: string
           health_insurance_company: string
@@ -106,6 +107,7 @@ export type Database = {
           church_tax?: boolean
           city: string
           created_at?: string
+          desired_start_date?: string | null
           email: string
           first_name: string
           health_insurance_company: string
@@ -138,6 +140,7 @@ export type Database = {
           church_tax?: boolean
           city?: string
           created_at?: string
+          desired_start_date?: string | null
           email?: string
           first_name?: string
           health_insurance_company?: string

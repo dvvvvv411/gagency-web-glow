@@ -63,6 +63,7 @@ const SteppedEmploymentContractForm: React.FC<SteppedEmploymentContractFormProps
     phone: '',
     email: applicantEmail,
     marital_status: '',
+    desired_start_date: '',
     tax_id: '',
     tax_class: '',
     health_insurance_company: '',
@@ -210,7 +211,7 @@ const SteppedEmploymentContractForm: React.FC<SteppedEmploymentContractFormProps
         return formData.first_name && formData.last_name && formData.birth_date && 
                formData.birth_place && formData.nationality && formData.address && 
                formData.postal_code && formData.city && formData.phone && 
-               formData.email && formData.marital_status;
+               formData.email && formData.marital_status && formData.desired_start_date;
       case 2:
         return formData.tax_id && formData.tax_class && formData.health_insurance_company && 
                formData.social_security_number;
@@ -453,6 +454,17 @@ const SteppedEmploymentContractForm: React.FC<SteppedEmploymentContractFormProps
                     required
                   />
                 </div>
+              </div>
+
+              <div>
+                <Label htmlFor="desired_start_date">Gewünschtes Startdatum *</Label>
+                <Input
+                  id="desired_start_date"
+                  type="date"
+                  value={formData.desired_start_date}
+                  onChange={(e) => handleInputChange('desired_start_date', e.target.value)}
+                  required
+                />
               </div>
             </div>
           </div>
