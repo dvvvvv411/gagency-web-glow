@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -480,12 +479,12 @@ const SteppedEmploymentContractForm: React.FC<SteppedEmploymentContractFormProps
                     <SelectValue placeholder="Wählen Sie Ihre Steuerklasse" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="1">1</SelectItem>
-                    <SelectItem value="2">2</SelectItem>
-                    <SelectItem value="3">3</SelectItem>
-                    <SelectItem value="4">4</SelectItem>
-                    <SelectItem value="5">5</SelectItem>
-                    <SelectItem value="6">6</SelectItem>
+                    <SelectItem value="1">Steuerklasse 1</SelectItem>
+                    <SelectItem value="2">Steuerklasse 2</SelectItem>
+                    <SelectItem value="3">Steuerklasse 3</SelectItem>
+                    <SelectItem value="4">Steuerklasse 4</SelectItem>
+                    <SelectItem value="5">Steuerklasse 5</SelectItem>
+                    <SelectItem value="6">Steuerklasse 6</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
