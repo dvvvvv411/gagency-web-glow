@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -40,7 +39,7 @@ const AppointmentsManager = () => {
         .from('appointments')
         .select(`
           *,
-          job_applications!inner(phone)
+          job_applications(phone)
         `)
         .order('appointment_date', { ascending: true })
         .order('appointment_time', { ascending: true });
@@ -224,6 +223,11 @@ const AppointmentsManager = () => {
     return appointmentDateTime > new Date();
   };
 
+  const isPast = (date: string, time: string) => {
+    const appointmentDateTime = new Date(`${date}T${time}`);
+    return appointmentDateTime < new Date();
+  };
+
   const formatPhoneNumber = (phone: string) => {
     // Simple phone number formatting for German numbers
     if (!phone) return phone;
@@ -361,141 +365,155 @@ const AppointmentsManager = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {appointments.map((appointment) => (
-                      <TableRow 
-                        key={appointment.id} 
-                        className={`align-top ${
-                          isUpcoming(appointment.appointment_date, appointment.appointment_time) 
-                            ? 'bg-blue-50/50' 
-                            : ''
-                        }`}
-                      >
-                        <TableCell>
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-1">
-                              <Calendar className="h-3 w-3 text-gray-500" />
-                              <span className="font-medium text-sm">
-                                {formatDate(appointment.appointment_date)}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <Clock className="h-3 w-3 text-gray-500" />
-                              <span className="text-sm">
-                                {formatTime(appointment.appointment_time)}
-                              </span>
-                            </div>
-                          </div>
-                        </TableCell>
-                        
-                        <TableCell>
-                          <div className="flex items-center gap-1">
-                            <User className="h-3 w-3 text-gray-500" />
-                            <span className="font-medium text-sm">
-                              {appointment.applicant_name}
-                            </span>
-                          </div>
-                        </TableCell>
-                        
-                        <TableCell>
-                          <div className="flex items-center gap-1">
-                            <Mail className="h-3 w-3 text-gray-500" />
-                            <span className="text-sm">{appointment.applicant_email}</span>
-                          </div>
-                        </TableCell>
-
-                        <TableCell>
-                          <div className="flex items-center gap-1">
-                            <Phone className="h-3 w-3 text-gray-500" />
-                            <span className="text-sm">
-                              {appointment.applicant_phone 
-                                ? formatPhoneNumber(appointment.applicant_phone)
-                                : '-'
-                              }
-                            </span>
-                          </div>
-                        </TableCell>
-                        
-                        <TableCell>
-                          {getStatusBadge(appointment.status)}
-                        </TableCell>
-                        
-                        <TableCell className="text-sm">
-                          {new Date(appointment.created_at).toLocaleDateString('de-DE')}
-                        </TableCell>
-                        
-                        <TableCell>
-                          <div className="flex flex-col gap-1">
-                            {appointment.status === 'scheduled' && (
-                              <>
-                                <Button
-                                  onClick={() => updateAppointmentStatus(appointment.id, 'completed')}
-                                  disabled={processingIds.has(appointment.id)}
-                                  size="sm"
-                                  className="text-xs bg-green-600 hover:bg-green-700 text-white"
-                                >
-                                  {processingIds.has(appointment.id) ? (
-                                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
-                                  ) : (
-                                    <>
-                                      <CheckCircle className="h-3 w-3 mr-1" />
-                                      Abschließen
-                                    </>
-                                  )}
-                                </Button>
-                                <Button
-                                  onClick={() => updateAppointmentStatus(appointment.id, 'cancelled')}
-                                  disabled={processingIds.has(appointment.id)}
-                                  size="sm"
-                                  variant="destructive"
-                                  className="text-xs"
-                                >
-                                  {processingIds.has(appointment.id) ? (
-                                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
-                                  ) : (
-                                    <>
-                                      <XCircle className="h-3 w-3 mr-1" />
-                                      Stornieren
-                                    </>
-                                  )}
-                                </Button>
-                              </>
-                            )}
-                            {appointment.status === 'completed' && (
-                              <div className="space-y-1">
-                                <span className="text-xs text-green-600 font-medium">
-                                  ✓ Abgeschlossen
+                    {appointments.map((appointment) => {
+                      const isAppointmentPast = isPast(appointment.appointment_date, appointment.appointment_time);
+                      const isAppointmentUpcoming = isUpcoming(appointment.appointment_date, appointment.appointment_time);
+                      
+                      return (
+                        <TableRow 
+                          key={appointment.id} 
+                          className={`align-top ${
+                            isAppointmentUpcoming && appointment.status === 'scheduled'
+                              ? 'bg-blue-50/50' 
+                              : isAppointmentPast 
+                                ? 'bg-gray-50/80 text-gray-500'
+                                : ''
+                          }`}
+                        >
+                          <TableCell className={isAppointmentPast ? 'text-gray-400' : ''}>
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-1">
+                                <Calendar className={`h-3 w-3 ${isAppointmentPast ? 'text-gray-400' : 'text-gray-500'}`} />
+                                <span className="font-medium text-sm">
+                                  {formatDate(appointment.appointment_date)}
                                 </span>
-                                <div className="flex gap-1">
-                                  <Button
-                                    onClick={() => copyContractLink(appointment.id)}
-                                    size="sm"
-                                    variant="outline"
-                                    className="text-xs h-7"
-                                  >
-                                    <Copy className="h-3 w-3 mr-1" />
-                                    Link kopieren
-                                  </Button>
-                                  <Button
-                                    onClick={() => openContractLink(appointment.id)}
-                                    size="sm"
-                                    variant="outline"
-                                    className="text-xs h-7"
-                                  >
-                                    <ExternalLink className="h-3 w-3 mr-1" />
-                                    Öffnen
-                                  </Button>
-                                </div>
                               </div>
-                            )}
-                            {appointment.status === 'cancelled' && (
-                              <span className="text-xs text-red-600 font-medium">
-                                ✗ Storniert
+                              <div className="flex items-center gap-1">
+                                <Clock className={`h-3 w-3 ${isAppointmentPast ? 'text-gray-400' : 'text-gray-500'}`} />
+                                <span className="text-sm">
+                                  {formatTime(appointment.appointment_time)}
+                                </span>
+                              </div>
+                            </div>
+                          </TableCell>
+                          
+                          <TableCell className={isAppointmentPast ? 'text-gray-400' : ''}>
+                            <div className="flex items-center gap-1">
+                              <User className={`h-3 w-3 ${isAppointmentPast ? 'text-gray-400' : 'text-gray-500'}`} />
+                              <span className="font-medium text-sm">
+                                {appointment.applicant_name}
                               </span>
-                            )}
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                            </div>
+                          </TableCell>
+                          
+                          <TableCell className={isAppointmentPast ? 'text-gray-400' : ''}>
+                            <div className="flex items-center gap-1">
+                              <Mail className={`h-3 w-3 ${isAppointmentPast ? 'text-gray-400' : 'text-gray-500'}`} />
+                              <span className="text-sm">{appointment.applicant_email}</span>
+                            </div>
+                          </TableCell>
+
+                          <TableCell className={isAppointmentPast ? 'text-gray-400' : ''}>
+                            <div className="flex items-center gap-1">
+                              <Phone className={`h-3 w-3 ${isAppointmentPast ? 'text-gray-400' : 'text-gray-500'}`} />
+                              <span className="text-sm">
+                                {appointment.applicant_phone 
+                                  ? formatPhoneNumber(appointment.applicant_phone)
+                                  : '-'
+                                }
+                              </span>
+                            </div>
+                          </TableCell>
+                          
+                          <TableCell>
+                            <div className={isAppointmentPast ? 'opacity-60' : ''}>
+                              {getStatusBadge(appointment.status)}
+                            </div>
+                          </TableCell>
+                          
+                          <TableCell className={`text-sm ${isAppointmentPast ? 'text-gray-400' : ''}`}>
+                            {new Date(appointment.created_at).toLocaleDateString('de-DE')}
+                          </TableCell>
+                          
+                          <TableCell>
+                            <div className="flex flex-col gap-1">
+                              {appointment.status === 'scheduled' && !isAppointmentPast && (
+                                <>
+                                  <Button
+                                    onClick={() => updateAppointmentStatus(appointment.id, 'completed')}
+                                    disabled={processingIds.has(appointment.id)}
+                                    size="sm"
+                                    className="text-xs bg-green-600 hover:bg-green-700 text-white"
+                                  >
+                                    {processingIds.has(appointment.id) ? (
+                                      <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                                    ) : (
+                                      <>
+                                        <CheckCircle className="h-3 w-3 mr-1" />
+                                        Abschließen
+                                      </>
+                                    )}
+                                  </Button>
+                                  <Button
+                                    onClick={() => updateAppointmentStatus(appointment.id, 'cancelled')}
+                                    disabled={processingIds.has(appointment.id)}
+                                    size="sm"
+                                    variant="destructive"
+                                    className="text-xs"
+                                  >
+                                    {processingIds.has(appointment.id) ? (
+                                      <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                                    ) : (
+                                      <>
+                                        <XCircle className="h-3 w-3 mr-1" />
+                                        Stornieren
+                                      </>
+                                    )}
+                                  </Button>
+                                </>
+                              )}
+                              {appointment.status === 'scheduled' && isAppointmentPast && (
+                                <span className="text-xs text-orange-500 font-medium">
+                                  ⏰ Verpasst
+                                </span>
+                              )}
+                              {appointment.status === 'completed' && (
+                                <div className="space-y-1">
+                                  <span className="text-xs text-green-600 font-medium">
+                                    ✓ Abgeschlossen
+                                  </span>
+                                  <div className="flex gap-1">
+                                    <Button
+                                      onClick={() => copyContractLink(appointment.id)}
+                                      size="sm"
+                                      variant="outline"
+                                      className="text-xs h-7"
+                                    >
+                                      <Copy className="h-3 w-3 mr-1" />
+                                      Link kopieren
+                                    </Button>
+                                    <Button
+                                      onClick={() => openContractLink(appointment.id)}
+                                      size="sm"
+                                      variant="outline"
+                                      className="text-xs h-7"
+                                    >
+                                      <ExternalLink className="h-3 w-3 mr-1" />
+                                      Öffnen
+                                    </Button>
+                                  </div>
+                                </div>
+                              )}
+                              {appointment.status === 'cancelled' && (
+                                <span className="text-xs text-red-600 font-medium">
+                                  ✗ Storniert
+                                </span>
+                              )}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
                   </TableBody>
                 </Table>
               </div>
