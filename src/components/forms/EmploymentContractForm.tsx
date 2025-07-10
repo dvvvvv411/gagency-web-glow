@@ -58,8 +58,7 @@ const EmploymentContractForm: React.FC<EmploymentContractFormProps> = ({
     tax_class: '',
     church_tax: false,
     health_insurance_company: '',
-    health_insurance_number: '',
-    pension_insurance_number: '',
+    social_security_number: '',
     bank_name: '',
     iban: '',
     bic: '',
@@ -348,12 +347,12 @@ const EmploymentContractForm: React.FC<EmploymentContractFormProps> = ({
                 <SelectValue placeholder="Wählen Sie Ihre Steuerklasse" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="1">Klasse I</SelectItem>
-                <SelectItem value="2">Klasse II</SelectItem>
-                <SelectItem value="3">Klasse III</SelectItem>
-                <SelectItem value="4">Klasse IV</SelectItem>
-                <SelectItem value="5">Klasse V</SelectItem>
-                <SelectItem value="6">Klasse VI</SelectItem>
+                <SelectItem value="1">1</SelectItem>
+                <SelectItem value="2">2</SelectItem>
+                <SelectItem value="3">3</SelectItem>
+                <SelectItem value="4">4</SelectItem>
+                <SelectItem value="5">5</SelectItem>
+                <SelectItem value="6">6</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -380,21 +379,11 @@ const EmploymentContractForm: React.FC<EmploymentContractFormProps> = ({
           </div>
           
           <div>
-            <Label htmlFor="health_insurance_number">Krankenversicherungsnummer *</Label>
+            <Label htmlFor="social_security_number">Sozialversicherungsnummer *</Label>
             <Input
-              id="health_insurance_number"
-              value={formData.health_insurance_number}
-              onChange={(e) => handleInputChange('health_insurance_number', e.target.value)}
-              required
-            />
-          </div>
-          
-          <div className="md:col-span-2">
-            <Label htmlFor="pension_insurance_number">Rentenversicherungsnummer *</Label>
-            <Input
-              id="pension_insurance_number"
-              value={formData.pension_insurance_number}
-              onChange={(e) => handleInputChange('pension_insurance_number', e.target.value)}
+              id="social_security_number"
+              value={formData.social_security_number}
+              onChange={(e) => handleInputChange('social_security_number', e.target.value)}
               required
             />
           </div>
