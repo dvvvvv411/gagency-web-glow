@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -131,8 +130,6 @@ const AppointmentsManager = () => {
   };
 
   const getHiddenPastAppointmentsCount = () => {
-    if (showAllPastAppointments) return 0;
-    
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     
@@ -430,26 +427,25 @@ const AppointmentsManager = () => {
                 Übersicht und Verwaltung aller gebuchten Termine
               </CardDescription>
             </div>
-            {hiddenCount > 0 && (
-              <Button
-                onClick={() => setShowAllPastAppointments(!showAllPastAppointments)}
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-2"
-              >
-                {showAllPastAppointments ? (
-                  <>
-                    <EyeOff className="h-4 w-4" />
-                    Ältere ausblenden
-                  </>
-                ) : (
-                  <>
-                    <Eye className="h-4 w-4" />
-                    {hiddenCount} ältere anzeigen
-                  </>
-                )}
-              </Button>
-            )}
+            {/* Always show the toggle button */}
+            <Button
+              onClick={() => setShowAllPastAppointments(!showAllPastAppointments)}
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              {showAllPastAppointments ? (
+                <>
+                  <EyeOff className="h-4 w-4" />
+                  Ältere ausblenden
+                </>
+              ) : (
+                <>
+                  <Eye className="h-4 w-4" />
+                  {hiddenCount > 0 ? `${hiddenCount} ältere anzeigen` : 'Alle anzeigen'}
+                </>
+              )}
+            </Button>
           </div>
         </CardHeader>
         <CardContent>
