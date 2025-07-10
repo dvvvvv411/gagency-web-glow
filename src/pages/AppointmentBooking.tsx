@@ -129,8 +129,12 @@ const AppointmentBooking = () => {
         
         // All appointments are considered as booked, regardless of status
         // This prevents double-booking even when appointments are completed/cancelled
-        const bookedTimes = data?.map(app => app.appointment_time) || [];
-        console.log('Booked times:', bookedTimes);
+        // Fix: Truncate seconds from database time to match frontend format
+        const bookedTimes = data?.map(app => {
+          // Convert "15:00:00" to "15:00" by taking only the first 5 characters
+          return app.appointment_time.substring(0, 5);
+        }) || [];
+        console.log('Booked times (normalized):', bookedTimes);
         
         const slotsWithAvailability: TimeSlotInfo[] = baseTimeSlots.map(time => {
           const [hours, minutes] = time.split(':').map(Number);
