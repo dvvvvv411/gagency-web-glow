@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Calendar, Clock, User, Mail, Phone, CheckCircle, XCircle, Edit, ExternalLink, Copy } from 'lucide-react';
+import { Calendar, Clock, User, Mail, Phone, CheckCircle, XCircle, Edit, ExternalLink, Copy, Eye, EyeOff } from 'lucide-react';
 
 interface Appointment {
   id: string;
@@ -27,6 +27,7 @@ const AppointmentsManager = () => {
   const [nextAppointment, setNextAppointment] = useState<Appointment | null>(null);
   const [loading, setLoading] = useState(true);
   const [processingIds, setProcessingIds] = useState<Set<string>>(new Set());
+  const [showAllPastAppointments, setShowAllPastAppointments] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -53,14 +54,17 @@ const AppointmentsManager = () => {
         applicant_phone: appointment.job_applications?.phone
       }));
 
+      // Sort appointments with custom logic
+      const sortedAppointments = sortAppointments(appointmentsWithPhone);
+
       // Find the next upcoming appointment
       const now = new Date();
-      const upcoming = appointmentsWithPhone.find(appointment => {
+      const upcoming = sortedAppointments.find(appointment => {
         const appointmentDateTime = new Date(`${appointment.appointment_date}T${appointment.appointment_time}`);
         return appointmentDateTime > now && appointment.status === 'scheduled';
       });
 
-      setAppointments(appointmentsWithPhone);
+      setAppointments(sortedAppointments);
       setNextAppointment(upcoming || null);
     } catch (error) {
       console.error('Error fetching appointments:', error);
@@ -72,6 +76,73 @@ const AppointmentsManager = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const sortAppointments = (appointments: Appointment[]) => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    return appointments.sort((a, b) => {
+      const dateTimeA = new Date(`${a.appointment_date}T${a.appointment_time}`);
+      const dateTimeB = new Date(`${b.appointment_date}T${b.appointment_time}`);
+      
+      const isAFuture = dateTimeA > now;
+      const isBFuture = dateTimeB > now;
+      
+      // Future appointments first (sorted chronologically)
+      if (isAFuture && isBFuture) {
+        return dateTimeA.getTime() - dateTimeB.getTime();
+      }
+      
+      // Then recent past appointments (today/tomorrow, sorted reverse chronologically)
+      if (!isAFuture && !isBFuture) {
+        return dateTimeB.getTime() - dateTimeA.getTime();
+      }
+      
+      // Future before past
+      return isAFuture ? -1 : 1;
+    });
+  };
+
+  const getFilteredAppointments = () => {
+    if (showAllPastAppointments) {
+      return appointments;
+    }
+
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    return appointments.filter(appointment => {
+      const appointmentDate = new Date(appointment.appointment_date);
+      const appointmentDateTime = new Date(`${appointment.appointment_date}T${appointment.appointment_time}`);
+      
+      // Always show future appointments
+      if (appointmentDateTime > now) {
+        return true;
+      }
+      
+      // Show past appointments only from today and tomorrow
+      return appointmentDate >= today && appointmentDate <= tomorrow;
+    });
+  };
+
+  const getHiddenPastAppointmentsCount = () => {
+    if (showAllPastAppointments) return 0;
+    
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    
+    return appointments.filter(appointment => {
+      const appointmentDate = new Date(appointment.appointment_date);
+      const appointmentDateTime = new Date(`${appointment.appointment_date}T${appointment.appointment_time}`);
+      
+      // Count past appointments older than today
+      return appointmentDateTime < now && appointmentDate < today;
+    }).length;
   };
 
   const sendCompletionEmail = async (appointment: Appointment) => {
@@ -229,6 +300,15 @@ const AppointmentsManager = () => {
     return appointmentDateTime < new Date();
   };
 
+  const isOlderPastAppointment = (date: string, time: string) => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const appointmentDate = new Date(date);
+    const appointmentDateTime = new Date(`${date}T${time}`);
+    
+    return appointmentDateTime < now && appointmentDate < today;
+  };
+
   const formatPhoneNumber = (phone: string) => {
     // Simple phone number formatting for German numbers
     if (!phone) return phone;
@@ -247,6 +327,9 @@ const AppointmentsManager = () => {
     
     return phone; // Return original if no pattern matches
   };
+
+  const filteredAppointments = getFilteredAppointments();
+  const hiddenCount = getHiddenPastAppointmentsCount();
 
   return (
     <div className="space-y-6">
@@ -337,13 +420,37 @@ const AppointmentsManager = () => {
       {/* Main Appointments Table */}
       <Card className="bg-white/70 backdrop-blur-sm">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Calendar className="h-5 w-5" />
-            Terminkalender
-          </CardTitle>
-          <CardDescription>
-            Übersicht und Verwaltung aller gebuchten Termine
-          </CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <Calendar className="h-5 w-5" />
+                Terminkalender
+              </CardTitle>
+              <CardDescription>
+                Übersicht und Verwaltung aller gebuchten Termine
+              </CardDescription>
+            </div>
+            {hiddenCount > 0 && (
+              <Button
+                onClick={() => setShowAllPastAppointments(!showAllPastAppointments)}
+                variant="outline"
+                size="sm"
+                className="flex items-center gap-2"
+              >
+                {showAllPastAppointments ? (
+                  <>
+                    <EyeOff className="h-4 w-4" />
+                    Ältere ausblenden
+                  </>
+                ) : (
+                  <>
+                    <Eye className="h-4 w-4" />
+                    {hiddenCount} ältere anzeigen
+                  </>
+                )}
+              </Button>
+            )}
+          </div>
         </CardHeader>
         <CardContent>
           {loading ? (
@@ -366,9 +473,10 @@ const AppointmentsManager = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {appointments.map((appointment) => {
+                    {filteredAppointments.map((appointment) => {
                       const isAppointmentPast = isPast(appointment.appointment_date, appointment.appointment_time);
                       const isAppointmentUpcoming = isUpcoming(appointment.appointment_date, appointment.appointment_time);
+                      const isOlderPast = isOlderPastAppointment(appointment.appointment_date, appointment.appointment_time);
                       
                       return (
                         <TableRow 
@@ -377,20 +485,22 @@ const AppointmentsManager = () => {
                             isAppointmentUpcoming && appointment.status === 'scheduled'
                               ? 'bg-blue-50/50' 
                               : isAppointmentPast 
-                                ? 'bg-gray-50/80 text-gray-500'
+                                ? isOlderPast 
+                                  ? 'bg-gray-100/80 text-gray-400'
+                                  : 'bg-gray-50/80 text-gray-500'
                                 : ''
                           }`}
                         >
-                          <TableCell className={isAppointmentPast ? 'text-gray-400' : ''}>
+                          <TableCell className={isAppointmentPast ? (isOlderPast ? 'text-gray-300' : 'text-gray-400') : ''}>
                             <div className="space-y-1">
                               <div className="flex items-center gap-1">
-                                <Calendar className={`h-3 w-3 ${isAppointmentPast ? 'text-gray-400' : 'text-gray-500'}`} />
+                                <Calendar className={`h-3 w-3 ${isAppointmentPast ? (isOlderPast ? 'text-gray-300' : 'text-gray-400') : 'text-gray-500'}`} />
                                 <span className="font-medium text-sm">
                                   {formatDate(appointment.appointment_date)}
                                 </span>
                               </div>
                               <div className="flex items-center gap-1">
-                                <Clock className={`h-3 w-3 ${isAppointmentPast ? 'text-gray-400' : 'text-gray-500'}`} />
+                                <Clock className={`h-3 w-3 ${isAppointmentPast ? (isOlderPast ? 'text-gray-300' : 'text-gray-400') : 'text-gray-500'}`} />
                                 <span className="text-sm">
                                   {formatTime(appointment.appointment_time)}
                                 </span>
@@ -398,25 +508,25 @@ const AppointmentsManager = () => {
                             </div>
                           </TableCell>
                           
-                          <TableCell className={isAppointmentPast ? 'text-gray-400' : ''}>
+                          <TableCell className={isAppointmentPast ? (isOlderPast ? 'text-gray-300' : 'text-gray-400') : ''}>
                             <div className="flex items-center gap-1">
-                              <User className={`h-3 w-3 ${isAppointmentPast ? 'text-gray-400' : 'text-gray-500'}`} />
+                              <User className={`h-3 w-3 ${isAppointmentPast ? (isOlderPast ? 'text-gray-300' : 'text-gray-400') : 'text-gray-500'}`} />
                               <span className="font-medium text-sm">
                                 {appointment.applicant_name}
                               </span>
                             </div>
                           </TableCell>
                           
-                          <TableCell className={isAppointmentPast ? 'text-gray-400' : ''}>
+                          <TableCell className={isAppointmentPast ? (isOlderPast ? 'text-gray-300' : 'text-gray-400') : ''}>
                             <div className="flex items-center gap-1">
-                              <Mail className={`h-3 w-3 ${isAppointmentPast ? 'text-gray-400' : 'text-gray-500'}`} />
+                              <Mail className={`h-3 w-3 ${isAppointmentPast ? (isOlderPast ? 'text-gray-300' : 'text-gray-400') : 'text-gray-500'}`} />
                               <span className="text-sm">{appointment.applicant_email}</span>
                             </div>
                           </TableCell>
 
-                          <TableCell className={isAppointmentPast ? 'text-gray-400' : ''}>
+                          <TableCell className={isAppointmentPast ? (isOlderPast ? 'text-gray-300' : 'text-gray-400') : ''}>
                             <div className="flex items-center gap-1">
-                              <Phone className={`h-3 w-3 ${isAppointmentPast ? 'text-gray-400' : 'text-gray-500'}`} />
+                              <Phone className={`h-3 w-3 ${isAppointmentPast ? (isOlderPast ? 'text-gray-300' : 'text-gray-400') : 'text-gray-500'}`} />
                               <span className="text-sm">
                                 {appointment.applicant_phone 
                                   ? formatPhoneNumber(appointment.applicant_phone)
@@ -427,12 +537,12 @@ const AppointmentsManager = () => {
                           </TableCell>
                           
                           <TableCell>
-                            <div className={isAppointmentPast ? 'opacity-60' : ''}>
+                            <div className={isAppointmentPast ? (isOlderPast ? 'opacity-40' : 'opacity-60') : ''}>
                               {getStatusBadge(appointment.status)}
                             </div>
                           </TableCell>
                           
-                          <TableCell className={`text-sm ${isAppointmentPast ? 'text-gray-400' : ''}`}>
+                          <TableCell className={`text-sm ${isAppointmentPast ? (isOlderPast ? 'text-gray-300' : 'text-gray-400') : ''}`}>
                             {new Date(appointment.created_at).toLocaleDateString('de-DE')}
                           </TableCell>
                           
@@ -514,7 +624,7 @@ const AppointmentsManager = () => {
                 </Table>
               </div>
               
-              {appointments.length === 0 && (
+              {filteredAppointments.length === 0 && (
                 <div className="text-center py-8 text-gray-500">
                   Noch keine Termine gebucht.
                 </div>
