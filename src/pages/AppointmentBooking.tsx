@@ -210,6 +210,30 @@ const AppointmentBooking = () => {
       }
 
       console.log('Appointment booked successfully');
+
+      // Send appointment confirmation email
+      try {
+        console.log('Sending appointment confirmation email...');
+        const { error: emailError } = await supabase.functions.invoke('send-appointment-confirmation', {
+          body: {
+            applicant_name: `${application.vorname} ${application.nachname}`,
+            applicant_email: application.email,
+            appointment_date: dateString,
+            appointment_time: data.time,
+          },
+        });
+
+        if (emailError) {
+          console.error('Error sending appointment confirmation email:', emailError);
+          // Don't throw here as the appointment was successfully created
+        } else {
+          console.log('Appointment confirmation email sent successfully');
+        }
+      } catch (emailError) {
+        console.error('Failed to send appointment confirmation email:', emailError);
+        // Don't throw here as the appointment was successfully created
+      }
+
       setSuccess(true);
       toast({
         title: "Termin gebucht",
