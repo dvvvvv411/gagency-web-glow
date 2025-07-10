@@ -20,7 +20,8 @@ import {
   Clock,
   AlertCircle,
   X,
-  HelpCircle
+  HelpCircle,
+  Loader
 } from 'lucide-react';
 
 interface EmploymentContract {
@@ -63,6 +64,8 @@ const EmploymentContractsManager = () => {
   const [loading, setLoading] = useState(true);
   const [processingIds, setProcessingIds] = useState<Set<string>>(new Set());
   const [selectedContract, setSelectedContract] = useState<EmploymentContract | null>(null);
+  const [imageUrls, setImageUrls] = useState<{[key: string]: string}>({});
+  const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set());
   const { toast } = useToast();
 
   useEffect(() => {
@@ -164,6 +167,48 @@ const EmploymentContractsManager = () => {
     }
   };
 
+  const getSignedUrl = async (filePath: string): Promise<string | null> => {
+    try {
+      const { data, error } = await supabase.storage
+        .from('id-documents')
+        .createSignedUrl(filePath, 3600); // 1 hour expiry
+
+      if (error) throw error;
+      return data.signedUrl;
+    } catch (error) {
+      console.error('Error creating signed URL:', error);
+      return null;
+    }
+  };
+
+  const loadImageUrl = async (contractId: string, filePath: string, type: 'front' | 'back') => {
+    const cacheKey = `${contractId}_${type}`;
+    
+    if (imageUrls[cacheKey] || loadingImages.has(cacheKey)) {
+      return;
+    }
+
+    setLoadingImages(prev => new Set(prev).add(cacheKey));
+
+    try {
+      const signedUrl = await getSignedUrl(filePath);
+      if (signedUrl) {
+        setImageUrls(prev => ({
+          ...prev,
+          [cacheKey]: signedUrl
+        }));
+      }
+    } catch (error) {
+      console.error('Error loading image URL:', error);
+    } finally {
+      setLoadingImages(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(cacheKey);
+        return newSet;
+      });
+    }
+  };
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'submitted':
@@ -209,8 +254,81 @@ const EmploymentContractsManager = () => {
     return iban.replace(/(.{4})/g, '$1 ').trim();
   };
 
+  const ImageDisplay = ({ contract, type }: { contract: EmploymentContract; type: 'front' | 'back' }) => {
+    const filePath = type === 'front' ? contract.id_front_file_path : contract.id_back_file_path;
+    const cacheKey = `${contract.id}_${type}`;
+    const imageUrl = imageUrls[cacheKey];
+    const isLoading = loadingImages.has(cacheKey);
+
+    useEffect(() => {
+      if (filePath && !imageUrl && !isLoading) {
+        loadImageUrl(contract.id, filePath, type);
+      }
+    }, [filePath, imageUrl, isLoading, contract.id, type]);
+
+    if (!filePath) {
+      return (
+        <div className="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center">
+          <p className="text-gray-500 text-sm">Kein Dokument hochgeladen</p>
+        </div>
+      );
+    }
+
+    if (isLoading) {
+      return (
+        <div className="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center">
+          <Loader className="h-6 w-6 animate-spin text-gray-400" />
+          <span className="ml-2 text-gray-500 text-sm">Lädt...</span>
+        </div>
+      );
+    }
+
+    if (!imageUrl) {
+      return (
+        <div className="w-full h-48 bg-gray-100 rounded-lg flex flex-col items-center justify-center gap-2">
+          <AlertCircle className="h-6 w-6 text-red-400" />
+          <p className="text-red-500 text-sm">Fehler beim Laden</p>
+          <Button
+            onClick={() => downloadDocument(filePath, `${contract.first_name}_${contract.last_name}_Ausweis_${type === 'front' ? 'Vorderseite' : 'Rueckseite'}`)}
+            variant="outline"
+            size="sm"
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Herunterladen
+          </Button>
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-2">
+        <img
+          src={imageUrl}
+          alt={`Ausweis ${type === 'front' ? 'Vorderseite' : 'Rückseite'}`}
+          className="w-full h-48 object-contain bg-gray-50 rounded-lg border"
+          onError={() => {
+            setImageUrls(prev => {
+              const newUrls = { ...prev };
+              delete newUrls[cacheKey];
+              return newUrls;
+            });
+          }}
+        />
+        <Button
+          onClick={() => downloadDocument(filePath, `${contract.first_name}_${contract.last_name}_Ausweis_${type === 'front' ? 'Vorderseite' : 'Rueckseite'}`)}
+          variant="outline"
+          size="sm"
+          className="w-full"
+        >
+          <Download className="h-4 w-4 mr-2" />
+          Herunterladen
+        </Button>
+      </div>
+    );
+  };
+
   const ContractDetailsDialog = ({ contract }: { contract: EmploymentContract }) => (
-    <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+    <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
       <DialogHeader>
         <DialogTitle className="flex items-center gap-2">
           <User className="h-5 w-5" />
@@ -221,7 +339,7 @@ const EmploymentContractsManager = () => {
         </DialogDescription>
       </DialogHeader>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Personal Information */}
         <Card>
           <CardHeader>
@@ -340,45 +458,24 @@ const EmploymentContractsManager = () => {
           </CardContent>
         </Card>
 
-        {/* Documents */}
-        <Card>
+        {/* Documents - Now spans full width and shows images */}
+        <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
               <CreditCard className="h-4 w-4" />
-              Dokumente
+              Ausweisdokumente
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex flex-col gap-2">
-              {contract.id_front_file_path && (
-                <Button
-                  onClick={() => downloadDocument(
-                    contract.id_front_file_path!,
-                    `${contract.first_name}_${contract.last_name}_Ausweis_Vorderseite`
-                  )}
-                  variant="outline"
-                  size="sm"
-                  className="justify-start"
-                >
-                  <Download className="h-4 w-4 mr-2" />
-                  Ausweis Vorderseite herunterladen
-                </Button>
-              )}
-              
-              {contract.id_back_file_path && (
-                <Button
-                  onClick={() => downloadDocument(
-                    contract.id_back_file_path!,
-                    `${contract.first_name}_${contract.last_name}_Ausweis_Rueckseite`
-                  )}
-                  variant="outline"
-                  size="sm"
-                  className="justify-start"
-                >
-                  <Download className="h-4 w-4 mr-2" />
-                  Ausweis Rückseite herunterladen
-                </Button>
-              )}
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="text-sm font-medium text-gray-700 mb-3">Vorderseite</h4>
+                <ImageDisplay contract={contract} type="front" />
+              </div>
+              <div>
+                <h4 className="text-sm font-medium text-gray-700 mb-3">Rückseite</h4>
+                <ImageDisplay contract={contract} type="back" />
+              </div>
             </div>
           </CardContent>
         </Card>
