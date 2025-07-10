@@ -85,8 +85,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     const resend = new Resend(resendApiKey);
 
-    // Create employment contract link
-    const contractUrl = `https://qdslhxpjnciozacwfyix.supabase.co/employment-contract?appointment=${appointmentId}`;
+    // Create employment contract link with the correct frontend URL
+    const contractUrl = `https://lovable.dev/projects/018ce8e9-6cc7-7b2a-80b4-7b2a892d8c4f/employment-contract?appointment=${appointmentId}`;
 
     // Send email
     console.log('Sending employment contract invitation email...');
