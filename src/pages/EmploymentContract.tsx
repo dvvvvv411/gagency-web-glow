@@ -187,17 +187,6 @@ const EmploymentContract = () => {
   return (
     <FluidBackground className="min-h-screen py-12">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header Info */}
-        <div className="mb-8 text-center">
-          <div className="inline-flex items-center justify-center p-4 bg-white/80 backdrop-blur-sm rounded-lg shadow-lg">
-            <div className="text-sm text-gray-600">
-              <p><strong>Bewerber:</strong> {appointment.applicant_name}</p>
-              <p><strong>E-Mail:</strong> {appointment.applicant_email}</p>
-              <p><strong>Termin:</strong> {new Date(appointment.appointment_date).toLocaleDateString('de-DE')} um {appointment.appointment_time.slice(0, 5)}</p>
-            </div>
-          </div>
-        </div>
-
         {/* Stepped Form */}
         <SteppedEmploymentContractForm
           appointmentId={appointment.id}
