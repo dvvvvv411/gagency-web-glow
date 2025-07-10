@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 import { Resend } from "npm:resend@2.0.0";
@@ -59,9 +58,8 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error('No email configuration found. Please configure email settings in admin panel.');
     }
 
-    // Create appointment booking link - use the request origin or fallback to project URL
-    const origin = req.headers.get('origin') || `https://${Deno.env.get('SUPABASE_URL')?.replace('https://', '').replace('.supabase.co', '')}.vercel.app`;
-    const appointmentBookingLink = `${origin}/appointment-booking?applicationId=${applicationId}`;
+    // Create appointment booking link with direct URL
+    const appointmentBookingLink = `https://qdslhxpjnciozacwfyix.lovableproject.com/appointment-booking?applicationId=${applicationId}`;
 
     console.log('Sending acceptance email with booking link:', appointmentBookingLink);
     console.log('Using sender config:', { sender_name: config.sender_name, sender_email: config.sender_email });
