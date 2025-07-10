@@ -33,6 +33,7 @@ const Careers = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState('');
 
   const form = useForm<ApplicationForm>({
     resolver: zodResolver(applicationSchema),
@@ -53,20 +54,24 @@ const Careers = () => {
     const fileExt = file.name.split('.').pop();
     const fileName = `${applicantName}_${type}_${Date.now()}.${fileExt}`;
     
+    console.log(`Starting upload for ${type}:`, fileName);
+    
     const { data, error } = await supabase.storage
       .from('application-documents')
       .upload(fileName, file);
 
     if (error) {
+      console.error(`Error uploading ${type}:`, error);
       throw error;
     }
 
+    console.log(`Successfully uploaded ${type}:`, data.path);
     return data.path;
   };
 
-  const sendConfirmationEmail = async (vorname: string, nachname: string, email: string) => {
+  const sendConfirmationEmailAsync = async (applicationId: string, vorname: string, nachname: string, email: string) => {
     try {
-      console.log('Sending confirmation email to:', email);
+      console.log('Starting async email send for application:', applicationId);
       
       const { data, error } = await supabase.functions.invoke('send-application-confirmation', {
         body: {
@@ -78,40 +83,26 @@ const Careers = () => {
 
       if (error) {
         console.error('Error sending confirmation email:', error);
-        // Don't throw here - we don't want to fail the entire application if email fails
-        toast({
-          title: "Hinweis",
-          description: "Ihre Bewerbung wurde erfolgreich eingereicht. Die Bestätigungs-E-Mail konnte jedoch nicht versendet werden.",
-          variant: "default",
-        });
       } else {
-        console.log('Confirmation email sent successfully:', data);
+        console.log('Confirmation email sent successfully for application:', applicationId);
       }
     } catch (error) {
-      console.error('Error in sendConfirmationEmail:', error);
-      // Don't throw - just log the error
+      console.error('Error in async email send:', error);
     }
   };
 
   const onSubmit = async (data: ApplicationForm) => {
     setIsSubmitting(true);
+    setUploadProgress('Bewerbung wird verarbeitet...');
     
     try {
       const applicantName = `${data.vorname}_${data.nachname}`.replace(/\s+/g, '_');
       
-      // Upload files
-      const cvFile = data.cv[0];
-      const anschreibenFile = data.anschreiben?.[0];
+      // Step 1: Save application to database first for immediate feedback
+      setUploadProgress('Bewerbungsdaten werden gespeichert...');
+      console.log('Saving application to database...');
       
-      const cvPath = await uploadFile(cvFile, 'cv', applicantName);
-      let anschreibenPath = null;
-      
-      if (anschreibenFile) {
-        anschreibenPath = await uploadFile(anschreibenFile, 'anschreiben', applicantName);
-      }
-
-      // Save application to database
-      const { error: dbError } = await supabase
+      const { data: applicationData, error: dbError } = await supabase
         .from('job_applications')
         .insert({
           vorname: data.vorname,
@@ -122,23 +113,79 @@ const Careers = () => {
           plz: data.plz,
           stadt: data.stadt,
           staatsangehoerigkeit: data.staatsangehoerigkeit,
-          cv_file_path: cvPath,
-          anschreiben_file_path: anschreibenPath,
+          cv_file_path: null, // Will be updated after upload
+          anschreiben_file_path: null,
           status: 'neu'
-        });
+        })
+        .select()
+        .single();
 
       if (dbError) {
+        console.error('Database error:', dbError);
         throw dbError;
       }
 
-      // Send confirmation email (non-blocking)
-      await sendConfirmationEmail(data.vorname, data.nachname, data.email);
+      const applicationId = applicationData.id;
+      console.log('Application saved with ID:', applicationId);
 
-      // Show success popup with confetti
+      // Step 2: Upload files in parallel
+      setUploadProgress('Dateien werden hochgeladen...');
+      console.log('Starting parallel file uploads...');
+      
+      const cvFile = data.cv[0];
+      const anschreibenFile = data.anschreiben?.[0];
+      
+      const uploadPromises = [
+        uploadFile(cvFile, 'cv', applicantName)
+      ];
+      
+      if (anschreibenFile) {
+        uploadPromises.push(uploadFile(anschreibenFile, 'anschreiben', applicantName));
+      }
+
+      const uploadResults = await Promise.all(uploadPromises);
+      const cvPath = uploadResults[0];
+      const anschreibenPath = uploadResults[1] || null;
+
+      console.log('File uploads completed:', { cvPath, anschreibenPath });
+
+      // Step 3: Update application with file paths
+      setUploadProgress('Bewerbung wird finalisiert...');
+      
+      const { error: updateError } = await supabase
+        .from('job_applications')
+        .update({
+          cv_file_path: cvPath,
+          anschreiben_file_path: anschreibenPath,
+        })
+        .eq('id', applicationId);
+
+      if (updateError) {
+        console.error('Error updating file paths:', updateError);
+        throw updateError;
+      }
+
+      console.log('Application updated with file paths');
+
+      // Step 4: Show immediate success feedback
+      setUploadProgress('');
       setShowSuccessPopup(true);
       form.reset();
+
+      // Step 5: Send email asynchronously in the background (non-blocking)
+      console.log('Starting background email send...');
+      sendConfirmationEmailAsync(applicationId, data.vorname, data.nachname, data.email);
+
+      toast({
+        title: "Bewerbung erfolgreich eingereicht!",
+        description: "Ihre Bewerbung wurde erfolgreich eingereicht. Sie erhalten in Kürze eine Bestätigungs-E-Mail.",
+        variant: "default",
+      });
+
     } catch (error) {
       console.error('Error submitting application:', error);
+      setUploadProgress('');
+      
       toast({
         title: "Fehler beim Einreichen der Bewerbung",
         description: "Bitte versuchen Sie es später erneut.",
@@ -509,6 +556,16 @@ const Careers = () => {
                             )}
                           />
                         </div>
+
+                        {/* Progress indicator */}
+                        {uploadProgress && (
+                          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                              <span className="text-blue-700 font-medium">{uploadProgress}</span>
+                            </div>
+                          </div>
+                        )}
 
                         <Button 
                           type="submit" 
