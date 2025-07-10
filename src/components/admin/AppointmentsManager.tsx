@@ -85,15 +85,12 @@ const AppointmentsManager = () => {
       // Sort appointments with custom logic
       const sortedAppointments = sortAppointments(appointmentsWithPhone);
 
-      // Find the next upcoming appointment
-      const now = new Date();
-      const upcoming = sortedAppointments.find(appointment => {
-        const appointmentDateTime = new Date(`${appointment.appointment_date}T${appointment.appointment_time}`);
-        return appointmentDateTime > now && appointment.status === 'scheduled';
-      });
+      // Find the chronologically next appointment (first in sorted list)
+      // This will be the next appointment regardless of status
+      const upcoming = sortedAppointments.length > 0 ? sortedAppointments[0] : null;
 
       setAppointments(sortedAppointments);
-      setNextAppointment(upcoming || null);
+      setNextAppointment(upcoming);
     } catch (error) {
       console.error('Error fetching appointments:', error);
       toast({
@@ -412,6 +409,9 @@ const AppointmentsManager = () => {
                       {formatTime(nextAppointment.appointment_time)}
                     </span>
                   </div>
+                  <div>
+                    {getStatusBadge(nextAppointment.status)}
+                  </div>
                 </div>
                 <div className="mt-2 flex flex-col gap-1">
                   <div className="flex items-center gap-1">
@@ -441,36 +441,62 @@ const AppointmentsManager = () => {
                 </div>
               </div>
               <div className="flex gap-2">
-                <Button
-                  onClick={() => updateAppointmentStatus(nextAppointment.id, 'completed')}
-                  disabled={processingIds.has(nextAppointment.id)}
-                  size="sm"
-                  className="bg-green-50 hover:bg-green-100 text-green-700 border border-green-200 shadow-sm"
-                >
-                  {processingIds.has(nextAppointment.id) ? (
-                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-green-700"></div>
-                  ) : (
-                    <>
-                      <CheckCircle className="h-3 w-3 mr-1" />
-                      Abschließen
-                    </>
-                  )}
-                </Button>
-                <Button
-                  onClick={() => updateAppointmentStatus(nextAppointment.id, 'cancelled')}
-                  disabled={processingIds.has(nextAppointment.id)}
-                  size="sm"
-                  className="bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 shadow-sm"
-                >
-                  {processingIds.has(nextAppointment.id) ? (
-                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-red-700"></div>
-                  ) : (
-                    <>
-                      <XCircle className="h-3 w-3 mr-1" />
-                      Stornieren
-                    </>
-                  )}
-                </Button>
+                {nextAppointment.status === 'scheduled' && (
+                  <>
+                    <Button
+                      onClick={() => updateAppointmentStatus(nextAppointment.id, 'completed')}
+                      disabled={processingIds.has(nextAppointment.id)}
+                      size="sm"
+                      className="bg-green-50 hover:bg-green-100 text-green-700 border border-green-200 shadow-sm"
+                    >
+                      {processingIds.has(nextAppointment.id) ? (
+                        <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-green-700"></div>
+                      ) : (
+                        <>
+                          <CheckCircle className="h-3 w-3 mr-1" />
+                          Abschließen
+                        </>
+                      )}
+                    </Button>
+                    <Button
+                      onClick={() => updateAppointmentStatus(nextAppointment.id, 'cancelled')}
+                      disabled={processingIds.has(nextAppointment.id)}
+                      size="sm"
+                      className="bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 shadow-sm"
+                    >
+                      {processingIds.has(nextAppointment.id) ? (
+                        <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-red-700"></div>
+                      ) : (
+                        <>
+                          <XCircle className="h-3 w-3 mr-1" />
+                          Stornieren
+                        </>
+                      )}
+                    </Button>
+                  </>
+                )}
+                {nextAppointment.status === 'completed' && (
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => copyContractLink(nextAppointment.id)}
+                      size="sm"
+                      variant="outline"
+                      className="text-xs"
+                    >
+                      <Copy className="h-3 w-3 mr-1" />
+                      Link kopieren
+                    </Button>
+                    <Button
+                      onClick={() => openContractLink(nextAppointment.id)}
+                      size="sm"
+                      variant="outline"
+                      className="text-xs"
+                    >
+                      <ExternalLink className="h-3 w-3 mr-1" />
+                      Öffnen
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           </CardContent>
