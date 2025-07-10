@@ -19,7 +19,6 @@ import {
   CheckCircle,
   Clock,
   AlertCircle,
-  X,
   HelpCircle,
   Loader
 } from 'lucide-react';
@@ -218,11 +217,18 @@ const EmploymentContractsManager = () => {
             Eingereicht
           </Badge>
         );
+      case 'done':
+        return (
+          <Badge className="bg-green-100 text-green-800 border-green-300">
+            <CheckCircle className="h-3 w-3 mr-1" />
+            Erledigt
+          </Badge>
+        );
       case 'approved':
         return (
           <Badge className="bg-green-100 text-green-800 border-green-300">
             <CheckCircle className="h-3 w-3 mr-1" />
-            Genehmigt
+            Erledigt
           </Badge>
         );
       case 'rejected':
@@ -510,7 +516,7 @@ const EmploymentContractsManager = () => {
                     <TableHead className="min-w-[120px]">Startdatum</TableHead>
                     <TableHead className="min-w-[100px]">Status</TableHead>
                     <TableHead className="min-w-[100px]">Eingereicht</TableHead>
-                    <TableHead className="min-w-[250px]">Aktionen</TableHead>
+                    <TableHead className="min-w-[200px]">Aktionen</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -574,39 +580,21 @@ const EmploymentContractsManager = () => {
                           </Dialog>
 
                           {contract.status === 'submitted' && (
-                            <>
-                              <Button
-                                onClick={() => updateContractStatus(contract.id, 'approved')}
-                                disabled={processingIds.has(contract.id)}
-                                size="sm"
-                                className="text-xs bg-green-600 hover:bg-green-700"
-                              >
-                                {processingIds.has(contract.id) ? (
-                                  <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
-                                ) : (
-                                  <>
-                                    <CheckCircle className="h-3 w-3 mr-1" />
-                                    Genehmigen
-                                  </>
-                                )}
-                              </Button>
-                              <Button
-                                onClick={() => updateContractStatus(contract.id, 'rejected')}
-                                disabled={processingIds.has(contract.id)}
-                                size="sm"
-                                variant="destructive"
-                                className="text-xs"
-                              >
-                                {processingIds.has(contract.id) ? (
-                                  <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
-                                ) : (
-                                  <>
-                                    <X className="h-3 w-3 mr-1" />
-                                    Ablehnen
-                                  </>
-                                )}
-                              </Button>
-                            </>
+                            <Button
+                              onClick={() => updateContractStatus(contract.id, 'done')}
+                              disabled={processingIds.has(contract.id)}
+                              size="sm"
+                              className="text-xs bg-green-600 hover:bg-green-700"
+                            >
+                              {processingIds.has(contract.id) ? (
+                                <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                              ) : (
+                                <>
+                                  <CheckCircle className="h-3 w-3 mr-1" />
+                                  Erledigt
+                                </>
+                              )}
+                            </Button>
                           )}
                         </div>
                       </TableCell>

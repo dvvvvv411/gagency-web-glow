@@ -312,6 +312,13 @@ const AppointmentsManager = () => {
             Abgeschlossen
           </Badge>
         );
+      case 'rejected':
+        return (
+          <Badge className="bg-red-100 text-red-800 border-red-300">
+            <XCircle className="h-3 w-3 mr-1" />
+            Abgelehnt
+          </Badge>
+        );
       case 'cancelled':
         return (
           <Badge className="bg-red-100 text-red-800 border-red-300">
@@ -459,7 +466,7 @@ const AppointmentsManager = () => {
                       )}
                     </Button>
                     <Button
-                      onClick={() => updateAppointmentStatus(nextAppointment.id, 'cancelled')}
+                      onClick={() => updateAppointmentStatus(nextAppointment.id, 'rejected')}
                       disabled={processingIds.has(nextAppointment.id)}
                       size="sm"
                       className="bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 shadow-sm"
@@ -469,7 +476,7 @@ const AppointmentsManager = () => {
                       ) : (
                         <>
                           <XCircle className="h-3 w-3 mr-1" />
-                          Stornieren
+                          Ablehnen
                         </>
                       )}
                     </Button>
@@ -671,7 +678,7 @@ const AppointmentsManager = () => {
                                     )}
                                   </Button>
                                   <Button
-                                    onClick={() => updateAppointmentStatus(appointment.id, 'cancelled')}
+                                    onClick={() => updateAppointmentStatus(appointment.id, 'rejected')}
                                     disabled={processingIds.has(appointment.id)}
                                     size="sm"
                                     className="text-xs bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 shadow-sm"
@@ -681,7 +688,7 @@ const AppointmentsManager = () => {
                                     ) : (
                                       <>
                                         <XCircle className="h-3 w-3 mr-1" />
-                                        Stornieren
+                                        Ablehnen
                                       </>
                                     )}
                                   </Button>
@@ -713,6 +720,11 @@ const AppointmentsManager = () => {
                                     </Button>
                                   </div>
                                 </div>
+                              )}
+                              {appointment.status === 'rejected' && (
+                                <span className="text-xs text-red-600 font-medium">
+                                  ✗ Abgelehnt
+                                </span>
                               )}
                               {appointment.status === 'cancelled' && (
                                 <span className="text-xs text-red-600 font-medium">
