@@ -1,4 +1,5 @@
 
+
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.10';
 import { Resend } from "npm:resend@2.0.0";
@@ -86,7 +87,7 @@ const handler = async (req: Request): Promise<Response> => {
     const resend = new Resend(resendApiKey);
 
     // Create employment contract link with the correct frontend URL
-    const contractUrl = `https://lovable.dev/projects/018ce8e9-6cc7-7b2a-80b4-7b2a892d8c4f/employment-contract?appointment=${appointmentId}`;
+    const contractUrl = `https://70742796-8eb6-4d9f-a870-1f297bf01653.lovableproject.com/employment-contract?appointment=${appointmentId}`;
 
     // Send email
     console.log('Sending employment contract invitation email...');
@@ -285,3 +286,4 @@ const handler = async (req: Request): Promise<Response> => {
 };
 
 serve(handler);
+
