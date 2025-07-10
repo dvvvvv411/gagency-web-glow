@@ -72,17 +72,198 @@ const handler = async (req: Request): Promise<Response> => {
     
     console.log('Using sender configuration:', { senderEmail, senderName });
 
-    // Simple, lightweight email template
+    // Professional, Outlook-compatible email template
     const emailHtml = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h2 style="color: #2563eb;">Vielen Dank für Ihre Bewerbung!</h2>
-        <p>Liebe/r ${applicantName},</p>
-        <p>wir haben Ihre Bewerbung erfolgreich erhalten und werden diese sorgfältig prüfen.</p>
-        <p>Sie hören innerhalb der nächsten Tage von uns.</p>
-        <p>Bei Fragen können Sie uns jederzeit kontaktieren.</p>
-        <br>
-        <p>Mit freundlichen Grüßen<br>Ihr ${senderName} Team</p>
-      </div>
+      <!DOCTYPE html>
+      <html lang="de" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="x-apple-disable-message-reformatting">
+        <title>Bewerbungsbestätigung - ${senderName}</title>
+        <!--[if mso]>
+        <noscript>
+          <xml>
+            <o:OfficeDocumentSettings>
+              <o:AllowPNG/>
+              <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
+          </xml>
+        </noscript>
+        <![endif]-->
+        <style>
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+          }
+          body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            background-color: #f8fafc;
+            margin: 0;
+            padding: 0;
+          }
+          .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+          }
+          .header {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            padding: 40px 30px;
+            text-align: center;
+            color: #ffffff;
+          }
+          .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          }
+          .content {
+            padding: 40px 30px;
+          }
+          .greeting {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 20px;
+          }
+          .message {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #4b5563;
+            margin-bottom: 16px;
+          }
+          .highlight-box {
+            background-color: #f0f9ff;
+            border-left: 4px solid #2563eb;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 0 6px 6px 0;
+          }
+          .highlight-box p {
+            margin: 0;
+            font-size: 16px;
+            color: #1e40af;
+            font-weight: 500;
+          }
+          .contact-info {
+            background-color: #f9fafb;
+            padding: 25px;
+            border-radius: 6px;
+            margin: 30px 0;
+            border: 1px solid #e5e7eb;
+          }
+          .contact-info h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 15px;
+          }
+          .contact-info p {
+            margin: 8px 0;
+            font-size: 14px;
+            color: #6b7280;
+          }
+          .footer {
+            background-color: #1f2937;
+            padding: 30px;
+            text-align: center;
+            color: #9ca3af;
+          }
+          .footer p {
+            margin: 8px 0;
+            font-size: 14px;
+          }
+          .company-name {
+            color: #ffffff;
+            font-weight: 600;
+          }
+          .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #e5e7eb, transparent);
+            margin: 30px 0;
+          }
+          /* Outlook-specific styles */
+          <!--[if mso]>
+          .email-container {
+            width: 600px !important;
+          }
+          .header, .content, .footer {
+            width: 100% !important;
+          }
+          <![endif]-->
+        </style>
+      </head>
+      <body>
+        <div style="padding: 20px 0;">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+              <td align="center">
+                <div class="email-container">
+                  <!-- Header -->
+                  <div class="header">
+                    <h1>Vielen Dank für Ihre Bewerbung!</h1>
+                  </div>
+                  
+                  <!-- Main Content -->
+                  <div class="content">
+                    <div class="greeting">
+                      Liebe/r ${applicantName},
+                    </div>
+                    
+                    <p class="message">
+                      wir freuen uns über Ihr Interesse an unserem Unternehmen und haben Ihre Bewerbung erfolgreich erhalten.
+                    </p>
+                    
+                    <div class="highlight-box">
+                      <p>✓ Ihre Bewerbungsunterlagen sind vollständig bei uns eingegangen und werden nun sorgfältig geprüft.</p>
+                    </div>
+                    
+                    <p class="message">
+                      Unser Recruiting-Team wird Ihre Unterlagen in den nächsten Tagen eingehend prüfen. Sie können davon ausgehen, dass Sie innerhalb einer Woche eine Rückmeldung von uns erhalten.
+                    </p>
+                    
+                    <p class="message">
+                      Sollten Sie zwischenzeitlich Fragen haben oder zusätzliche Informationen bereitstellen möchten, zögern Sie bitte nicht, uns zu kontaktieren.
+                    </p>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="contact-info">
+                      <h3>Kontaktinformationen</h3>
+                      <p><strong>E-Mail:</strong> ${senderEmail}</p>
+                      <p><strong>Unternehmen:</strong> ${senderName}</p>
+                      <p>Wir sind von Montag bis Freitag, 9:00 - 17:00 Uhr für Sie da.</p>
+                    </div>
+                    
+                    <p class="message">
+                      Nochmals vielen Dank für Ihr Interesse. Wir freuen uns darauf, Sie kennenzulernen!
+                    </p>
+                  </div>
+                  
+                  <!-- Footer -->
+                  <div class="footer">
+                    <p>Mit freundlichen Grüßen</p>
+                    <p class="company-name">Ihr ${senderName} Team</p>
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #374151;">
+                      <p style="font-size: 12px;">Diese E-Mail wurde automatisch generiert. Bitte antworten Sie nicht direkt auf diese Nachricht.</p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </body>
+      </html>
     `;
 
     console.log('Sending confirmation email to:', applicantEmail);
