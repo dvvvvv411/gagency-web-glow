@@ -98,39 +98,9 @@ const Careers = () => {
     try {
       const applicantName = `${data.vorname}_${data.nachname}`.replace(/\s+/g, '_');
       
-      // Step 1: Save application to database first for immediate feedback
-      setUploadProgress('Bewerbungsdaten werden gespeichert...');
-      console.log('Saving application to database...');
-      
-      const { data: applicationData, error: dbError } = await supabase
-        .from('job_applications')
-        .insert({
-          vorname: data.vorname,
-          nachname: data.nachname,
-          email: data.email,
-          phone: data.phone,
-          adresse: data.adresse,
-          plz: data.plz,
-          stadt: data.stadt,
-          staatsangehoerigkeit: data.staatsangehoerigkeit,
-          cv_file_path: null, // Will be updated after upload
-          anschreiben_file_path: null,
-          status: 'neu'
-        })
-        .select()
-        .single();
-
-      if (dbError) {
-        console.error('Database error:', dbError);
-        throw dbError;
-      }
-
-      const applicationId = applicationData.id;
-      console.log('Application saved with ID:', applicationId);
-
-      // Step 2: Upload files in parallel
+      // Step 1: Upload files first
       setUploadProgress('Dateien werden hochgeladen...');
-      console.log('Starting parallel file uploads...');
+      console.log('Starting file uploads...');
       
       const cvFile = data.cv[0];
       const anschreibenFile = data.anschreiben?.[0];
@@ -149,30 +119,42 @@ const Careers = () => {
 
       console.log('File uploads completed:', { cvPath, anschreibenPath });
 
-      // Step 3: Update application with file paths
-      setUploadProgress('Bewerbung wird finalisiert...');
+      // Step 2: Save application to database with file paths
+      setUploadProgress('Bewerbung wird gespeichert...');
+      console.log('Saving application to database...');
       
-      const { error: updateError } = await supabase
+      const { data: applicationData, error: dbError } = await supabase
         .from('job_applications')
-        .update({
+        .insert({
+          vorname: data.vorname,
+          nachname: data.nachname,
+          email: data.email,
+          phone: data.phone,
+          adresse: data.adresse,
+          plz: data.plz,
+          stadt: data.stadt,
+          staatsangehoerigkeit: data.staatsangehoerigkeit,
           cv_file_path: cvPath,
           anschreiben_file_path: anschreibenPath,
+          status: 'neu'
         })
-        .eq('id', applicationId);
+        .select()
+        .single();
 
-      if (updateError) {
-        console.error('Error updating file paths:', updateError);
-        throw updateError;
+      if (dbError) {
+        console.error('Database error:', dbError);
+        throw dbError;
       }
 
-      console.log('Application updated with file paths');
+      const applicationId = applicationData.id;
+      console.log('Application saved with ID:', applicationId);
 
-      // Step 4: Show immediate success feedback
+      // Step 3: Show immediate success feedback
       setUploadProgress('');
       setShowSuccessPopup(true);
       form.reset();
 
-      // Step 5: Send email asynchronously in the background (non-blocking)
+      // Step 4: Send email asynchronously in the background (non-blocking)
       console.log('Starting background email send...');
       sendConfirmationEmailAsync(applicationId, data.vorname, data.nachname, data.email);
 
