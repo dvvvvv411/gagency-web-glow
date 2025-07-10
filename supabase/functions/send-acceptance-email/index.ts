@@ -3,8 +3,6 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 import { Resend } from "npm:resend@2.0.0";
 
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
-
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
@@ -38,7 +36,15 @@ const handler = async (req: Request): Promise<Response> => {
       }
     });
 
-    // Get sender configuration
+    // Get Resend API key
+    const resendApiKey = Deno.env.get("RESEND_API_KEY");
+    if (!resendApiKey) {
+      throw new Error('RESEND_API_KEY environment variable is not set');
+    }
+
+    const resend = new Resend(resendApiKey);
+
+    // Get sender configuration from database
     const { data: config, error: configError } = await supabase
       .from('resend_config')
       .select('sender_name, sender_email')
@@ -46,13 +52,19 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (configError) {
       console.error('Error fetching sender config:', configError);
-      throw new Error('Could not fetch sender configuration');
+      throw new Error('Could not fetch sender configuration. Please configure email settings in admin panel.');
     }
 
-    // Create appointment booking link
-    const appointmentBookingLink = `${req.headers.get('origin') || 'https://qdslhxpjnciozacwfyix.supabase.co'}/appointment-booking?applicationId=${applicationId}`;
+    if (!config) {
+      throw new Error('No email configuration found. Please configure email settings in admin panel.');
+    }
+
+    // Create appointment booking link - use the request origin or fallback to project URL
+    const origin = req.headers.get('origin') || `https://${Deno.env.get('SUPABASE_URL')?.replace('https://', '').replace('.supabase.co', '')}.vercel.app`;
+    const appointmentBookingLink = `${origin}/appointment-booking?applicationId=${applicationId}`;
 
     console.log('Sending acceptance email with booking link:', appointmentBookingLink);
+    console.log('Using sender config:', { sender_name: config.sender_name, sender_email: config.sender_email });
 
     const emailResponse = await resend.emails.send({
       from: `${config.sender_name} <${config.sender_email}>`,
