@@ -100,11 +100,11 @@ const Navigation = () => {
             ) : (
               <div className="flex items-center space-x-3">
                 <Link
-                  to="/contact"
+                  to="/livechat"
                   className="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-primary-600 hover:to-primary-700 transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl hover:scale-105 group"
                 >
                   <Sparkles size={16} className="group-hover:rotate-12 transition-transform duration-300" />
-                  Projekt starten
+                  Mitarbeiter Portal
                 </Link>
               </div>
             )}
@@ -159,11 +159,11 @@ const Navigation = () => {
               ) : (
                 <div className="space-y-2 pt-4 border-t border-gray-200">
                   <Link
-                    to="/contact"
+                    to="/livechat"
                     onClick={() => setIsOpen(false)}
                     className="block w-full mt-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white px-4 py-3 rounded-xl font-semibold text-center hover:from-primary-600 hover:to-primary-700 transition-all duration-300"
                   >
-                    Projekt starten
+                    Mitarbeiter Portal
                   </Link>
                 </div>
               )}
