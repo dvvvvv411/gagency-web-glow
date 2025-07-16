@@ -4,42 +4,18 @@ import { MessageCircle, Clock, Wifi, CheckCircle } from "lucide-react";
 
 const LiveChat = () => {
   useEffect(() => {
-    // Erst alle existierenden Crisp Elemente entfernen
-    const existingScript = document.querySelector('script[src="https://client.crisp.chat/l.js"]');
-    if (existingScript) {
-      existingScript.remove();
-    }
+    // Genau der gewünschte HTML Code als JavaScript
+    (window as any).$crisp = [];
+    (window as any).CRISP_WEBSITE_ID = "d4303196-8b82-4187-b0ed-6d919ce2774b";
     
-    const crispWidget = document.querySelector('#crisp-chatbox');
-    if (crispWidget) {
-      crispWidget.remove();
-    }
-
-    // Globale Variablen zurücksetzen
-    delete (window as any).$crisp;
-    delete (window as any).CRISP_WEBSITE_ID;
-    delete (window as any).CRISP_RUNTIME_CONFIG;
-    
-    // Kleine Verzögerung, dann Crisp neu laden
-    const timeoutId = setTimeout(() => {
-      (window as any).$crisp = [];
-      (window as any).CRISP_WEBSITE_ID = "d4303196-8b82-4187-b0ed-6d919ce2774b";
-      
-      const script = document.createElement("script");
-      script.src = "https://client.crisp.chat/l.js";
-      script.async = true;
-      script.onload = () => {
-        console.log("Crisp Chat erfolgreich geladen!");
-      };
-      script.onerror = () => {
-        console.error("Fehler beim Laden von Crisp Chat");
-      };
-      document.getElementsByTagName("head")[0].appendChild(script);
-    }, 100);
+    const d = document;
+    const s = d.createElement("script");
+    s.src = "https://client.crisp.chat/l.js";
+    s.async = true;
+    d.getElementsByTagName("head")[0].appendChild(s);
     
     // Cleanup beim Verlassen der Seite
     return () => {
-      clearTimeout(timeoutId);
       const existingScript = document.querySelector('script[src="https://client.crisp.chat/l.js"]');
       if (existingScript) {
         existingScript.remove();
@@ -50,7 +26,6 @@ const LiveChat = () => {
       }
       delete (window as any).$crisp;
       delete (window as any).CRISP_WEBSITE_ID;
-      delete (window as any).CRISP_RUNTIME_CONFIG;
     };
   }, []);
   return (
