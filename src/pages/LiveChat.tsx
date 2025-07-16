@@ -1,7 +1,34 @@
+import { useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MessageCircle, Clock, Wifi, CheckCircle } from "lucide-react";
 
 const LiveChat = () => {
+  useEffect(() => {
+    // Crisp Chat nur auf dieser Seite laden
+    (window as any).$crisp = [];
+    (window as any).CRISP_WEBSITE_ID = "d4303196-8b82-4187-b0ed-6d919ce2774b";
+    
+    const script = document.createElement("script");
+    script.src = "https://client.crisp.chat/l.js";
+    script.async = true;
+    document.getElementsByTagName("head")[0].appendChild(script);
+    
+    // Cleanup beim Verlassen der Seite
+    return () => {
+      const existingScript = document.querySelector('script[src="https://client.crisp.chat/l.js"]');
+      if (existingScript) {
+        existingScript.remove();
+      }
+      // Crisp Chat Widget entfernen
+      const crispWidget = document.querySelector('#crisp-chatbox');
+      if (crispWidget) {
+        crispWidget.remove();
+      }
+      // Globale Variablen zurücksetzen
+      delete (window as any).$crisp;
+      delete (window as any).CRISP_WEBSITE_ID;
+    };
+  }, []);
   return (
     <div className="container mx-auto px-4 py-16">
       <div className="max-w-4xl mx-auto">
