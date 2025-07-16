@@ -4,6 +4,16 @@ import { MessageCircle, Clock, Wifi, CheckCircle } from "lucide-react";
 
 const LiveChat = () => {
   useEffect(() => {
+    // Prüfen ob wir bereits einen Refresh gemacht haben
+    const hasRefreshed = sessionStorage.getItem('livechat-refreshed');
+    
+    if (!hasRefreshed) {
+      // Markieren dass wir refreshen und dann refreshen
+      sessionStorage.setItem('livechat-refreshed', 'true');
+      window.location.reload();
+      return;
+    }
+    
     // Genau der gewünschte HTML Code als JavaScript
     (window as any).$crisp = [];
     (window as any).CRISP_WEBSITE_ID = "d4303196-8b82-4187-b0ed-6d919ce2774b";
@@ -16,6 +26,9 @@ const LiveChat = () => {
     
     // Cleanup beim Verlassen der Seite
     return () => {
+      // Session Storage für nächsten Besuch zurücksetzen
+      sessionStorage.removeItem('livechat-refreshed');
+      
       const existingScript = document.querySelector('script[src="https://client.crisp.chat/l.js"]');
       if (existingScript) {
         existingScript.remove();
