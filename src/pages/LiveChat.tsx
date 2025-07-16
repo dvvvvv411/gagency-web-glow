@@ -91,7 +91,7 @@ const LiveChat = () => {
                         <span className="font-semibold text-foreground">Ruhige Umgebung</span>
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        Suchen Sie sich einen ruhigen Ort für ungestörte Beratung.
+                        Suchen Sie sich einen ruhigen Ort für ungestörte Auftragsbearbeitung.
                       </p>
                     </CardContent>
                   </Card>
