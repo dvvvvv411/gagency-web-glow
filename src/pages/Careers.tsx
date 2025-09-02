@@ -204,7 +204,7 @@ const Careers = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Connected Card Container */}
           <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
-            <div className="grid lg:grid-cols-2">
+            <div className="grid lg:grid-cols-2 items-stretch">
               {/* Linke Spalte - Stellenanzeige */}
               <div className="bg-gradient-to-br from-primary-50 to-white p-8 lg:p-12">
                 <div className="h-full flex flex-col">
@@ -218,32 +218,31 @@ const Careers = () => {
                       </p>
                     </div>
                     
-                    {/* Job Variants */}
-                    <div className="bg-white rounded-xl p-6 border border-primary-100 shadow-sm">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Verfügbare Positionen:</h3>
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between p-4 bg-primary-50 rounded-lg border border-primary-100">
-                          <div>
-                            <span className="font-medium text-primary-700">Minijob</span>
+                    <div className="mb-8">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-3">Verfügbare Positionen:</h3>
+                      <ul className="divide-y divide-gray-200 border border-gray-200 rounded-lg">
+                        <li className="flex items-center justify-between py-3 px-4">
+                          <div className="text-gray-800">
+                            <p className="font-medium">Minijob</p>
                             <p className="text-sm text-gray-600">5 Std./Woche</p>
                           </div>
-                          <span className="font-bold text-primary-700">556€/Monat</span>
-                        </div>
-                        <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg border border-blue-100">
-                          <div>
-                            <span className="font-medium text-blue-700">Teilzeit</span>
+                          <p className="font-semibold text-gray-900">556€/Monat</p>
+                        </li>
+                        <li className="flex items-center justify-between py-3 px-4">
+                          <div className="text-gray-800">
+                            <p className="font-medium">Teilzeit</p>
                             <p className="text-sm text-gray-600">15 Std./Woche</p>
                           </div>
-                          <span className="font-bold text-blue-700">1600€/Monat</span>
-                        </div>
-                        <div className="flex items-center justify-between p-4 bg-purple-50 rounded-lg border border-purple-100">
-                          <div>
-                            <span className="font-medium text-purple-700">Vollzeit</span>
+                          <p className="font-semibold text-gray-900">1600€/Monat</p>
+                        </li>
+                        <li className="flex items-center justify-between py-3 px-4">
+                          <div className="text-gray-800">
+                            <p className="font-medium">Vollzeit</p>
                             <p className="text-sm text-gray-600">30 Std./Woche</p>
                           </div>
-                          <span className="font-bold text-purple-700">3300€/Monat</span>
-                        </div>
-                      </div>
+                          <p className="font-semibold text-gray-900">3300€/Monat</p>
+                        </li>
+                      </ul>
                     </div>
                   </div>
 
