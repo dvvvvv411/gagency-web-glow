@@ -7,6 +7,7 @@ import { MapPin, Clock, Users, GraduationCap, Briefcase, Star, Shield, Lock, Tes
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -22,6 +23,9 @@ const applicationSchema = z.object({
   plz: z.string().min(4, 'PLZ muss mindestens 4 Zeichen lang sein'),
   stadt: z.string().min(2, 'Bitte geben Sie Ihre Stadt an'),
   staatsangehoerigkeit: z.string().min(2, 'Bitte geben Sie Ihre Staatsangehörigkeit an'),
+  employment_type: z.enum(['minijob', 'teilzeit', 'vollzeit'], {
+    required_error: 'Bitte wählen Sie eine Beschäftigungsart aus',
+  }),
   cv: z.any().refine((files) => files?.length > 0, 'Bitte laden Sie Ihren Lebenslauf hoch'),
   anschreiben: z.any().optional(),
   datenschutz: z.boolean().refine((val) => val === true, 'Sie müssen den Datenschutzbestimmungen zustimmen'),
@@ -46,6 +50,7 @@ const Careers = () => {
       plz: '',
       stadt: '',
       staatsangehoerigkeit: '',
+      employment_type: 'minijob' as const,
       datenschutz: false,
     },
   });
@@ -134,6 +139,7 @@ const Careers = () => {
           plz: data.plz,
           stadt: data.stadt,
           staatsangehoerigkeit: data.staatsangehoerigkeit,
+          employment_type: data.employment_type,
           cv_file_path: cvPath,
           anschreiben_file_path: anschreibenPath,
           status: 'neu'
@@ -202,29 +208,47 @@ const Careers = () => {
               {/* Linke Spalte - Stellenanzeige */}
               <div className="bg-gradient-to-br from-primary-50 to-white p-8 lg:p-12">
                 <div className="h-full flex flex-col">
-                  <div className="flex items-start justify-between mb-8">
+                  <div className="mb-8">
                     <div>
                       <h2 className="text-2xl md:text-3xl font-bold text-primary-600 mb-2">
                         Assistenz im digitalen Projektmanagement (m/w/d)
                       </h2>
-                      <p className="text-lg text-gray-600">
+                      <p className="text-lg text-gray-600 mb-6">
                         Bringe Ordnung in unsere Abläufe und unterstütze bei digitalen Projekten
                       </p>
                     </div>
-                    <div className="bg-primary-100 text-primary-700 px-3 py-1 rounded-full text-sm font-medium">
-                      Minijob
+                    
+                    {/* Job Variants */}
+                    <div className="bg-white rounded-xl p-6 border border-primary-100 shadow-sm">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Verfügbare Positionen:</h3>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between p-4 bg-primary-50 rounded-lg border border-primary-100">
+                          <div>
+                            <span className="font-medium text-primary-700">Minijob</span>
+                            <p className="text-sm text-gray-600">5 Std./Woche</p>
+                          </div>
+                          <span className="font-bold text-primary-700">556€/Monat</span>
+                        </div>
+                        <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg border border-blue-100">
+                          <div>
+                            <span className="font-medium text-blue-700">Teilzeit</span>
+                            <p className="text-sm text-gray-600">15 Std./Woche</p>
+                          </div>
+                          <span className="font-bold text-blue-700">1600€/Monat</span>
+                        </div>
+                        <div className="flex items-center justify-between p-4 bg-purple-50 rounded-lg border border-purple-100">
+                          <div>
+                            <span className="font-medium text-purple-700">Vollzeit</span>
+                            <p className="text-sm text-gray-600">30 Std./Woche</p>
+                          </div>
+                          <span className="font-bold text-purple-700">3300€/Monat</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
                   {/* Job Details */}
-                  <div className="grid md:grid-cols-4 gap-6 mb-8">
-                    <div className="flex items-center space-x-3">
-                      <Clock className="text-primary-500" size={20} />
-                      <div>
-                        <p className="font-medium">Arbeitszeit</p>
-                        <p className="text-gray-600">10h/Woche</p>
-                      </div>
-                    </div>
+                  <div className="grid md:grid-cols-3 gap-6 mb-8">
                     <div className="flex items-center space-x-3">
                       <MapPin className="text-primary-500" size={20} />
                       <div>
@@ -240,10 +264,10 @@ const Careers = () => {
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
-                      <Euro className="text-primary-500" size={20} />
+                      <Users className="text-primary-500" size={20} />
                       <div>
-                        <p className="font-medium">Gehalt</p>
-                        <p className="text-gray-600">556€ pro Monat</p>
+                        <p className="font-medium">Team</p>
+                        <p className="text-gray-600">Jung & dynamisch</p>
                       </div>
                     </div>
                   </div>
@@ -469,6 +493,50 @@ const Careers = () => {
                                 <FormControl>
                                   <Input placeholder="Ihre Staatsangehörigkeit" {...field} />
                                 </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                          <FormField
+                            control={form.control}
+                            name="employment_type"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Beschäftigungsart *</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                  <FormControl>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Wählen Sie Ihre gewünschte Beschäftigungsart" />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    <SelectItem value="minijob">
+                                      <div className="flex items-center justify-between w-full">
+                                        <div>
+                                          <span className="font-medium text-primary-700">Minijob</span>
+                                          <span className="text-sm text-gray-500 ml-2">5 Std./Woche - 556€/Monat</span>
+                                        </div>
+                                      </div>
+                                    </SelectItem>
+                                    <SelectItem value="teilzeit">
+                                      <div className="flex items-center justify-between w-full">
+                                        <div>
+                                          <span className="font-medium text-blue-700">Teilzeit</span>
+                                          <span className="text-sm text-gray-500 ml-2">15 Std./Woche - 1600€/Monat</span>
+                                        </div>
+                                      </div>
+                                    </SelectItem>
+                                    <SelectItem value="vollzeit">
+                                      <div className="flex items-center justify-between w-full">
+                                        <div>
+                                          <span className="font-medium text-purple-700">Vollzeit</span>
+                                          <span className="text-sm text-gray-500 ml-2">30 Std./Woche - 3300€/Monat</span>
+                                        </div>
+                                      </div>
+                                    </SelectItem>
+                                  </SelectContent>
+                                </Select>
                                 <FormMessage />
                               </FormItem>
                             )}
