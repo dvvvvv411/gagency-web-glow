@@ -1,7 +1,7 @@
 import { ArrowRight, Badge, Rocket, Clock, TrendingUp, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { AnimatedSection } from '@/components/ui/animated-section';
-import TechElements from '@/components/graphics/TechElements';
+import heroWorkspace from '@/assets/hero-workspace.png';
 
 const HeroSection = () => {
   const trustBadges = [
@@ -65,10 +65,33 @@ const HeroSection = () => {
             </div>
           </div>
           
-          {/* Right Tech Animation - 45% */}
+          {/* Right Image - 45% */}
           <div className="lg:col-span-5">
-            <div className="relative h-96">
-              <TechElements />
+            <div className="relative">
+              <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+                <img 
+                  src={heroWorkspace} 
+                  alt="Professioneller Arbeitsplatz mit digitalen Tools"
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+                <div className="absolute top-4 left-4 bg-primary-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                  Digitale Expertise
+                </div>
+              </div>
+              
+              {/* Floating Stats Card */}
+              <div className="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-lg p-4 border border-gray-100">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+                    <TrendingUp size={20} className="text-primary-600" />
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-gray-900">98%</div>
+                    <div className="text-xs text-gray-600">Erfolgsrate</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
