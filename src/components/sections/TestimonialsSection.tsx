@@ -16,7 +16,7 @@ const TestimonialsSection = () => {
       name: "Marcus Weber",
       position: "Geschäftsführer",
       company: "München, Deutschland",
-      quote: "Die Entwicklung unserer E-Commerce-Plattform war ein voller Erfolg. Innerhalb von 6 Monaten konnten wir unseren Online-Umsatz um 400% steigern.",
+      quote: "Die Realisierung unserer E-Commerce-Plattform war ein kompletter Erfolg. Binnen 6 Monaten konnten wir unseren Onlineumsatz um 400% erhöhen.",
       avatar: "MW",
       avatarImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
       rating: 5,
@@ -28,7 +28,7 @@ const TestimonialsSection = () => {
       name: "Dr. Julia Schneider",
       position: "IT-Leiterin",
       company: "Berlin, Deutschland",
-      quote: "Professionelle Beratung und erstklassige Umsetzung. Das automatisierte System hat unsere Arbeitsabläufe revolutioniert und spart uns täglich 8 Stunden.",
+      quote: "Exzellente Beratung und hochwertige Realisierung. Das automatisierte System hat unsere Geschäftsabläufe modernisiert und erspart uns täglich 8 Stunden.",
       avatar: "JS",
       avatarImage: "https://images.unsplash.com/photo-1494790108755-2616b68650d2?w=150&h=150&fit=crop&crop=face",
       rating: 5,
@@ -40,7 +40,7 @@ const TestimonialsSection = () => {
       name: "Alexander Müller",
       position: "Marketing Director",
       company: "Hamburg, Deutschland",
-      quote: "Von der ersten Beratung bis zum Go-Live - alles perfekt koordiniert. Die neue Website generiert 250% mehr Leads als zuvor.",
+      quote: "Vom ersten Gespräch bis zum Live-Gang - durchgängig professionell abgewickelt. Die neue Website erzielt 250% mehr Interessenten als vorher.",
       avatar: "AM",
       avatarImage: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
       rating: 5,
@@ -52,7 +52,7 @@ const TestimonialsSection = () => {
       name: "Sarah Hoffmann",
       position: "CTO",
       company: "Frankfurt, Deutschland",
-      quote: "Beeindruckende technische Expertise und zuverlässige Projektabwicklung. Unser neues System läuft seit 18 Monaten ohne Probleme.",
+      quote: "Herausragende technische Fachkenntnis und verlässliche Projektdurchführung. Unser neues System funktioniert seit 18 Monaten fehlerfrei.",
       avatar: "SH",
       avatarImage: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
       rating: 5,
@@ -65,17 +65,17 @@ const TestimonialsSection = () => {
   const stats = [
     {
       icon: Users,
-      number: "150+",
-      label: "Zufriedene Kunden"
+      number: "200+",
+      label: "Betreute Unternehmen"
     },
     {
       icon: Zap,
-      number: "98%",
-      label: "Erfolgsrate"
+      number: "97%",
+      label: "Erfolgsquote"
     },
     {
       icon: Sparkles,
-      number: "4.9",
+      number: "4.8",
       label: "Ø Bewertung"
     }
   ];
@@ -96,10 +96,10 @@ const TestimonialsSection = () => {
         {/* Compact Header */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Das sagen unsere Kunden
+            Stimmen unserer Auftraggeber
           </h2>
           <p className="text-lg text-blue-100 max-w-2xl mx-auto">
-            Echte Erfolgsgeschichten von Unternehmen, die mit unserer Expertise ihre digitale Transformation gemeistert haben.
+            Authentische Erfahrungsberichte von Firmen, die mit unserer Beratung ihre digitale Entwicklung erfolgreich gemeistert haben.
           </p>
         </div>
 
@@ -194,11 +194,11 @@ const TestimonialsSection = () => {
         {/* Compact CTA */}
         <div className="text-center mt-12">
           <p className="text-blue-100 mb-4">
-            Werden Sie Teil unserer Erfolgsgeschichten
+            Schließen Sie sich unseren Erfolgsgeschichten an
           </p>
           <button className="bg-white text-blue-600 px-8 py-3 rounded-xl font-semibold hover:bg-blue-50 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1 group">
             <span className="flex items-center gap-2">
-              Kostenloses Beratungsgespräch vereinbaren
+              Unverbindliches Strategiegespräch buchen
               <Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" />
             </span>
           </button>

@@ -8,7 +8,7 @@ const Services = () => {
     {
       icon: Code,
       title: 'Webentwicklung',
-      description: 'Wir entwickeln maßgeschneiderte Websites und Webanwendungen, die Ihre Geschäftsanforderungen erfüllen und Ihre Online-Präsenz stärken.',
+      description: 'Wir erstellen individuell angepasste Websites und Webanwendungen, die Ihre Geschäftsziele unterstützen und Ihre digitale Präsenz verstärken.',
       features: [
         'Responsive Webdesign',
         'Progressive Web Apps',
@@ -20,10 +20,10 @@ const Services = () => {
     {
       icon: Palette,
       title: 'UI/UX Design',
-      description: 'Wir gestalten intuitive und ansprechende Benutzeroberflächen, die Ihre Nutzer begeistern und zu einer positiven Nutzererfahrung beitragen.',
+      description: 'Wir designen benutzerfreundliche und ansprechende Oberflächen, die Ihre Nutzer begeistern und zu einer optimalen User Experience führen.',
       features: [
         'Wireframing & Prototyping',
-        'Benutzerfreundliche Interfaces',
+        'Nutzerfreundliche Interfaces',
         'Corporate Design',
         'UX-Forschung und -Tests'
       ],
@@ -32,7 +32,7 @@ const Services = () => {
     {
       icon: ShoppingBag,
       title: 'E-Commerce',
-      description: 'Wir erstellen Online-Shops, die Verkäufe fördern und ein nahtloses Einkaufserlebnis für Ihre Kunden bieten.',
+      description: 'Wir realisieren Online-Shops, die den Verkauf fördern und ein reibungsloses Shopping-Erlebnis für Ihre Kunden schaffen.',
       features: [
         'Shop-Systeme (Shopify, WooCommerce)',
         'Produktmanagement',
@@ -44,7 +44,7 @@ const Services = () => {
     {
       icon: Globe,
       title: 'Online Marketing',
-      description: 'Wir helfen Ihnen, Ihre Zielgruppe zu erreichen und Ihre digitale Präsenz zu stärken mit gezielten Marketingstrategien.',
+      description: 'Wir unterstützen Sie dabei, Ihre Zielgruppe zu erreichen und Ihre Online-Präsenz zu verstärken mit strategischen Marketing-Ansätzen.',
       features: [
         'SEO-Optimierung',
         'Content Marketing',
@@ -62,10 +62,10 @@ const Services = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Unsere <span className="bg-gradient-to-r from-primary-600 to-blue-600 bg-clip-text text-transparent">Dienstleistungen</span>
+              Unsere <span className="bg-gradient-to-r from-primary-600 to-blue-600 bg-clip-text text-transparent">Services</span>
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Von der Konzeption bis zur Umsetzung - wir bieten maßgeschneiderte digitale Lösungen für Ihr Unternehmen.
+              Von der Ideenfindung bis zur finalen Realisierung - wir bieten individuelle digitale Lösungen für Ihr Unternehmen.
             </p>
           </div>
         </div>
@@ -115,10 +115,10 @@ const Services = () => {
         <AnimatedSection className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" animation="fade-up" delay={400}>
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Unser Arbeitsprozess
+              Unser Vorgehen
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Ein klarer Prozess für erfolgreiche Ergebnisse. So arbeiten wir mit unseren Kunden zusammen.
+              Ein strukturiertes Vorgehen für erfolgreiche Resultate. So realisieren wir gemeinsam mit unseren Auftraggebern Projekte.
             </p>
           </div>
 
@@ -131,10 +131,10 @@ const Services = () => {
               {/* Step 1 */}
               <div className="relative flex flex-col md:flex-row items-center group">
                 <div className="md:w-1/2 md:pr-12 mb-8 md:mb-0 text-right md:text-left md:order-1 transform transition-all duration-500 group-hover:scale-105">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Konzeption & Strategie</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Analyse & Planung</h3>
                   <p className="text-gray-600">
-                    Wir beginnen mit einer gründlichen Analyse Ihrer Anforderungen und Ziele. 
-                    Darauf basierend entwickeln wir eine maßgeschneiderte Strategie für Ihr Projekt.
+                    Wir starten mit einer detaillierten Analyse Ihrer Bedürfnisse und Zielsetzungen. 
+                    Basierend darauf entwickeln wir eine passgenaue Strategie für Ihr Vorhaben.
                   </p>
                 </div>
                 <div className="md:w-1/2 flex justify-center md:justify-start md:pl-12 md:order-2">
@@ -149,10 +149,10 @@ const Services = () => {
               {/* Step 2 */}
               <div className="relative flex flex-col md:flex-row items-center group">
                 <div className="md:w-1/2 md:pl-12 mb-8 md:mb-0 text-left md:order-2 transform transition-all duration-500 group-hover:scale-105">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Design & Prototyping</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Design & Entwurf</h3>
                   <p className="text-gray-600">
-                    Nach der Konzeptionsphase erstellen wir Wireframes und interaktive Prototypen, 
-                    um die Struktur und das Design Ihrer digitalen Lösung zu visualisieren.
+                    Im Anschluss an die Analysephase entwickeln wir Wireframes und interaktive Prototypen, 
+                    um das Layout und die Gestaltung Ihrer digitalen Lösung zu veranschaulichen.
                   </p>
                 </div>
                 <div className="md:w-1/2 flex justify-center md:justify-end md:pr-12 md:order-1">
@@ -167,10 +167,10 @@ const Services = () => {
               {/* Step 3 */}
               <div className="relative flex flex-col md:flex-row items-center group">
                 <div className="md:w-1/2 md:pr-12 mb-8 md:mb-0 text-right md:text-left md:order-1 transform transition-all duration-500 group-hover:scale-105">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Entwicklung & Umsetzung</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Entwicklung & Realisierung</h3>
                   <p className="text-gray-600">
-                    Unsere erfahrenen Entwickler setzen die Designs um und bringen Ihre digitale 
-                    Lösung mit modernsten Technologien zum Leben.
+                    Unsere kompetenten Entwickler setzen die Entwürfe um und erwecken Ihre digitale 
+                    Lösung mit aktuellsten Technologien zum Leben.
                   </p>
                 </div>
                 <div className="md:w-1/2 flex justify-center md:justify-start md:pl-12 md:order-2">
@@ -185,10 +185,10 @@ const Services = () => {
               {/* Step 4 */}
               <div className="relative flex flex-col md:flex-row items-center group">
                 <div className="md:w-1/2 md:pl-12 mb-8 md:mb-0 text-left md:order-2 transform transition-all duration-500 group-hover:scale-105">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Test & Optimierung</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Prüfung & Verbesserung</h3>
                   <p className="text-gray-600">
-                    Wir führen umfassende Tests durch, um sicherzustellen, dass Ihre Lösung 
-                    fehlerfrei funktioniert und optimale Performance bietet.
+                    Wir führen ausführliche Tests durch, um sicherzustellen, dass Ihre Lösung 
+                    einwandfrei funktioniert und optimale Leistung bietet.
                   </p>
                 </div>
                 <div className="md:w-1/2 flex justify-center md:justify-end md:pr-12 md:order-1">
@@ -203,10 +203,10 @@ const Services = () => {
               {/* Step 5 */}
               <div className="relative flex flex-col md:flex-row items-center group">
                 <div className="md:w-1/2 md:pr-12 mb-8 md:mb-0 text-right md:text-left md:order-1 transform transition-all duration-500 group-hover:scale-105">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Launch & Support</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Go-Live & Betreuung</h3>
                   <p className="text-gray-600">
-                    Nach dem erfolgreichen Launch Ihrer digitalen Lösung bieten wir 
-                    kontinuierlichen Support und Wartung an.
+                    Nach dem erfolgreichen Start Ihrer digitalen Lösung bieten wir 
+                    dauerhaften Support und Wartung an.
                   </p>
                 </div>
                 <div className="md:w-1/2 flex justify-center md:justify-start md:pl-12 md:order-2">
@@ -228,16 +228,16 @@ const Services = () => {
           <div className="bg-gradient-to-br from-primary-600 to-blue-600 rounded-2xl p-8 md:p-12 shadow-2xl transform transition-all duration-500 hover:scale-105">
             <div className="max-w-3xl mx-auto text-center">
               <h2 className="text-3xl font-bold text-white mb-6">
-                Bereit, Ihr nächstes Projekt zu starten?
+                Möchten Sie Ihr nächstes Projekt realisieren?
               </h2>
               <p className="text-primary-100 text-xl mb-8">
-                Kontaktieren Sie uns für ein unverbindliches Beratungsgespräch.
+                Nehmen Sie Kontakt mit uns auf für ein kostenloses Beratungsgespräch.
               </p>
               <Link
                 to="/contact"
                 className="bg-white text-primary-600 px-8 py-4 rounded-lg font-medium hover:bg-gray-100 transition-all duration-300 inline-flex items-center transform hover:scale-105 shadow-lg hover:shadow-xl"
               >
-                Jetzt anfragen
+                Anfrage senden
               </Link>
             </div>
           </div>

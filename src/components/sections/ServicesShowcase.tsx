@@ -7,37 +7,37 @@ const ServicesShowcase = () => {
     {
       icon: RefreshCw,
       title: 'Digitale Transformation',
-      description: 'Prozesse neu gedacht',
+      description: 'Geschäftsprozesse revolutioniert',
       animation: 'hover:rotate-180 transition-transform duration-500'
     },
     {
       icon: ShoppingCart,
       title: 'E-Commerce Entwicklung',
-      description: 'Online-Shops, die verkaufen',
+      description: 'Webshops, die konvertieren',
       animation: 'hover:scale-110 transition-transform duration-300'
     },
     {
       icon: BarChart3,
       title: 'Datenanalyse & BI',
-      description: 'Insights, die bewegen',
+      description: 'Erkenntnisse, die wirken',
       animation: 'hover:animate-bounce'
     },
     {
       icon: Zap,
       title: 'Prozessautomatisierung',
-      description: 'Effizienz maximieren',
+      description: 'Produktivität optimieren',
       animation: 'hover:rotate-12 transition-transform duration-300'
     },
     {
       icon: Cloud,
       title: 'Cloud-Migration',
-      description: 'Skalierbar in die Zukunft',
+      description: 'Zukunftssicher skalieren',
       animation: 'hover:scale-110 transition-transform duration-300'
     },
     {
       icon: Target,
       title: 'Digital Marketing',
-      description: 'Reichweite, die konvertiert',
+      description: 'Sichtbarkeit, die überzeugt',
       animation: 'hover:rotate-12 transition-transform duration-300'
     }
   ];
@@ -47,11 +47,11 @@ const ServicesShowcase = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Komplettlösungen für digitalen Erfolg
+            Ganzheitliche Lösungen für digitalen Erfolg
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Von der Strategieentwicklung bis zur technischen Umsetzung – 
-            wir begleiten Sie auf Ihrem Weg zur digitalen Exzellenz.
+            Von der Konzeption bis zur finalen Implementierung – 
+            wir führen Sie sicher durch Ihre digitale Transformation.
           </p>
         </div>
         
@@ -74,7 +74,7 @@ const ServicesShowcase = () => {
                 {service.description}
               </p>
               <div className="flex items-center text-primary-600 font-medium group-hover:text-primary-700 transition-colors duration-200">
-                Mehr erfahren
+                Weitere Details
                 <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform duration-200" />
               </div>
             </div>

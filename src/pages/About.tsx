@@ -30,14 +30,14 @@ const About = () => {
         <div className="max-w-7xl mx-auto relative">
           <div className="text-center animate-fade-in">
             <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6">
-              Unser <span className="bg-gradient-to-r from-primary-600 to-blue-600 bg-clip-text text-transparent">Team</span>,
+              Unser <span className="bg-gradient-to-r from-primary-600 to-blue-600 bg-clip-text text-transparent">Unternehmen</span>,
             </h1>
             <h2 className="text-5xl md:text-7xl font-bold text-gray-900 mb-8">
-              Ihre <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Vision</span>
+              Ihre <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Ziele</span>
             </h2>
             <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Wir verwandeln digitale Träume in messbare Erfolge und begleiten Sie auf dem Weg 
-              zur digitalen Transformation.
+              Wir transformieren digitale Ideen in messbare Erfolge und unterstützen Sie auf dem Weg 
+              zur digitalen Innovation.
             </p>
           </div>
         </div>

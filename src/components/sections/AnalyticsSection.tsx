@@ -5,18 +5,18 @@ const AnalyticsSection = () => {
   const benefits = [
     {
       icon: BarChart3,
-      title: "Datenbasierte Entscheidungen",
-      description: "Fundierte Geschäftsentscheidungen durch aussagekräftige Analytics"
+      title: "Faktenbasierte Entscheidungen",
+      description: "Solide Geschäftsführung durch aussagekräftige Datenauswertungen"
     },
     {
       icon: Target,
-      title: "Präzise Zielgruppenerreichung",
-      description: "Optimierte Marketing-Strategien basierend auf echten Daten"
+      title: "Gezielte Kundenansprache",
+      description: "Verbesserte Marketing-Ansätze auf Basis echter Nutzerdaten"
     },
     {
       icon: TrendingUp,
-      title: "Kontinuierliche Optimierung",
-      description: "Ständige Verbesserung durch Performance-Monitoring"
+      title: "Beständige Verbesserung",
+      description: "Fortlaufende Optimierung durch systematisches Leistungsmonitoring"
     }
   ];
 
@@ -61,16 +61,16 @@ const AnalyticsSection = () => {
               </div>
               
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-                Daten in
+                Informationen in
                 <span className="text-primary-500 block">
-                  Erfolg verwandeln
+                  Wachstum umwandeln
                 </span>
               </h2>
               
               <p className="text-xl text-gray-600 leading-relaxed">
-                Mit intelligenten Analytics-Lösungen machen wir Ihre Geschäftsdaten 
-                zu einem strategischen Vorteil. Erkennen Sie Potentiale, optimieren 
-                Sie Prozesse und treffen Sie datenbasierte Entscheidungen.
+                Mit modernen Analytics-Systemen machen wir Ihre Unternehmensdaten 
+                zu einem echten Wettbewerbsvorteil. Identifizieren Sie Chancen, verbessern 
+                Sie Ihre Abläufe und agieren Sie auf Basis fundierter Analysen.
               </p>
             </div>
 
@@ -98,8 +98,8 @@ const AnalyticsSection = () => {
               <div className="flex items-center gap-4 p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
                 <CheckCircle className="text-green-500" size={24} />
                 <div>
-                  <div className="font-semibold text-gray-900">Kostenlose Analytics-Analyse</div>
-                  <div className="text-sm text-gray-600">Lassen Sie uns Ihr Potential bewerten</div>
+                <div className="font-semibold text-gray-900">Kostenfreie Analytics-Bewertung</div>
+                <div className="text-sm text-gray-600">Lassen Sie uns Ihre Möglichkeiten analysieren</div>
                 </div>
               </div>
             </div>
