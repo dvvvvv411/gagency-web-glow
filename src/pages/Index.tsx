@@ -4,7 +4,6 @@ import { useAuth } from '@/contexts/AuthContext';
 import FluidBackground from '@/components/backgrounds/FluidBackground';
 import HeroSection from '@/components/sections/HeroSection';
 import ServicesShowcase from '@/components/sections/ServicesShowcase';
-import FocusWorkSection from '@/components/sections/FocusWorkSection';
 import StatsBar from '@/components/sections/StatsBar';
 import TestimonialsSection from '@/components/sections/TestimonialsSection';
 
@@ -37,7 +36,6 @@ const Index = () => {
       <div className="relative z-10">
         <HeroSection />
         <ServicesShowcase />
-        <FocusWorkSection />
         <StatsBar />
         
         {/* Strong Blue Background Section for Testimonials */}
