@@ -1,7 +1,7 @@
 import { ArrowRight, Badge, Rocket, Clock, TrendingUp, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { AnimatedSection } from '@/components/ui/animated-section';
-import TechElements from '@/components/graphics/TechElements';
+import heroDashboard from '@/assets/hero-dashboard.png';
 
 const HeroSection = () => {
   const trustBadges = [
@@ -65,10 +65,19 @@ const HeroSection = () => {
             </div>
           </div>
           
-          {/* Right Tech Animation - 45% */}
+          {/* Right Dashboard Image - 45% */}
           <div className="lg:col-span-5">
-            <div className="relative h-96">
-              <TechElements />
+            <div className="relative">
+              <div className="bg-gradient-to-br from-primary-50 to-blue-50 rounded-2xl p-8 shadow-2xl border border-primary-100">
+                <img 
+                  src={heroDashboard} 
+                  alt="Modern Dashboard Interface" 
+                  className="w-full h-auto rounded-xl shadow-lg"
+                  loading="lazy"
+                />
+                <div className="absolute -top-4 -right-4 w-8 h-8 bg-primary-500 rounded-full animate-pulse"></div>
+                <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-blue-400 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+              </div>
             </div>
           </div>
         </div>
