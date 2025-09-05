@@ -1,6 +1,5 @@
 import { BarChart3, TrendingUp, Target, CheckCircle } from 'lucide-react';
 import { AnimatedSection } from '@/components/ui/animated-section';
-import businessAnalytics from '@/assets/business-analytics.png';
 
 const AnalyticsSection = () => {
   const benefits = [
@@ -29,7 +28,7 @@ const AnalyticsSection = () => {
           <div className="relative">
             <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
               <img 
-                src={businessAnalytics} 
+                src="/lovable-uploads/3da4ad58-04d9-4170-ae3b-792cba7ce5fd.png" 
                 alt="Business Analytics und Datenauswertung"
                 className="w-full h-full object-cover"
                 loading="lazy"

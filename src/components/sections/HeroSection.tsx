@@ -1,7 +1,6 @@
 import { ArrowRight, Badge, Rocket, Clock, TrendingUp, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { AnimatedSection } from '@/components/ui/animated-section';
-import heroWorkspace from '@/assets/hero-workspace.png';
 
 const HeroSection = () => {
   const trustBadges = [
@@ -70,7 +69,7 @@ const HeroSection = () => {
             <div className="relative">
               <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
                 <img 
-                  src={heroWorkspace} 
+                  src="/lovable-uploads/668603aa-72bf-4686-8fb8-577de74a2805.png" 
                   alt="Professioneller Arbeitsplatz mit digitalen Tools"
                   className="w-full h-full object-cover"
                   loading="lazy"
