@@ -218,23 +218,23 @@ const Careers = () => {
                       </p>
                     </div>
                     
-                    <div className="mb-4">
-                      <h3 className="text-lg font-semibold text-primary-700 mb-2">Verfügbare Positionen:</h3>
-                      <div className="grid grid-cols-3 gap-6 p-4 border border-border rounded-lg bg-card">
+                    <div className="mb-8">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-3">Verfügbare Positionen:</h3>
+                      <div className="grid grid-cols-3 gap-4 p-4 border border-gray-200 rounded-lg">
                         <div className="text-center">
-                          <p className="font-medium text-foreground">Minijob</p>
-                          <p className="text-sm text-muted-foreground">5 Std./Woche</p>
-                          <p className="font-semibold text-primary-700">556€/Monat</p>
+                          <p className="font-medium text-gray-800">Minijob</p>
+                          <p className="text-sm text-gray-600">5 Std./Woche</p>
+                          <p className="font-semibold text-gray-900">556€/Monat</p>
                         </div>
                         <div className="text-center">
-                          <p className="font-medium text-foreground">Teilzeit</p>
-                          <p className="text-sm text-muted-foreground">15 Std./Woche</p>
-                          <p className="font-semibold text-primary-700">1600€/Monat</p>
+                          <p className="font-medium text-gray-800">Teilzeit</p>
+                          <p className="text-sm text-gray-600">15 Std./Woche</p>
+                          <p className="font-semibold text-gray-900">1600€/Monat</p>
                         </div>
                         <div className="text-center">
-                          <p className="font-medium text-foreground">Vollzeit</p>
-                          <p className="text-sm text-muted-foreground">30 Std./Woche</p>
-                          <p className="font-semibold text-primary-700">3300€/Monat</p>
+                          <p className="font-medium text-gray-800">Vollzeit</p>
+                          <p className="text-sm text-gray-600">30 Std./Woche</p>
+                          <p className="font-semibold text-gray-900">3300€/Monat</p>
                         </div>
                       </div>
                     </div>
