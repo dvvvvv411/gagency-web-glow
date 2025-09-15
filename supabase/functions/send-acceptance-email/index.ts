@@ -36,18 +36,10 @@ const handler = async (req: Request): Promise<Response> => {
       }
     });
 
-    // Get Resend API key
-    const resendApiKey = Deno.env.get("RESEND_API_KEY");
-    if (!resendApiKey) {
-      throw new Error('RESEND_API_KEY environment variable is not set');
-    }
-
-    const resend = new Resend(resendApiKey);
-
     // Get sender configuration from database
     const { data: config, error: configError } = await supabase
       .from('resend_config')
-      .select('sender_name, sender_email')
+      .select('sender_name, sender_email, api_key')
       .single();
 
     if (configError) {
@@ -55,9 +47,12 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error('Could not fetch sender configuration. Please configure email settings in admin panel.');
     }
 
-    if (!config) {
-      throw new Error('No email configuration found. Please configure email settings in admin panel.');
+    if (!config || !config.api_key) {
+      throw new Error('Resend API key not configured. Please configure email settings in admin panel.');
     }
+
+    // Initialize Resend with API key from database
+    const resend = new Resend(config.api_key);
 
     // Create appointment booking link with custom domain
     const appointmentBookingLink = `https://ingenio-europe.de/appointment-booking?applicationId=${applicationId}`;

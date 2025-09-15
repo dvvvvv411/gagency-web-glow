@@ -264,6 +264,7 @@ export type Database = {
       }
       resend_config: {
         Row: {
+          api_key: string | null
           created_at: string
           id: string
           sender_email: string
@@ -271,6 +272,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          api_key?: string | null
           created_at?: string
           id?: string
           sender_email: string
@@ -278,6 +280,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          api_key?: string | null
           created_at?: string
           id?: string
           sender_email?: string

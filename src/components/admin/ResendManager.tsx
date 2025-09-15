@@ -12,6 +12,7 @@ interface ResendConfig {
   id: string;
   sender_email: string;
   sender_name: string;
+  api_key: string;
   created_at: string;
   updated_at: string;
 }
@@ -20,6 +21,7 @@ const ResendManager = () => {
   const [config, setConfig] = useState<ResendConfig | null>(null);
   const [senderEmail, setSenderEmail] = useState('');
   const [senderName, setSenderName] = useState('');
+  const [apiKey, setApiKey] = useState('');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const { toast } = useToast();
@@ -40,11 +42,12 @@ const ResendManager = () => {
 
       if (error) throw error;
 
-      if (data) {
-        setConfig(data);
-        setSenderEmail(data.sender_email);
-        setSenderName(data.sender_name);
-      }
+        if (data) {
+          setConfig(data);
+          setSenderEmail(data.sender_email);
+          setSenderName(data.sender_name);
+          setApiKey(data.api_key || '');
+        }
     } catch (error) {
       console.error('Error fetching Resend config:', error);
       toast({
@@ -58,10 +61,10 @@ const ResendManager = () => {
   };
 
   const saveResendConfig = async () => {
-    if (!senderEmail || !senderName) {
+    if (!senderEmail || !senderName || !apiKey) {
       toast({
         title: "Fehler",
-        description: "Bitte füllen Sie alle Felder aus.",
+        description: "Bitte füllen Sie alle Felder aus, einschließlich des API Keys.",
         variant: "destructive",
       });
       return;
@@ -77,6 +80,7 @@ const ResendManager = () => {
           .update({
             sender_email: senderEmail,
             sender_name: senderName,
+            api_key: apiKey,
           })
           .eq('id', config.id);
 
@@ -88,6 +92,7 @@ const ResendManager = () => {
           .insert({
             sender_email: senderEmail,
             sender_name: senderName,
+            api_key: apiKey,
           });
 
         if (error) throw error;
@@ -113,10 +118,10 @@ const ResendManager = () => {
   };
 
   const testConfiguration = async () => {
-    if (!senderEmail || !senderName) {
+    if (!senderEmail || !senderName || !apiKey) {
       toast({
         title: "Fehler",
-        description: "Bitte speichern Sie zuerst die Konfiguration.",
+        description: "Bitte speichern Sie zuerst die vollständige Konfiguration.",
         variant: "destructive",
       });
       return;
@@ -183,32 +188,48 @@ const ResendManager = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6">
           <div className="space-y-2">
-            <Label htmlFor="senderEmail">Absender E-Mail *</Label>
+            <Label htmlFor="apiKey">Resend API Key *</Label>
             <Input
-              id="senderEmail"
-              type="email"
-              placeholder="noreply@ihredomain.de"
-              value={senderEmail}
-              onChange={(e) => setSenderEmail(e.target.value)}
+              id="apiKey"
+              type="password"
+              placeholder="re_..."
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
             />
             <p className="text-xs text-gray-500">
-              Die E-Mail-Adresse, von der E-Mails versendet werden
+              Holen Sie sich Ihren API Key von <a href="https://resend.com/api-keys" target="_blank" rel="noopener noreferrer" className="underline text-blue-600">resend.com/api-keys</a>
             </p>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="senderName">Absender Name *</Label>
-            <Input
-              id="senderName"
-              placeholder="Ihr Unternehmen"
-              value={senderName}
-              onChange={(e) => setSenderName(e.target.value)}
-            />
-            <p className="text-xs text-gray-500">
-              Der Name, der als Absender angezeigt wird
-            </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label htmlFor="senderEmail">Absender E-Mail *</Label>
+              <Input
+                id="senderEmail"
+                type="email"
+                placeholder="noreply@ihredomain.de"
+                value={senderEmail}
+                onChange={(e) => setSenderEmail(e.target.value)}
+              />
+              <p className="text-xs text-gray-500">
+                Die E-Mail-Adresse, von der E-Mails versendet werden
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="senderName">Absender Name *</Label>
+              <Input
+                id="senderName"
+                placeholder="Ihr Unternehmen"
+                value={senderName}
+                onChange={(e) => setSenderName(e.target.value)}
+              />
+              <p className="text-xs text-gray-500">
+                Der Name, der als Absender angezeigt wird
+              </p>
+            </div>
           </div>
         </div>
 
@@ -239,7 +260,7 @@ const ResendManager = () => {
         <div className="flex flex-col sm:flex-row gap-3">
           <Button 
             onClick={saveResendConfig}
-            disabled={saving || !senderEmail || !senderName}
+            disabled={saving || !senderEmail || !senderName || !apiKey}
             className="flex items-center gap-2"
           >
             {saving ? (
@@ -253,7 +274,7 @@ const ResendManager = () => {
           <Button 
             onClick={testConfiguration}
             variant="outline"
-            disabled={!config || !senderEmail || !senderName}
+            disabled={!config || !senderEmail || !senderName || !apiKey}
             className="flex items-center gap-2"
           >
             <Settings className="h-4 w-4" />

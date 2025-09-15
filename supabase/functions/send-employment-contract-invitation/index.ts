@@ -55,7 +55,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log('Fetching Resend configuration...');
     const { data: resendConfig, error: configError } = await supabase
       .from('resend_config')
-      .select('sender_email, sender_name')
+      .select('sender_email, sender_name, api_key')
       .order('created_at', { ascending: false })
       .limit(1)
       .maybeSingle();
@@ -65,9 +65,9 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error('Failed to fetch email configuration');
     }
 
-    if (!resendConfig) {
-      console.error('No Resend configuration found');
-      throw new Error('Email configuration not found. Please configure Resend settings in the admin panel.');
+    if (!resendConfig || !resendConfig.api_key) {
+      console.error('No Resend configuration found or API key missing');
+      throw new Error('Resend API key not configured. Please configure email settings in the admin panel.');
     }
 
     console.log('Using Resend config:', { 
@@ -75,14 +75,8 @@ const handler = async (req: Request): Promise<Response> => {
       sender_name: resendConfig.sender_name 
     });
 
-    // Initialize Resend
-    const resendApiKey = Deno.env.get('RESEND_API_KEY');
-    if (!resendApiKey) {
-      console.error('RESEND_API_KEY not found');
-      throw new Error('Resend API key not configured');
-    }
-
-    const resend = new Resend(resendApiKey);
+    // Initialize Resend with API key from database
+    const resend = new Resend(resendConfig.api_key);
 
     // Create employment contract link with custom domain
     const contractUrl = `https://ingenio-europe.de/employment-contract?appointment=${appointmentId}`;

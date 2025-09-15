@@ -3,8 +3,6 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 import { Resend } from "npm:resend@2.0.0";
 
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
-
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
@@ -52,7 +50,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log('Fetching sender configuration from database...');
     const { data: resendConfig, error: configError } = await supabase
       .from('resend_config')
-      .select('sender_email, sender_name')
+      .select('sender_email, sender_name, api_key')
       .order('created_at', { ascending: false })
       .limit(1)
       .maybeSingle();
@@ -67,6 +65,20 @@ const handler = async (req: Request): Promise<Response> => {
         }
       );
     }
+
+    if (!resendConfig || !resendConfig.api_key) {
+      console.error('Resend API key not configured');
+      return new Response(
+        JSON.stringify({ error: "Resend API key not configured in admin panel" }),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    // Initialize Resend with API key from database
+    const resend = new Resend(resendConfig.api_key);
 
     // Use default values if no configuration is found
     const senderEmail = resendConfig?.sender_email || "noreply@amcd.de";
