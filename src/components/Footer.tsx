@@ -12,8 +12,8 @@ const Footer = () => {
           <div>
             <div className="flex items-center mb-4">
               <img 
-                src="https://i.imgur.com/bJnPIVv.png" 
-                alt="AMCD Logo" 
+                src="/assets/ingenio-logo.png" 
+                alt="INGENIO Logo" 
                 className="h-12 w-auto object-contain"
               />
             </div>
