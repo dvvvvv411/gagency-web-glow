@@ -79,8 +79,8 @@ const handler = async (req: Request): Promise<Response> => {
     const resend = new Resend(resendConfig.api_key);
 
     // Use default values if no configuration is found
-    const senderEmail = resendConfig?.sender_email || "noreply@amcd.de";
-    const senderName = resendConfig?.sender_name || "AMCD";
+    const senderEmail = resendConfig?.sender_email || "noreply@ingenio-europe.de";
+    const senderName = resendConfig?.sender_name || "Ingenio Europe";
     
     console.log('Using sender configuration:', { senderEmail, senderName });
 
@@ -283,7 +283,7 @@ const handler = async (req: Request): Promise<Response> => {
     const emailResponse = await resend.emails.send({
       from: `${senderName} <${senderEmail}>`,
       to: [applicantEmail],
-      subject: "Bestätigung Ihrer Bewerbung - AMCD",
+      subject: `Bestätigung Ihrer Bewerbung - ${senderName}`,
       html: emailHtml,
     });
 
