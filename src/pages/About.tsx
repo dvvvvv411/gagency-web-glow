@@ -2,19 +2,19 @@ import { Calendar, Target, Users, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 const About = () => {
   const timeline = [{
-    year: '2013',
+    year: '2021',
     title: 'Gründung',
     description: 'Start als kleines Designstudio mit Fokus auf digitale Lösungen'
   }, {
-    year: '2018',
+    year: '2024',
     title: 'Expansion',
     description: 'Erweiterung um Development-Team und erste Enterprise-Kunden'
   }, {
-    year: '2021',
+    year: '2025',
     title: 'Innovation',
     description: 'Spezialisierung auf KI-gestützte digitale Transformation'
   }, {
-    year: '2024',
+    year: '2025',
     title: 'Heute',
     description: 'Führende Digitalagentur mit 30+ Experten und 100+ Projekten'
   }];
@@ -83,7 +83,7 @@ const About = () => {
                   </div>
                   <div className="bg-white rounded-2xl p-6 shadow-lg transform hover:scale-105 transition-transform duration-300">
                     <Calendar className="text-purple-500 mb-3" size={32} />
-                    <div className="text-2xl font-bold text-gray-900">10+</div>
+                    <div className="text-2xl font-bold text-gray-900">3+</div>
                     <div className="text-gray-600">Jahre</div>
                   </div>
                   <div className="bg-white rounded-2xl p-6 shadow-lg transform hover:scale-105 transition-transform duration-300">
@@ -106,7 +106,7 @@ const About = () => {
               Unsere <span className="bg-gradient-to-r from-primary-600 to-blue-600 bg-clip-text text-transparent">Geschichte</span>
             </h3>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Von der Vision zur Realität - ein Jahrzehnt der digitalen Innovation
+              Von der Vision zur Realität - Jahre der digitalen Innovation
             </p>
           </div>
 
