@@ -15,7 +15,7 @@ const TestimonialsSection = () => {
     {
       name: "Marcus Weber",
       position: "Geschäftsführer",
-      company: "München, Deutschland",
+      company: "Berlin, Deutschland",
       quote: "Die Realisierung unserer E-Commerce-Plattform war ein kompletter Erfolg. Binnen 6 Monaten konnten wir unseren Onlineumsatz um 400% erhöhen.",
       avatar: "MW",
       avatarImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",

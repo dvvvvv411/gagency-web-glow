@@ -9,9 +9,9 @@ const Impressum = () => {
             <div>
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">Angaben gemäß § 5 TMG</h2>
               <div className="space-y-2">
-                <p><strong>AMCD Consult GmbH</strong></p>
-                <p>Rubensstr. 13</p>
-                <p>81245 München</p>
+                <p><strong>Ingenio Europe GmbH</strong></p>
+                <p>Max-Dohrn-Str. 8-10</p>
+                <p>10589 Berlin</p>
                 <p>Deutschland</p>
               </div>
             </div>
@@ -19,8 +19,8 @@ const Impressum = () => {
             <div>
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">Kontakt</h2>
               <div className="space-y-2">
-                <p><strong>Telefon:</strong> +49 89 41435250</p>
-                <p><strong>E-Mail:</strong> info@amcd-agentur.de</p>
+                <p><strong>Telefon:</strong> +49 30 23258380</p>
+                <p><strong>E-Mail:</strong> info@ingenio-europe.de</p>
               </div>
             </div>
 
@@ -28,23 +28,23 @@ const Impressum = () => {
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">Registereintrag</h2>
               <div className="space-y-2">
                 <p>Eintragung im Handelsregister.</p>
-                <p>Registergericht: Amtsgericht München</p>
-                <p>Registernummer: HRB 235317</p>
+                <p>Registergericht: Amtsgericht Charlottenburg (Berlin)</p>
+                <p>Registernummer: HRB 235401 B</p>
               </div>
             </div>
 
             <div>
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">Umsatzsteuer-ID</h2>
               <p>Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:</p>
-              <p>DE987654321</p>
+              <p>DE558437355</p>
             </div>
 
             <div>
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h2>
               <div className="space-y-2">
-                <p>Armin Doster</p>
-                <p>Rubensstr. 13</p>
-                <p>81245 München</p>
+                <p>Nicolas Grumbach</p>
+                <p>Max-Dohrn-Str. 8-10</p>
+                <p>10589 Berlin</p>
                 <p>Deutschland</p>
               </div>
             </div>

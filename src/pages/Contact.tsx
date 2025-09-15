@@ -47,8 +47,8 @@ const Contact = () => {
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-1">E-Mail</h3>
-                      <a href="mailto:info@amcd-agentur.de" className="text-primary-600 hover:text-primary-700 hover:underline transition-all duration-200">
-                        info@amcd-agentur.de
+                      <a href="mailto:info@ingenio-europe.de" className="text-primary-600 hover:text-primary-700 hover:underline transition-all duration-200">
+                        info@ingenio-europe.de
                       </a>
                     </div>
                   </CardContent>
@@ -61,8 +61,8 @@ const Contact = () => {
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-1">Telefon</h3>
-                      <a href="tel:+498941435250" className="text-primary-600 hover:text-primary-700 hover:underline transition-all duration-200">
-                        +49 89 41435250
+                      <a href="tel:+493023258380" className="text-primary-600 hover:text-primary-700 hover:underline transition-all duration-200">
+                        +49 30 23258380
                       </a>
                     </div>
                   </CardContent>
@@ -76,8 +76,8 @@ const Contact = () => {
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-1">Adresse</h3>
                       <p className="text-gray-600">
-                        Rubensstr. 13<br />
-                        81245 München<br />
+                        Max-Dohrn-Str. 8-10<br />
+                        10589 Berlin<br />
                         Deutschland
                       </p>
                     </div>

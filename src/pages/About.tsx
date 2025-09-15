@@ -55,7 +55,7 @@ const About = () => {
                 <h3 className="text-2xl font-bold text-gray-900">Unsere Mission</h3>
               </div>
               <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                Bei AMCD glauben wir daran, dass digitale Transformation mehr ist als nur Technologie. 
+                Bei INGENIO glauben wir daran, dass digitale Transformation mehr ist als nur Technologie. 
                 Es geht darum, Geschäftsprozesse zu revolutionieren und nachhaltiges Wachstum zu schaffen.
               </p>
               <p className="text-lg text-gray-700 leading-relaxed mb-6">

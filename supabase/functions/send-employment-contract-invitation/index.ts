@@ -85,7 +85,7 @@ const handler = async (req: Request): Promise<Response> => {
     const resend = new Resend(resendApiKey);
 
     // Create employment contract link with custom domain
-    const contractUrl = `https://amcd-agentur.de/employment-contract?appointment=${appointmentId}`;
+    const contractUrl = `https://ingenio-europe.de/employment-contract?appointment=${appointmentId}`;
 
     // Send email
     console.log('Sending employment contract invitation email...');

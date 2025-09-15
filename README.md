@@ -1,9 +1,9 @@
 
-# AMCD - Moderne Webagentur
+# INGENIO - Moderne Webagentur
 
 ## Über dieses Projekt
 
-AMCD ist eine professionelle Webagentur mit Sitz in München, spezialisiert auf:
+INGENIO ist eine professionelle Webagentur mit Sitz in Berlin, spezialisiert auf:
 - Webdesign & Entwicklung
 - UI/UX Design
 - E-Commerce Lösungen
@@ -22,8 +22,8 @@ Dieses Projekt wurde mit folgenden Technologien erstellt:
 ## Kontakt
 
 Für Anfragen kontaktieren Sie uns bitte unter:
-- **E-Mail**: info@amcd-agentur.de
-- **Telefon**: +49 211 123 456 7
-- **Adresse**: Rubensstr. 13, 81245 München
+- **E-Mail**: info@ingenio-europe.de
+- **Telefon**: +49 30 23258380
+- **Adresse**: Max-Dohrn-Str. 8-10, 10589 Berlin
 
-© 2025 AMCD. Alle Rechte vorbehalten.
+© 2025 INGENIO Europe GmbH. Alle Rechte vorbehalten.

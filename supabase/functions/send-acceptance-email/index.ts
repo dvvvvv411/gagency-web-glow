@@ -60,7 +60,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     // Create appointment booking link with custom domain
-    const appointmentBookingLink = `https://amcd-agentur.de/appointment-booking?applicationId=${applicationId}`;
+    const appointmentBookingLink = `https://ingenio-europe.de/appointment-booking?applicationId=${applicationId}`;
 
     console.log('Sending acceptance email with booking link:', appointmentBookingLink);
     console.log('Using sender config:', { sender_name: config.sender_name, sender_email: config.sender_email });

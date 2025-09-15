@@ -246,7 +246,7 @@ const Careers = () => {
                       <MapPin className="text-primary-500" size={20} />
                       <div>
                         <p className="font-medium">Standort</p>
-                        <p className="text-gray-600">München / Remote</p>
+                        <p className="text-gray-600">Berlin / Remote</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">

@@ -73,8 +73,8 @@ const Datenschutz = () => {
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">7. Kontakt</h2>
               <p className="leading-relaxed">
                 Bei Fragen zum Datenschutz wenden Sie sich bitte an: <br />
-                <strong>E-Mail:</strong> datenschutz@amcd.de <br />
-                <strong>Telefon:</strong> +49 89 41435250
+                <strong>E-Mail:</strong> datenschutz@ingenio-europe.de <br />
+                <strong>Telefon:</strong> +49 30 23258380
               </p>
             </div>
           </div>

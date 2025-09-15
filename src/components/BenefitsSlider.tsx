@@ -63,9 +63,9 @@ const BenefitsSlider = () => {
         {/* Header */}
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Warum <span className="bg-gradient-to-r from-primary-600 to-blue-600 bg-clip-text text-transparent">AMCD?</span>
+            Warum <span className="bg-gradient-to-r from-primary-600 to-blue-600 bg-clip-text text-transparent">INGENIO?</span>
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">Entdecken Sie, was AMCD zum perfekten Sprungbrett für Ihre Karriere macht</p>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">Entdecken Sie, was INGENIO zum perfekten Sprungbrett für Ihre Karriere macht</p>
         </div>
 
         {/* Main Slider Card */}
