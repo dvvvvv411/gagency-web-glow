@@ -39,7 +39,7 @@ const Navigation = () => {
           <div className="flex-1 flex justify-center md:justify-start">
             <Link to="/" className="flex items-center group">
               <img 
-                src="/assets/ingenio-logo.png" 
+                src="/ingenio-logo.png" 
                 alt="INGENIO Logo" 
                 className="h-16 w-auto object-contain group-hover:scale-105 transition-all duration-300"
               />

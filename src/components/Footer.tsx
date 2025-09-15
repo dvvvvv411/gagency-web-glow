@@ -12,7 +12,7 @@ const Footer = () => {
           <div>
             <div className="flex items-center mb-4">
               <img 
-                src="/assets/ingenio-logo.png" 
+                src="/ingenio-logo.png" 
                 alt="INGENIO Logo" 
                 className="h-12 w-auto object-contain"
               />
