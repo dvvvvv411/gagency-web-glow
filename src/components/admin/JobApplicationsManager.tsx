@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { FileText, Eye, Phone, Mail, MapPin, User, Flag, Check, Calendar, ExternalLink, Copy } from 'lucide-react';
+import { FileText, Eye, Phone, Mail, MapPin, User, Flag, Check, Calendar, ExternalLink, Copy, Briefcase } from 'lucide-react';
 import PDFViewerDialog from './PDFViewerDialog';
 
 interface JobApplication {
@@ -18,6 +18,7 @@ interface JobApplication {
   plz: string;
   stadt: string;
   staatsangehoerigkeit: string;
+  employment_type: string;
   cv_file_path: string | null;
   anschreiben_file_path: string | null;
   status: string;
@@ -165,6 +166,19 @@ const JobApplicationsManager = () => {
     window.open(link, '_blank');
   };
 
+  const getEmploymentTypeLabel = (employmentType: string) => {
+    switch (employmentType) {
+      case 'minijob':
+        return 'Minijob';
+      case 'teilzeit':
+        return 'Teilzeit';
+      case 'vollzeit':
+        return 'Vollzeit';
+      default:
+        return employmentType;
+    }
+  };
+
   const getStatusBadge = (status: string, acceptedAt: string | null) => {
     if (status === 'angenommen' || acceptedAt) {
       return (
@@ -207,6 +221,7 @@ const JobApplicationsManager = () => {
                       <TableHead className="w-[200px]">Bewerber</TableHead>
                       <TableHead className="w-[180px]">Kontakt</TableHead>
                       <TableHead className="w-[160px]">Ort</TableHead>
+                      <TableHead className="w-[120px]">Anstellungsart</TableHead>
                       <TableHead className="w-[100px]">Nation</TableHead>
                       <TableHead className="w-[90px]">Status</TableHead>
                       <TableHead className="w-[140px]">Dokumente</TableHead>
@@ -253,6 +268,13 @@ const JobApplicationsManager = () => {
                                 <div className="text-gray-400 truncate">{application.adresse}</div>
                               </div>
                             </div>
+                          </div>
+                        </TableCell>
+                        
+                        <TableCell className="p-3">
+                          <div className="flex items-center gap-1 text-xs">
+                            <Briefcase className="h-3 w-3 text-gray-500 flex-shrink-0" />
+                            <span className="break-words">{getEmploymentTypeLabel(application.employment_type)}</span>
                           </div>
                         </TableCell>
                         
