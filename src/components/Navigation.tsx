@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Sparkles, User, LogOut } from 'lucide-react';
+import { Menu, X, User, LogOut } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import {
@@ -73,7 +73,7 @@ const Navigation = () => {
 
           {/* Auth Section */}
           <div className="hidden md:flex items-center space-x-4">
-            {user ? (
+            {user && (
               <div className="flex items-center space-x-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -96,16 +96,6 @@ const Navigation = () => {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-              </div>
-            ) : (
-              <div className="flex items-center space-x-3">
-                <Link
-                  to="/livechat"
-                  className="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-primary-600 hover:to-primary-700 transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl hover:scale-105 group"
-                >
-                  <Sparkles size={16} className="group-hover:rotate-12 transition-transform duration-300" />
-                  Mitarbeiter Portal
-                </Link>
               </div>
             )}
           </div>
@@ -140,7 +130,7 @@ const Navigation = () => {
                 </Link>
               ))}
               
-              {user ? (
+              {user && (
                 <div className="space-y-2 pt-4 border-t border-gray-200">
                   <div className="px-4 py-2 text-sm text-gray-500">
                     {user.email}
@@ -155,16 +145,6 @@ const Navigation = () => {
                     <LogOut size={16} />
                     Abmelden
                   </button>
-                </div>
-              ) : (
-                <div className="space-y-2 pt-4 border-t border-gray-200">
-                  <Link
-                    to="/livechat"
-                    onClick={() => setIsOpen(false)}
-                    className="block w-full mt-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white px-4 py-3 rounded-xl font-semibold text-center hover:from-primary-600 hover:to-primary-700 transition-all duration-300"
-                  >
-                    Mitarbeiter Portal
-                  </Link>
                 </div>
               )}
             </div>
