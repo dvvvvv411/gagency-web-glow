@@ -220,7 +220,7 @@ const Careers = () => {
                     
                     <div className="mb-4">
                       <h3 className="text-lg font-semibold text-primary-700 mb-2">Verfügbare Positionen:</h3>
-                      <div className="grid grid-cols-3 gap-6 p-4 border border-border rounded-lg bg-card">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-4 border border-border rounded-lg bg-card">
                         <div className="text-center">
                           <p className="font-medium text-foreground">Minijob</p>
                           <p className="text-sm text-muted-foreground">5 Std./Woche</p>
